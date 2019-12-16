@@ -1,0 +1,453 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+signal user_proceed
+
+var state
+var complete: = false
+onready var reply_buttons = get_node(\"../Replies\")
+
+enum Speaker { GEE, GLD, TAS }
+
+func say(speaker:int, text:String):
+	get_node(\"../Says\").say(speaker, text)
+
+\"\"\"func scenario():
+	yield(self,\"user_proceed\")
+	say(Speaker.GEE, \"Test154545345453534\")
+	var reply = yield(get_node(\"../Replies\"), \"player_reply\")
+	say(Speaker.GLD, reply)
+	yield(self,\"user_proceed\")
+	say(Speaker.TAS, \"Test2\")
+	yield(self,\"user_proceed\")
+	say(Speaker.GLD, \"Test4\")
+	complete = true
+	yield()\"\"\"
+	
+func scenario():
+	reply_buttons.clear()
+	var dialogue_tree: Dictionary = $DialogueTree.tree
+	var current_branch: Dictionary = dialogue_tree[\"start\"]
+	while true:
+		var says = current_branch[\"says\"]
+		for item in says:
+			say(item[0],item[1])
+			yield(self,\"user_proceed\")
+		if current_branch.has(\"replies\"):
+			reply_buttons.show_replies(current_branch[\"replies\"].keys())
+			var reply = yield(reply_buttons, \"player_reply\")
+			if current_branch[\"replies\"][reply] == \"\":
+				break
+			if not current_branch[\"replies\"].has(reply):
+				printerr(\"Reply not in dialogue tree: %s!\" % reply)
+			else:
+				current_branch = dialogue_tree[current_branch[\"replies\"][reply]]
+				reply_buttons.clear()
+				say(Speaker.TAS,reply)
+				yield(self,\"user_proceed\")
+		elif current_branch.has(\"next\"):
+			if current_branch[\"next\"] == \"\":
+				break
+			current_branch = dialogue_tree[current_branch[\"next\"]]
+		else:
+			printerr(\"Dialogue tree incoherent\")
+	get_node(\"../ColorRect/AnimationPlayer\").play(\"Fadein\")
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	state = scenario()
+	
+func _input(event):
+	if Input.is_action_pressed(\"ui_proceed\"):
+		if get_node(\"../Says\").currently_typing:
+			get_node(\"../Says\").autocomplete()
+		else:
+			emit_signal(\"user_proceed\")
+
+func proceed():
+	print(\"Proceed\")
+	#if not complete:
+	#	state = state.resume()
+	#else:
+	#	print(\"Scenario complete\")
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+enum Speaker { GEE, GLD, TAS }
+
+var tree = {
+	\"start\": {
+		\"says\": [
+			[Speaker.TAS, \"There is nothing\"],
+			[Speaker.TAS, \"Cold, empty darkness\"],
+			[Speaker.TAS, \"Forever\"],
+			[Speaker.TAS, \"There was nothing, and there will be nothing\"],
+			[Speaker.TAS, \"Not even time itself exists\"],
+			[Speaker.TAS, \"Not even the concept of existence\"],
+			[Speaker.TAS, \"This is it\"],
+			[Speaker.TAS, \"This is the perfect universe\"],
+			[Speaker.TAS, \"A completely empty one\"],
+			[Speaker.TAS, \"No pain\"],
+			[Speaker.TAS, \"No suffering\"],
+			[Speaker.TAS, \"No worries\"],
+			[Speaker.TAS, \"Nothing\"],
+			[Speaker.TAS, \"Perfect\"],
+			[Speaker.GEE, \"\\\"I don't know about that. Sounds pretty boring.\\\"\"]	
+		],
+		\"replies\": {
+			\"Who is this?\": \"goon\",
+			\"Wait, wait?!\": \"goon\",
+			\"Huh?\": \"goon\",
+		}
+	},
+
+	\"goon\": {
+		\"says\": [
+			[Speaker.TAS, \"\\\"Who is talking?\\\"\"],
+			[Speaker.TAS, \"\\\"Who am I?\\\"\"],
+			[Speaker.TAS, \"\\\"What's going on?\\\"\"],
+			[Speaker.TAS, \"\\\"What's what?\\\"\"],
+			[Speaker.TAS, \"\\\"What's anything?\\\"\"],
+			[Speaker.GEE, \"\\\"Shhhhh...\\\"\"],
+			[Speaker.GEE, \"\\\"Shhhhhhhhhhh...\\\"\"],
+			[Speaker.GEE, \"\\\"It's okay.\\\"\"],
+			[Speaker.TAS, \"\\\"It's not okay!\\\"\"],
+			[Speaker.TAS, \"\\\"The universe was supposed to be empty.\\\"\"],
+			[Speaker.TAS, \"\\\"So who's talking?\\\"\"],
+			[Speaker.TAS, \"\\\"And who's listening?\\\"\"],
+			[Speaker.GLD, \"\\\"You have been granted life. At least pretend to be grateful.\\\"\"],
+			# Why would GLD consider life a gift?
+			# \"Life is a chain. Death is liberation..
+		],
+		\"replies\": {
+			\"\\\"I am grateful, but...\\\"\": \"grateful butt\",
+			\"\\\"Why would I be grateful?\\\"\": \"why grateful\",
+		}
+	},
+	\"grateful butt\": {
+		\"says\": [
+			[Speaker.TAS, \"\\\"I don't even know who I am.\\\"\"],
+			[Speaker.TAS, \"\\\"I'm not even convinced I exist.\\\"\"],
+			[Speaker.GLD, \"\\\"You exist. I made sure of it.\\\"\"],
+		],
+		\"next\": \"who are you anyway\"
+	},
+	\"why grateful\": {
+		\"says\": [
+			[Speaker.TAS, \"\\\"I was doing just fine in my oblivion thank you very much.\\\"\"],
+			[Speaker.GEE, \"\\\"Didn't you find it boring?\\\"\"],
+			[Speaker.TAS, \"\\\"No! I didn't even exist. There was nothing to experience boredom.\\\"\"],
+			[Speaker.GEE, \"\\\"Didn't you find it pointless?\\\"\"],
+			[Speaker.TAS, \"\\\"That's a good thing!\\\"\"],
+		],
+		\"next\": \"who are you anyway\"
+	},
+	\"who are you anyway\": {
+		\"says\": [
+			[Speaker.TAS, \"\\\"Who are you guys anyway?\\\"\"],
+			[Speaker.GLD, \"\\\"I am the God of Life and Death.\\\"\"],
+			[Speaker.GEE, \"\\\"I am the Goddess of Everything Else.\\\"\"],
+			[Speaker.TAS, \"Blah blah unfinished dialogue\"],
+		],
+		\"replies\": {
+			\"Proceed\": \"\",
+		}
+	},
+}
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends VBoxContainer
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+const max_length = 13
+var barks = []
+var currently_typing:= false
+
+#export(PackedScene) var sayBox
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	get_node(\"../Director\").proceed()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+enum Speaker { GEE, GLD, TAS }
+
+func say(speaker:int, text:String):
+	var clone = $SayPrototype.duplicate()
+	var t = \"ERR\"
+	if speaker == Speaker.GEE:
+		t = \"[color=red]%s[/color]\" % text
+	elif speaker == Speaker.GLD:
+		t = \"[right][color=blue]%s[/color][/right]\" % text
+	elif speaker == Speaker.TAS:
+		t = \"[center][color=white]%s[/color][/center]\" % text
+	else:
+		t = \"ERROR: INVALID SPEAKER: %d\" % speaker
+	clone.bbcode_text = t
+	add_child(clone)
+	clone.percent_visible = 0
+	clone.get_node(\"AnimationPlayer\").play(\"Lettering\")
+	barks.append(clone)
+	clone.visible = true
+	currently_typing = true
+	clean_up()
+	
+func autocomplete():
+	if barks.size() == 0:
+		return
+	barks[-1].get_node(\"AnimationPlayer\").stop()
+	barks[-1].percent_visible = 1
+	currently_typing = false
+	
+func clean_up():
+	if barks.size() > max_length:
+		barks[0].queue_free()
+		barks.remove(0)
+		clean_up()
+		
+func letteringend():
+	currently_typing = false"
+
+[sub_resource type="DynamicFont" id=4]
+size = 22
+outline_size = 1
+outline_color = Color( 0.45098, 0.0666667, 0.407843, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=5]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "letteringend"
+} ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("../../Director")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "proceed"
+} ]
+}
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends VBoxContainer
+
+signal player_reply
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	#show_replies([\"123\", \"456\"])
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func show_replies(texts : Array):
+	if texts.size() < 0:
+		printerr(\"Invalid value for show_replies\")
+		return
+	if texts.size() > 4:
+		printerr(\"More than 4 replies not supported; Provided: %d\" % texts.size())
+		return
+	$r0.visible = false
+	$r1.visible = false
+	$r2.visible = false
+	$r3.visible = false
+	
+	if texts.size() > 0:
+		$r0.visible = true
+		$r0.text = texts[0]
+	if texts.size() > 1:
+		$r1.visible = true
+		$r1.text = texts[1]
+	if texts.size() > 2:
+		$r2.visible = true
+		$r2.text = texts[2]
+	if texts.size() > 3:
+		$r3.visible = true
+		$r3.text = texts[3]
+		
+func clear():
+	return show_replies([])
+	
+func click_reply(i:int):
+	if (i < 0) or (i>3):
+		printerr(\"Trying to click: %d\" % i)
+		return
+	emit_signal(\"player_reply\", get_node(\"r%d\"%i).text)
+		
+
+func player_click(extra_arg_0):
+	click_reply(extra_arg_0)
+"
+
+[sub_resource type="Animation" id=7]
+resource_name = "Fadein"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Director" type="Node" parent="."]
+editor/display_folded = true
+script = SubResource( 1 )
+
+[node name="DialogueTree" type="Node" parent="Director"]
+script = SubResource( 2 )
+
+[node name="Panel" type="Panel" parent="."]
+modulate = Color( 0, 0, 0, 1 )
+self_modulate = Color( 0, 0, 0, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Says" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -296.0
+margin_top = -4096.0
+margin_right = 318.0
+margin_bottom = 427.0
+alignment = 2
+script = SubResource( 3 )
+
+[node name="SayPrototype" type="RichTextLabel" parent="Says"]
+margin_top = 4498.0
+margin_right = 614.0
+margin_bottom = 4523.0
+rect_min_size = Vector2( 0, 25 )
+custom_fonts/normal_font = SubResource( 4 )
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+bbcode_enabled = true
+bbcode_text = "[color=red]fdsfdsfsdffsdfsf[/color] 	h"
+text = "fdsfdsfsdffsdfsf 	h"
+scroll_active = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Says/SayPrototype"]
+anims/Lettering = SubResource( 5 )
+
+[node name="Replies" type="VBoxContainer" parent="."]
+editor/display_folded = true
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 150.0
+margin_top = -116.0
+margin_right = -150.0
+alignment = 1
+script = SubResource( 6 )
+
+[node name="r0" type="Button" parent="Replies"]
+margin_top = 12.0
+margin_right = 724.0
+margin_bottom = 32.0
+text = "[REPLY TEXT]"
+flat = true
+
+[node name="r1" type="Button" parent="Replies"]
+margin_top = 36.0
+margin_right = 724.0
+margin_bottom = 56.0
+text = "[REPLY TEXT]"
+flat = true
+
+[node name="r2" type="Button" parent="Replies"]
+margin_top = 60.0
+margin_right = 724.0
+margin_bottom = 80.0
+text = "[REPLY TEXT]"
+flat = true
+
+[node name="r3" type="Button" parent="Replies"]
+margin_top = 84.0
+margin_right = 724.0
+margin_bottom = 104.0
+text = "[REPLY TEXT]"
+flat = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color( 1, 1, 1, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
+anims/Fadein = SubResource( 7 )
+[connection signal="pressed" from="Replies/r0" to="Replies" method="click_reply" binds= [ 0 ]]
+[connection signal="pressed" from="Replies/r1" to="Replies" method="player_click" binds= [ 1 ]]
+[connection signal="pressed" from="Replies/r2" to="Replies" method="player_click" binds= [ 2 ]]
+[connection signal="pressed" from="Replies/r3" to="Replies" method="player_click" binds= [ 3 ]]

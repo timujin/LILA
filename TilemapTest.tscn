@@ -1,0 +1,125 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://tilesheet.png" type="Texture" id=1]
+[ext_resource path="res://Untitled.png" type="Texture" id=2]
+
+[sub_resource type="NavigationPolygon" id=2]
+vertices = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ) ]
+
+[sub_resource type="ConvexPolygonShape2D" id=3]
+points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
+
+[sub_resource type="ConvexPolygonShape2D" id=4]
+points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
+
+[sub_resource type="ConvexPolygonShape2D" id=5]
+points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
+
+[sub_resource type="ConvexPolygonShape2D" id=6]
+points = PoolVector2Array( 0, 0, 64, 0, 64, 64, 0, 64 )
+
+[sub_resource type="TileSet" id=1]
+resource_local_to_scene = true
+0/name = "tilesheet.png 0"
+0/texture = ExtResource( 1 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 576, 192 )
+0/tile_mode = 2
+0/autotile/icon_coordinate = Vector2( 0, 0 )
+0/autotile/tile_size = Vector2( 64, 64 )
+0/autotile/spacing = 0
+0/autotile/occluder_map = [  ]
+0/autotile/navpoly_map = [ Vector2( 5, 0 ), SubResource( 2 ) ]
+0/autotile/z_index_map = [  ]
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shapes = [ {
+"autotile_coord": Vector2( 1, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 3 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 2, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 4 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 3, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 5 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+}, {
+"autotile_coord": Vector2( 4, 0 ),
+"one_way": false,
+"one_way_margin": 1.0,
+"shape": SubResource( 6 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
+} ]
+0/z_index = 0
+1/name = "tilesheet.png 1"
+1/texture = ExtResource( 1 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 128, 0, 192, 128 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shapes = [  ]
+1/z_index = 0
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Sprite
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):#
+#	if Input.
+"
+
+[sub_resource type="Animation" id=8]
+resource_name = "New Anim"
+length = 15.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 4, 10.9, 14.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 530.584, 0 ), Vector2( 530.584, 200 ), Vector2( 530.584, 0 ) ]
+}
+
+[node name="Node2D" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource( 1 )
+format = 1
+tile_data = PoolIntArray( 3, 1, 0, 4, 1, 0, 5, 1, 0, 6, 1, 0, 7, 1, 0, 8, 1, 0, 9, 1, 0, 10, 1, 0, 11, 1, 0, 12, 1, 0, 65537, 1, 0, 65538, 1, 0, 65548, 1, 0, 131073, 1, 0, 131075, 1, 0, 131076, 1, 0, 131077, 0, 131072, 131078, 2, 0, 131079, 2, 0, 131080, 2, 0, 131081, 2, 0, 131082, 1, 0, 131083, 1, 0, 131084, 1, 0, 196609, 1, 0, 196610, 2, 0, 196611, 0, 131072, 196612, 1, 0, 196613, 0, 131072, 196614, 0, 131072, 196615, 1, 0, 196616, 1, 0, 196617, 0, 131072, 196618, 0, 131072, 196619, 0, 131072, 196620, 2, 0, 262145, 1, 0, 262146, 2, 0, 262147, 1, 0, 262148, 1, 0, 262149, 0, 131072, 262150, 0, 131072, 262151, 0, 131072, 262152, 0, 131072, 262153, 0, 131072, 262154, 2, 0, 262155, 2, 0, 262156, 2, 0, 327681, 1, 0, 327682, 1, 0, 327683, 1, 0, 327684, 0, 131072, 327685, 0, 131072, 327686, 0, 131072, 327687, 0, 131072, 327688, 0, 131072, 327689, 2, 0, 327690, 0, 4, 327691, 0, 4, 327692, 0, 4, 327693, 0, 4, 327694, 0, 4, 393217, 1, 0, 393218, 1, 0, 393220, 0, 131072, 393221, 0, 131072, 393222, 0, 131072, 393223, 0, 131072, 393224, 0, 131072, 393225, 4, 0, 393226, 0, 4, 393227, 0, 4, 393228, 0, 4, 393229, 0, 4, 393230, 0, 131085, 458756, 0, 131072, 458757, 0, 131072, 458758, 0, 131072, 458759, 0, 131072, 458760, 0, 131072, 458761, 0, 131072, 458762, 0, 131072, 458763, 0, 131072, 458764, 0, 131072, 458765, 0, 131072, 458766, 0, 131072, 524292, 0, 131072, 524293, 0, 131072, 524294, 0, 131072, 524295, 4, 0, 524296, 1, 0, 589833, 1, 0 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 530.584, 284.887 )
+texture = ExtResource( 2 )
+script = SubResource( 7 )
+
+[node name="Camera2D" type="Camera2D" parent="Sprite"]
+current = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite"]
+autoplay = "New Anim"
+"anims/New Anim" = SubResource( 8 )

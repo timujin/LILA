@@ -1,0 +1,12 @@
+D:\QTETest\.mono\temp\bin\Tools\QTETest.dll
+D:\QTETest\.mono\temp\bin\Tools\QTETest.pdb
+D:\QTETest\.mono\temp\obj\Tools\QTETest.csprojAssemblyReference.cache
+D:\QTETest\.mono\temp\obj\Tools\QTETest.csproj.CoreCompileInputs.cache
+D:\QTETest\.mono\temp\obj\Tools\QTETest.dll
+D:\QTETest\.mono\temp\obj\Tools\QTETest.pdb
+D:\Projects\QTETest\.mono\temp\bin\Tools\QTETest.dll
+D:\Projects\QTETest\.mono\temp\bin\Tools\QTETest.pdb
+D:\Projects\QTETest\.mono\temp\obj\Tools\QTETest.csprojAssemblyReference.cache
+D:\Projects\QTETest\.mono\temp\obj\Tools\QTETest.csproj.CoreCompileInputs.cache
+D:\Projects\QTETest\.mono\temp\obj\Tools\QTETest.dll
+D:\Projects\QTETest\.mono\temp\obj\Tools\QTETest.pdb
