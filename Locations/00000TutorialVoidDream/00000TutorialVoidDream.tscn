@@ -56,6 +56,8 @@ func scenario():
 		else:
 			printerr(\"Dialogue tree incoherent\")
 	get_node(\"../ColorRect/AnimationPlayer\").play(\"Fadein\")
+	yield(get_node(\"../ColorRect/AnimationPlayer\"), \"animation_finished\")
+	get_tree().change_scene(\"res://Locations/00001PentagramRoom/PentagramRoom.tscn\")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -386,6 +388,7 @@ alignment = 2
 script = SubResource( 3 )
 
 [node name="SayPrototype" type="RichTextLabel" parent="Says"]
+visible = false
 margin_top = 4498.0
 margin_right = 614.0
 margin_bottom = 4523.0

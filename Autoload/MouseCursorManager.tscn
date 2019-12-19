@@ -6,6 +6,8 @@ script/source = "extends Node
 var base = preload(\"res://Assets/Cursors/base.png\")
 var hand = preload(\"res://Assets/Cursors/hand.png\")
 
+onready var floatie = get_tree().get_root().get_node(\"/root/Floatie\")
+
 var is_mouse_active : bool = true
 
 # Called when the node enters the scene tree for the first time.
@@ -20,17 +22,18 @@ func _ready():
 func disable_cursor():
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	is_mouse_active = false
+	floatie.stop_displaying()
 	
 func enable_cursor():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	is_mouse_active = true
 	
 func base_cursor():
-	print(\"base\")
+	#print(\"base\")
 	Input.set_custom_mouse_cursor(base, Input.CURSOR_ARROW, Vector2(11,2))
 	
 func hand_cursor():
-	print(\"hand\")
+	#print(\"hand\")
 	Input.set_custom_mouse_cursor(hand, Input.CURSOR_ARROW, Vector2(25,2))"
 
 [node name="MouseCursorManager" type="Node"]

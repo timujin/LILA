@@ -3,13 +3,31 @@
 [ext_resource path="res://ambush.PNG" type="Texture" id=1]
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Popup
 
 onready var speaker = $Panel/HBoxContainer/TextureRect
 onready var textbox = $Panel/HBoxContainer/MarginContainer/RichTextLabel
 var color:Color     = Color.white setget set_color
 var text:String     = \"{NO TEXT}\" setget set_text
+
+func show_dialogue(text:String, speaker:Texture, position: Vector2, color:Color = Color.white):
+	set_text(text)
+	set_speaker(speaker)
+	set_color(color)
+	rect_position = position
+	#yield(get_tree(), \"idle_frame\")
+	call_deferred(\"safe_popup\")
+	
+var unskippable: = false
+func safe_popup():
+	unskippable = true
+	popup()
+	yield(get_tree().create_timer(0.2), \"timeout\")
+	unskippable = false
+	
+func is_up() -> bool:
+	return visible
 
 func set_color(val:Color):
 	color = val
@@ -26,6 +44,14 @@ func set_speaker(val:Texture):
 		speaker.visible = true
 		speaker.texture = val
 		
+		
+func _input(event):
+	if unskippable:
+		return
+	if visible && Input.is_action_pressed(\"ui_proceed\"):
+		hide()
+		get_tree().set_input_as_handled()
+			
 func _ready():
 	return
 	set_color(Color.red)
@@ -34,7 +60,7 @@ func _ready():
 	#set_speaker(null)
 	call_deferred(\"popup\")"
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=2]
 size = 21
 extra_spacing_top = 2
 font_data = ExtResource( 2 )
@@ -42,8 +68,7 @@ font_data = ExtResource( 2 )
 [node name="Popup" type="Popup"]
 margin_right = 490.0
 margin_bottom = 120.0
-popup_exclusive = true
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="Panel" type="Panel" parent="."]
 anchor_right = 1.0
@@ -75,7 +100,7 @@ margin_top = 20.0
 margin_right = -20.0
 margin_bottom = -20.0
 grow_vertical = 2
-custom_fonts/normal_font = SubResource( 1 )
+custom_fonts/normal_font = SubResource( 2 )
 bbcode_enabled = true
 bbcode_text = "gdfgdfgdfgdfg
 dgfgfdg

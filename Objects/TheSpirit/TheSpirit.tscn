@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Objects/TheSpirit/ghost.jpg" type="Texture" id=1]
+[ext_resource path="res://Objects/TheSpirit/spirit.png" type="Texture" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -82,14 +82,56 @@ func move_along_path(distance : float):
 		move_along_path(distance)
 		"
 
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+onready var ghost = get_node(\"../ghost\")
+onready var anim_player = get_node(\"../AnimationPlayer\")
+
+func state_lay_down():
+	ghost.rotation_degrees = 90
+	
+func state_stand_up():
+	ghost.rotation_degrees = 0
+
+
+func anim_slowly_stand_up():
+	anim_player.play(\"StandUp\")
+	return anim_player
+
+	
+#func _ready():
+#	state_lay_down()"
+
+[sub_resource type="Animation" id=3]
+resource_name = "StandUp"
+tracks/0/type = "value"
+tracks/0/path = NodePath("ghost:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 90.0, 0.0 ]
+}
+
 [node name="TheSpirit" type="Node2D" groups=[
 "player",
 ]]
 
 [node name="ghost" type="Sprite" parent="."]
-position = Vector2( 0.340555, 0.510839 )
-scale = Vector2( 0.00741544, 0.0120004 )
+position = Vector2( -11.3508, -22.9356 )
+scale = Vector2( 0.730812, 0.817368 )
 texture = ExtResource( 1 )
 
 [node name="Movement" type="Node" parent="."]
 script = SubResource( 1 )
+
+[node name="Presentation" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/StandUp = SubResource( 3 )

@@ -28,6 +28,7 @@ config/icon="res://icon.png"
 
 MouseCursorManager="*res://Autoload/MouseCursorManager.tscn"
 DialogueWindow="*res://Autoload/DialogueWindow.tscn"
+Floatie="*res://Autoload/Floatie.tscn"
 
 [display]
 

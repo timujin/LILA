@@ -1,36 +1,167 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=44 format=2]
 
 [ext_resource path="res://Locations/00001PentagramRoom/Graphics/RoomBackground.png" type="Texture" id=1]
 [ext_resource path="res://Locations/00001PentagramRoom/Graphics/Pentagram.png" type="Texture" id=2]
-[ext_resource path="res://Locations/00001PentagramRoom/Graphics/bed.png" type="Texture" id=3]
-[ext_resource path="res://Locations/00001PentagramRoom/Graphics/drawer.png" type="Texture" id=4]
-[ext_resource path="res://Locations/00001PentagramRoom/Graphics/chair.png" type="Texture" id=5]
-[ext_resource path="res://Locations/00001PentagramRoom/Graphics/control_panel.png" type="Texture" id=6]
-[ext_resource path="res://Objects/BaseObject.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Locations/00001PentagramRoom/Graphics/index.png" type="Texture" id=8]
-[ext_resource path="res://Objects/TheSpirit/TheSpirit.tscn" type="PackedScene" id=9]
-[ext_resource path="res://Autoload/DialogueWindow.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Objects/BaseObject.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/TheShade/StandingUp1.png" type="Texture" id=4]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/TheShade/Blob.png" type="Texture" id=5]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/TheShade/StandingUp2.png" type="Texture" id=6]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/TheShade/Leaning.png" type="Texture" id=7]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/chair.png" type="Texture" id=8]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/control_panel.png" type="Texture" id=9]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/drawer.png" type="Texture" id=10]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/bed.png" type="Texture" id=11]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/index.png" type="Texture" id=12]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/TheSummoner/SittingSleeping.png" type="Texture" id=13]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/Pentagram_flare.png" type="Texture" id=14]
+[ext_resource path="res://Objects/TheSpirit/TheSpirit.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Locations/00001PentagramRoom/Graphics/BlackShadow.png" type="Texture" id=16]
 
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 20, 60 )
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 24.6316, 60 )
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Activator
 
 func on_activate():
-	print(\"Door\")"
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
 
-[sub_resource type="NavigationPolygon" id=1]
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 54.6316, 40 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").wonder_what_that_pile_is()"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Sprite
+
+var leaning = preload(\"res://Locations/00001PentagramRoom/Graphics/TheShade/Leaning.png\")
+
+func rise_up():
+	$AnimationPlayer.play(\"StandingUp\")
+	yield($AnimationPlayer, \"animation_finished\")
+	texture = leaning"
+
+[sub_resource type="Animation" id=6]
+resource_name = "StandingUp"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.6, 1.4, 1.9 ),
+"transitions": PoolRealArray( 1, 1, 4.14106, 2.63902 ),
+"update": 1,
+"values": [ ExtResource( 5 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 7 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 40, 70 )
+
+[sub_resource type="GDScript" id=8]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 50, 60 )
+
+[sub_resource type="GDScript" id=10]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 34.6316, 40 )
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 80, 40 )
+
+[sub_resource type="GDScript" id=14]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 54.4481, 26.4228 )
+
+[sub_resource type="GDScript" id=16]
+script/source = "extends Activator
+
+func on_activate():
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+
+[sub_resource type="GDScript" id=17]
+script/source = "extends Sprite
+
+var sleeping = preload(\"res://Locations/00001PentagramRoom/Graphics/TheSummoner/SittingSleeping.png\")
+var banging =  preload(\"res://Locations/00001PentagramRoom/Graphics/TheSummoner/SittingBang.png\")
+var standing = preload(\"res://Locations/00001PentagramRoom/Graphics/TheSummoner/Standing.png\")
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+func swap_sleeping():
+	texture = sleeping
+	
+func swap_bang():
+	texture = banging
+	
+func swap_standing():
+	texture = standing"
+
+[sub_resource type="Animation" id=18]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="NavigationPolygon" id=19]
 vertices = PoolVector2Array( 520, 180, 520, 270, 180, 270, 180, 180, 980, 180, 990, 590, 960, 400, 850, 240, 40, 180, 670, 290, 860, 550, 30, 590, 670, 490 )
 polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 4, 5, 6 ), PoolIntArray( 4, 6, 7 ), PoolIntArray( 8, 4, 7, 9 ), PoolIntArray( 10, 6, 5 ), PoolIntArray( 10, 5, 11 ), PoolIntArray( 12, 10, 11 ), PoolIntArray( 12, 11, 8, 9 ) ]
 outlines = [ PoolVector2Array( 40, 180, 980, 180, 990, 590, 30, 590 ), PoolVector2Array( 850, 240, 670, 290, 670, 490, 860, 550, 960, 400 ), PoolVector2Array( 520, 180, 520, 270, 180, 270, 180, 180 ) ]
 
-[sub_resource type="NavigationPolygon" id=2]
+[sub_resource type="NavigationPolygon" id=20]
 vertices = PoolVector2Array( 950, 400, 850, 530, 690, 480, 690, 300, 850, 250 )
 polygons = [ PoolIntArray( 0, 1, 2, 3, 4 ) ]
 outlines = [ PoolVector2Array( 850, 250, 690, 300, 690, 480, 850, 530, 950, 400 ) ]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=21]
 script/source = "extends Node
 
 # Declare member variables here. Examples:
@@ -51,12 +182,12 @@ func activate():
 		get_parent().add_child(nav)
 		activated = false"
 
-[sub_resource type="NavigationPolygon" id=4]
+[sub_resource type="NavigationPolygon" id=22]
 vertices = PoolVector2Array( 850, 240, 960, 400, 950, 400, 850, 250, 860, 550, 850, 530, 670, 490, 690, 480, 670, 290, 690, 300 )
 polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 2, 1, 4, 5 ), PoolIntArray( 5, 4, 6, 7 ), PoolIntArray( 7, 6, 8, 9 ), PoolIntArray( 9, 8, 0, 3 ) ]
 outlines = [ PoolVector2Array( 670, 290, 850, 240, 960, 400, 860, 550, 670, 490 ), PoolVector2Array( 690, 300, 690, 480, 850, 530, 950, 400, 850, 250 ) ]
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=23]
 script/source = "extends Line2D
 
 onready var nav:= get_node(\"../NavMesh\")
@@ -82,7 +213,6 @@ func _unhandled_input(event):
 		points = path
 		onstart = true
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -92,26 +222,179 @@ func _ready():
 #	pass
 "
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=24]
 script/source = "extends Node
 
 onready var dialogue_window = get_tree().get_root().get_node(\"/root/DialogueWindow\")
+onready var mouse_cursor_manager = get_tree().get_root().get_node(\"/root/MouseCursorManager\")
+onready var spirit_presentation = get_node(\"../TheSpirit/Presentation\")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	print(\"!!\")
-	dialogue_window.text = \"qwererefdsf\\nfdsfds\"
-	dialogue_window.color = Color.blue
-	dialogue_window.set_speaker(preload(\"res://ambush.PNG\"))
-	dialogue_window.rect_position = $DialoguePoint.rect_position
-	dialogue_window.call_deferred(\"popup\")
-	dialogue_window.visible = true
-	pass # Replace with function body.
+	var black_overlay = get_node(\"../BlackOverlay\")
+	var black_overlay_anim = get_node(\"../BlackOverlay/AnimationPlayer\")
+	
+	black_overlay.visible = true
+	spirit_presentation.state_lay_down()
+	mouse_cursor_manager.disable_cursor()
+	
+	for line in $Dialogue.dia1:
+		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+	#yield(get_tree().create_timer(1.0), \"timeout\")
+	black_overlay_anim.play(\"FadeOutCircle\")
+	yield(black_overlay_anim, \"animation_finished\")
+	
+	for line in $Dialogue.dia2:
+		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+	black_overlay_anim.play(\"FadeOutAll\")
+	yield(black_overlay_anim, \"animation_finished\")
+	var spirit_anim = spirit_presentation.anim_slowly_stand_up()
+	yield(spirit_anim, \"animation_finished\")
+		
+	for line in $Dialogue.dia3:
+		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+	mouse_cursor_manager.enable_cursor()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	dialogue_window.popup()
-"
+var has_lamented = false
+func lament_that_cant_reach():
+	mouse_cursor_manager.disable_cursor()
+	var flare = get_tree().get_root().get_node(\"/root/Node2D/Objects/Pentagram_flare/AnimationPlayer\")
+	flare.play(\"Flare\")
+	yield(flare, \"animation_finished\")
+	
+	var source
+	if has_lamented:
+		source = $Dialogue.reach_lament_2
+	else:
+		source = $Dialogue.reach_lament
+		
+	for line in source:
+		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+		
+	has_lamented = true
+	mouse_cursor_manager.enable_cursor()
+
+func wonder_what_that_pile_is():
+	mouse_cursor_manager.disable_cursor()
+	get_tree().set_input_as_handled()
+	yield(get_tree().create_timer(0.01), \"timeout\")
+	for line in $Dialogue.wonder:
+		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
+		#return
+		#yield(get_tree().create_timer(1.0), \"timeout\")
+		yield(dialogue_window, \"popup_hide\")
+		print(\"dfi\")
+	mouse_cursor_manager.enable_cursor()
+
+
+func set_up_normal():
+	pass"
+
+[sub_resource type="GDScript" id=25]
+script/source = "extends Node
+
+var dia1 = [
+\"Was that a dream?\",
+\"It didn't feel real at all.\",
+\"Is this a dream?\",
+\"Difficult to say. Doesn't feel like anything.\",
+#\"Definitely doesn't feel real.\",
+#\"Where am I?\",
+#\"Am I surrounded by nothing?\",
+#\"...\",
+#\"My eyes are closed.\",
+#\"I should probably do something about that.\",
+#\"Open my eyes just a little bit.\"
+]
+
+var dia2 = [
+#\"That went well.\",
+#\"Looks like I'm lying on something.\",
+\"Might as open my eyes all the way.\"
+]
+
+var dia3 = [
+\"Interesting.\"
+]
+
+var reach_lament = [
+\"I can't reach it.\",
+\"Some kind of hard barrier surrounds me.\",
+\"Tracing the edge of the shape on the floor.\",
+\"I'm trapped here.\"
+]
+
+var reach_lament_2 = [
+\"I can't reach it.\"
+]
+
+var wonder = [
+\"I can't quite see what that is.\",
+\"Some kind of... black pile on the floor?\"
+]"
+
+[sub_resource type="Animation" id=26]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("In:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Out:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 1.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 2 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "queue_free"
+} ]
+}
+
+[sub_resource type="Animation" id=27]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("In:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+}
 
 [node name="Node2D" type="Node2D"]
 
@@ -129,30 +412,8 @@ scale = Vector2( 1.26667, 1.26667 )
 texture = ExtResource( 2 )
 
 [node name="Objects" type="Node2D" parent="."]
-editor/display_folded = true
 
-[node name="bed" type="Sprite" parent="Objects"]
-position = Vector2( 410, 230 )
-scale = Vector2( 0.777344, 0.532234 )
-texture = ExtResource( 3 )
-
-[node name="drawer" type="Sprite" parent="Objects"]
-position = Vector2( 230, 220 )
-scale = Vector2( 0.365353, 0.404545 )
-texture = ExtResource( 4 )
-
-[node name="chair" type="Sprite" parent="Objects"]
-position = Vector2( 428.5, 516.5 )
-scale = Vector2( 0.549451, 0.497653 )
-texture = ExtResource( 5 )
-
-[node name="control_panel" type="Sprite" parent="Objects"]
-position = Vector2( 540, 390 )
-rotation = 1.61474
-scale = Vector2( 0.146048, 0.229692 )
-texture = ExtResource( 6 )
-
-[node name="Door" parent="Objects" instance=ExtResource( 7 )]
+[node name="Door" parent="Objects" instance=ExtResource( 3 )]
 editor/display_folded = true
 position = Vector2( 34.6316, 340 )
 
@@ -165,54 +426,255 @@ position = Vector2( 35.3684, 0 )
 
 [node name="ClickArea" parent="Objects/Door" index="2"]
 ActivatorName = "Door"
-activation_type = "From interaction point"
 
 [node name="CollisionShape2D" parent="Objects/Door/ClickArea" index="0"]
 position = Vector2( -14.6316, 0 )
-shape = SubResource( 6 )
+shape = SubResource( 1 )
 
 [node name="Activator" parent="Objects/Door" index="3"]
-script = SubResource( 7 )
+script = SubResource( 2 )
 
-[node name="window" type="Sprite" parent="Objects"]
-position = Vector2( 490, 40 )
-scale = Vector2( 0.5, 0.233333 )
+[node name="TheInfintratorObj" parent="Objects" instance=ExtResource( 3 )]
+position = Vector2( 90, 510 )
+
+[node name="Sprite" parent="Objects/TheInfintratorObj" index="0"]
+visible = false
+position = Vector2( -14.6315, 0 )
+scale = Vector2( 0.242, 0.462 )
+texture = null
+
+[node name="InteractionPoint" parent="Objects/TheInfintratorObj" index="1"]
+position = Vector2( 70, 10 )
+
+[node name="ClickArea" parent="Objects/TheInfintratorObj" index="2"]
+ActivatorName = "Pile"
+
+[node name="CollisionShape2D" parent="Objects/TheInfintratorObj/ClickArea" index="0"]
+position = Vector2( 10, 20 )
+shape = SubResource( 3 )
+
+[node name="Activator" parent="Objects/TheInfintratorObj" index="3"]
+script = SubResource( 4 )
+
+[node name="TheInfiltratorSprite" type="Sprite" parent="Objects"]
+editor/display_folded = true
+position = Vector2( 112.987, 512.729 )
+scale = Vector2( 0.486583, 0.418195 )
+texture = ExtResource( 4 )
+script = SubResource( 5 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Objects/TheInfiltratorSprite"]
+anims/StandingUp = SubResource( 6 )
+
+[node name="Chair" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
+position = Vector2( 440, 510 )
+
+[node name="Sprite" parent="Objects/Chair" index="0"]
+position = Vector2( -5, -9.05991e-006 )
+scale = Vector2( 0.769231, 0.56338 )
 texture = ExtResource( 8 )
+
+[node name="InteractionPoint" parent="Objects/Chair" index="1"]
+position = Vector2( 70, 30 )
+
+[node name="ClickArea" parent="Objects/Chair" index="2"]
+ActivatorName = "The Summoner"
+activation_type = "From interaction point"
+
+[node name="CollisionShape2D" parent="Objects/Chair/ClickArea" index="0"]
+position = Vector2( -10, -10 )
+shape = SubResource( 7 )
+
+[node name="Activator" parent="Objects/Chair" index="3"]
+script = SubResource( 8 )
+
+[node name="ControlPanel" parent="Objects" instance=ExtResource( 3 )]
+position = Vector2( 570, 390 )
+
+[node name="Sprite" parent="Objects/ControlPanel" index="0"]
+position = Vector2( -28.2316, -34.4979 )
+rotation = 1.57079
+scale = Vector2( 0.200963, 0.270594 )
+texture = ExtResource( 9 )
+
+[node name="InteractionPoint" parent="Objects/ControlPanel" index="1"]
+editor/display_folded = false
+position = Vector2( 35.3684, 0 )
+
+[node name="Sprite" parent="Objects/ControlPanel/InteractionPoint" index="0"]
+position = Vector2( -151.868, -40.0001 )
+
+[node name="ClickArea" parent="Objects/ControlPanel" index="2"]
+ActivatorName = "Control panel"
+
+[node name="CollisionShape2D" parent="Objects/ControlPanel/ClickArea" index="0"]
+position = Vector2( -30, -40 )
+shape = SubResource( 9 )
+
+[node name="Activator" parent="Objects/ControlPanel" index="3"]
+script = SubResource( 10 )
+
+[node name="Drawer" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
+position = Vector2( 240, 220 )
+
+[node name="Sprite" parent="Objects/Drawer" index="0"]
+position = Vector2( -10, 0 )
+scale = Vector2( 0.350745, 0.462 )
+texture = ExtResource( 10 )
+
+[node name="InteractionPoint" parent="Objects/Drawer" index="1"]
+position = Vector2( -10, 80 )
+
+[node name="ClickArea" parent="Objects/Drawer" index="2"]
+editor/display_folded = true
+ActivatorName = "Drawer"
+
+[node name="CollisionShape2D" parent="Objects/Drawer/ClickArea" index="0"]
+position = Vector2( -14.6316, 0 )
+shape = SubResource( 11 )
+
+[node name="Activator" parent="Objects/Drawer" index="3"]
+script = SubResource( 12 )
+
+[node name="Bed" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
+position = Vector2( 420, 220 )
+
+[node name="Sprite" parent="Objects/Bed" index="0"]
+position = Vector2( -24.025, 0 )
+scale = Vector2( 0.548318, 0.462 )
+texture = ExtResource( 11 )
+
+[node name="InteractionPoint" parent="Objects/Bed" index="1"]
+position = Vector2( -20, 70 )
+
+[node name="ClickArea" parent="Objects/Bed" index="2"]
+ActivatorName = "Bed"
+
+[node name="CollisionShape2D" parent="Objects/Bed/ClickArea" index="0"]
+position = Vector2( -20, 0 )
+shape = SubResource( 13 )
+
+[node name="Activator" parent="Objects/Bed" index="3"]
+script = SubResource( 14 )
+
+[node name="Window" parent="Objects" instance=ExtResource( 3 )]
+position = Vector2( 520, 20 )
+
+[node name="Sprite" parent="Objects/Window" index="0"]
+position = Vector2( -15, 25 )
+scale = Vector2( 0.488889, 0.222222 )
+texture = ExtResource( 12 )
+
+[node name="InteractionPoint" parent="Objects/Window" index="1"]
+position = Vector2( -10, 190 )
+
+[node name="ClickArea" parent="Objects/Window" index="2"]
+editor/display_folded = true
+ActivatorName = "Window"
+
+[node name="CollisionShape2D" parent="Objects/Window/ClickArea" index="0"]
+position = Vector2( -14.1696, 25.8304 )
+shape = SubResource( 15 )
+
+[node name="Activator" parent="Objects/Window" index="3"]
+script = SubResource( 16 )
+
+[node name="TheSummoner" type="Sprite" parent="Objects"]
+position = Vector2( 470, 510 )
+scale = Vector2( 0.4, 0.566667 )
+texture = ExtResource( 13 )
+script = SubResource( 17 )
+
+[node name="Pentagram_flare" type="Sprite" parent="Objects"]
+editor/display_folded = true
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 790, 389.75 )
+scale = Vector2( 1.2, 1.19833 )
+texture = ExtResource( 14 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Objects/Pentagram_flare"]
+anims/Flare = SubResource( 18 )
 
 [node name="NavMesh" type="Navigation2D" parent="."]
 editor/display_folded = true
 visible = false
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="NavMesh"]
-navpoly = SubResource( 1 )
+navpoly = SubResource( 19 )
 
 [node name="NavigationPolygonInstance2" type="NavigationPolygonInstance" parent="NavMesh"]
-navpoly = SubResource( 2 )
+navpoly = SubResource( 20 )
 
 [node name="ExternalPentagram" type="Node" parent="NavMesh"]
-script = SubResource( 3 )
+script = SubResource( 21 )
 
-[node name="NavigationPolygonInstance3" type="NavigationPolygonInstance" parent="NavMesh"]
-navpoly = SubResource( 4 )
+[node name="NavigationPolygonInstance3" type="NavigationPolygonInstance" parent="NavMesh/ExternalPentagram"]
+visible = false
+navpoly = SubResource( 22 )
 
 [node name="NavVisualizer" type="Line2D" parent="."]
 visible = false
 points = PoolVector2Array( -201.105, 535.526, -119, 469.211, -197.947, 357.632 )
 texture_mode = 137
-script = SubResource( 5 )
+script = SubResource( 23 )
 
-[node name="TheSpirit" parent="." instance=ExtResource( 9 )]
-position = Vector2( 800, 400 )
-
-[node name="Popup" parent="." instance=ExtResource( 10 )]
+[node name="TheSpirit" parent="." instance=ExtResource( 15 )]
+editor/display_folded = true
+position = Vector2( 800, 430 )
 
 [node name="Director" type="Node" parent="."]
-script = SubResource( 8 )
+script = SubResource( 24 )
 
-[node name="DialoguePoint" type="Control" parent="Director"]
-margin_left = 370.0
-margin_top = 330.0
-margin_right = 410.0
-margin_bottom = 370.0
+[node name="MusingPoint" type="Control" parent="Director"]
+margin_left = 310.0
+margin_top = 40.0
+margin_right = 350.0
+margin_bottom = 80.0
+
+[node name="Dialogue" type="Node" parent="Director"]
+script = SubResource( 25 )
+
+[node name="BlackOverlay" type="Control" parent="."]
+editor/display_folded = true
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Out" type="TextureRect" parent="BlackOverlay"]
+margin_left = -60.0
+margin_top = -450.0
+margin_right = 1280.0
+margin_bottom = 1180.0
+texture = ExtResource( 16 )
+expand = true
+
+[node name="In" type="ColorRect" parent="BlackOverlay"]
+margin_left = 630.0
+margin_top = 290.0
+margin_right = 940.0
+margin_bottom = 510.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="BlackOverlay"]
+anims/FadeOutAll = SubResource( 26 )
+anims/FadeOutCircle = SubResource( 27 )
 
 [editable path="Objects/Door"]
+
+[editable path="Objects/TheInfintratorObj"]
+
+[editable path="Objects/Chair"]
+
+[editable path="Objects/ControlPanel"]
+
+[editable path="Objects/Drawer"]
+
+[editable path="Objects/Bed"]
+
+[editable path="Objects/Window"]
+
+[editable path="TheSpirit"]
