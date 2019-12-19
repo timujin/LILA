@@ -38,7 +38,7 @@ func scenario():
 			say(item[0],item[1])
 			yield(self,\"user_proceed\")
 		if current_branch.has(\"replies\"):
-			reply_buttons.show_replies(current_branch[\"replies\"].keys())
+			reply_buttons.show_replies(current_branch[\"replies\"])
 			var reply = yield(reply_buttons, \"player_reply\")
 			if current_branch[\"replies\"][reply] == \"\":
 				break

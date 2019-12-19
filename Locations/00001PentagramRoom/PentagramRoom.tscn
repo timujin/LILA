@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=2]
+[gd_scene load_steps=47 format=2]
 
 [ext_resource path="res://Locations/00001PentagramRoom/Graphics/RoomBackground.png" type="Texture" id=1]
 [ext_resource path="res://Locations/00001PentagramRoom/Graphics/Pentagram.png" type="Texture" id=2]
@@ -64,11 +64,11 @@ tracks/0/keys = {
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 40, 70 )
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=28]
 script/source = "extends Activator
 
 func on_activate():
-	get_tree().get_root().get_node(\"/root/Node2D/Director\").lament_that_cant_reach()"
+	get_tree().get_root().get_node(\"/root/Node2D/Director\").alert_the_summoner()"
 
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 50, 60 )
@@ -187,41 +187,6 @@ vertices = PoolVector2Array( 850, 240, 960, 400, 950, 400, 850, 250, 860, 550, 8
 polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 2, 1, 4, 5 ), PoolIntArray( 5, 4, 6, 7 ), PoolIntArray( 7, 6, 8, 9 ), PoolIntArray( 9, 8, 0, 3 ) ]
 outlines = [ PoolVector2Array( 670, 290, 850, 240, 960, 400, 860, 550, 670, 490 ), PoolVector2Array( 690, 300, 690, 480, 850, 530, 950, 400, 850, 250 ) ]
 
-[sub_resource type="GDScript" id=23]
-script/source = "extends Line2D
-
-onready var nav:= get_node(\"../NavMesh\")
-
-var onstart:bool = true
-var point1:Vector2
-var point2:Vector2
-
-func _unhandled_input(event):
-	return
-	if not event is InputEventMouseButton:
-		return
-	if event.button_index != BUTTON_LEFT or not event.pressed:
-		return
-	if onstart:
-		print(\"point1\")
-		point1 = event.global_position
-		onstart = false
-	else:
-		print(\"point2\")
-		point2 = event.global_position
-		var path = nav.get_simple_path(point1, point2)
-		points = path
-		onstart = true
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-"
-
 [sub_resource type="GDScript" id=24]
 script/source = "extends Node
 
@@ -237,6 +202,8 @@ func _ready():
 	black_overlay.visible = true
 	spirit_presentation.state_lay_down()
 	mouse_cursor_manager.disable_cursor()
+	
+	
 	
 	for line in $Dialogue.dia1:
 		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
@@ -283,22 +250,109 @@ func lament_that_cant_reach():
 
 func wonder_what_that_pile_is():
 	mouse_cursor_manager.disable_cursor()
-	get_tree().set_input_as_handled()
-	yield(get_tree().create_timer(0.01), \"timeout\")
+	#get_tree().set_input_as_handled()
+	#yield(get_tree().create_timer(0.01), \"timeout\")
 	for line in $Dialogue.wonder:
 		dialogue_window.show_dialogue(line, null, $MusingPoint.rect_position, Color.white)
 		#return
 		#yield(get_tree().create_timer(1.0), \"timeout\")
 		yield(dialogue_window, \"popup_hide\")
-		print(\"dfi\")
+	
 	mouse_cursor_manager.enable_cursor()
 
+func alert_the_summoner():
+	mouse_cursor_manager.disable_cursor()
+	for line in $Dialogue.alerting_the_summoner:
+		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+		
+	var summoner = get_node(\"../Objects/TheSummoner\")
+	summoner.swap_bang()
+	yield(get_tree().create_timer(1.0), \"timeout\")
+	summoner.swap_standing()
+	
+	get_node(\"SummonerWalk1/AnimationPlayer\").play(\"Walk\")
+	yield(get_tree(), \"idle_frame\")
+	while get_node(\"SummonerWalk1/AnimationPlayer\").is_playing():
+		summoner.position = get_node(\"SummonerWalk1/PathFollow2D\").position
+		yield(get_tree(), \"idle_frame\")
+	
+	for line in $Dialogue.summoner_first_words:
+		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+	get_node(\"SummonerWalk2/AnimationPlayer\").play(\"Walk\")
+	yield(get_tree(), \"idle_frame\")
+	while get_node(\"SummonerWalk2/AnimationPlayer\").is_playing():
+		summoner.position = get_node(\"SummonerWalk2/PathFollow2D\").position
+		yield(get_tree(), \"idle_frame\")
+		
+	for line in $Dialogue.summoner_wake_up_shade:
+		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+		
+	yield(get_node(\"../Objects/TheInfiltratorSprite\").rise_up(), \"completed\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+		
+	for line in $Dialogue.post_wake_shade:
+		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+		
+	get_node(\"SummonerWalk2/AnimationPlayer\").play_backwards(\"Walk\")
+	yield(get_tree(), \"idle_frame\")
+	while get_node(\"SummonerWalk2/AnimationPlayer\").is_playing():
+		summoner.position = get_node(\"SummonerWalk2/PathFollow2D\").position
+		yield(get_tree(), \"idle_frame\")
+		
+	for line in $Dialogue.calming_down:
+		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
+		yield(dialogue_window, \"popup_hide\")
+	
+	yield(run_dialogue_1(), \"completed\")
+		
+	mouse_cursor_manager.enable_cursor()
+
+func run_dialogue_1():
+	print(\"Run dialogue 1\")
+	var dialogue_tree: Dictionary = $Dialogue.dialogue_before_combat
+	var current_branch: Dictionary = dialogue_tree[\"start\"]
+	while true:
+		var says = current_branch[\"says\"]
+		for item in says:
+			print(\"Say 1\")
+			dialogue_window.show_dialogue(item[1], item[0], $MusingPoint.rect_position, Color.white)
+			yield(dialogue_window, \"popup_hide\")
+		if current_branch.has(\"replies\"):
+			print(\"Replying\")
+			$\"/root/DialogueReply\".show_replies(current_branch[\"replies\"], $MusingPoint.rect_position)
+			mouse_cursor_manager.enable_cursor()
+			var reply = yield($\"/root/DialogueReply\", \"choice_made\")
+			mouse_cursor_manager.disable_cursor()
+			if current_branch[\"replies\"][reply] == \"\":
+				break
+			if not current_branch[\"replies\"].has(reply):
+				printerr(\"Reply not in dialogue tree: %s!\" % reply)
+			else:
+				current_branch = dialogue_tree[current_branch[\"replies\"][reply]]
+				yield(get_tree(),\"idle_frame\")
+		elif current_branch.has(\"next\"):
+			if current_branch[\"next\"] == \"\":
+				break
+			current_branch = dialogue_tree[current_branch[\"next\"]]
+		else:
+			printerr(\"Dialogue tree incoherent\")
 
 func set_up_normal():
 	pass"
 
 [sub_resource type="GDScript" id=25]
 script/source = "extends Node
+
+
+var face_spirit = preload(\"res://Assets/Sprites/Faces/spirit.png\")
+var face_summoner = preload(\"res://Assets/Sprites/Faces/summoner.png\")
+var face_shade = preload(\"res://Assets/Sprites/Faces/shade.png\")
 
 var dia1 = [
 \"Was that a dream?\",
@@ -338,7 +392,172 @@ var reach_lament_2 = [
 var wonder = [
 \"I can't quite see what that is.\",
 \"Some kind of... black pile on the floor?\"
-]"
+]
+
+var alerting_the_summoner = [
+[null,			\"A robed man is sleeping on the chair.\"],
+[null,			\"Might as well wake him up.\"],
+[face_spirit,	\"Hey!\"], 
+[face_spirit,	\"Hey, listen!\"]
+]
+
+var summoner_first_words = [
+[face_summoner, \"By the Lord! They're awake!\"],
+[face_summoner, \"Assistant!\"]
+]
+
+var summoner_wake_up_shade = [
+[face_summoner, \"Assistant! Wake up! The Spirit is here.\"],
+]
+
+var post_wake_shade = [
+[face_shade, \"Oh wow. That took a while. Is it really them?\"],
+[face_summoner, \"I don't know. Does it look like them?\"],
+[face_shade, \"What are they supposed to look like?\"],
+[face_spirit, \"Uh, listen...\"],
+[face_summoner,  \"Stop! Don't talk yet.\"],
+[face_summoner,  \"Stay calm, stay focused.\"],
+]
+
+var calming_down = [
+[face_summoner,  \"It's okay. You're here.\"],
+#[face_summoner,  \"Everything is going according to the plan.\"],
+#[face_summoner,  \"Take a few deep breaths and recenter yourself.\"],
+#[face_summoner,  \"You may feel like you don't exist, or that the world is not real..\"],
+#[face_summoner,  \"..or that I'm just a voice in your head, or something like that.\"],
+#[face_summoner,  \"Don't panic.\"],
+#[face_summoner,  \"Just breathe.\"],
+#[face_summoner,  \"Absolutely nothing is wrong at this point.\"],
+#[face_summoner,  \"This feeling will pass. The world will become real.\"],
+[face_shade,     \"What's two plus two?\"]
+]
+
+var dialogue_before_combat = {
+	\"start\": {
+		\"says\": [
+			[face_shade, \"What's two plus two?\"]
+		],
+		\"replies\": {
+			\"Four.\": \"4\",
+			\"Twenty three.\": \"23\",
+			\"Fish.\": \">)\",
+		}
+	},
+
+	\"4\": {
+		\"says\": [
+			[face_summoner, \"Good.\"],
+			[face_summoner, \"You're surprisingly lucid, all things considered.\"],
+			[face_summoner, \"Let's run some tests on you.\"],
+		],
+		\"next\": \"don't worry\"
+	},
+	\"23\": {
+		\"says\": [
+			[face_summoner, \"That's... not good.\"],
+			[face_summoner, \"We need to run some tests on you, to make sure you can survive.\"],
+		],
+		\"next\": \"don't worry\"
+	},
+	\">)\": {
+		\"says\": [
+			[face_summoner, \"Oh my.\"],
+			[face_summoner, \"The patient is incoherent.\"],
+			[face_summoner, \"We need to run some tests to make sure they can survive.\"],
+		],
+		\"next\": \"don't worry\"
+	},
+	\"don't worry\": {
+		\"says\": [
+			[face_summoner, \"Don't worry, Spirit, we're just checking your vitals.\"],
+			[face_summoner, \"Basic reasoning, reaction time, hand-eye coordination, these things.\"],
+			[face_summoner, \"Take a deep breath.\"],
+			[face_summoner, \"What do you feel like?\"],
+		],
+		\"replies\": {
+			\"I feel like nothing.\": \"nothing\",
+			\"I feel incomplete, somehow.\": \"incomplete\",
+			\"I feel trapped.\": \"trapped\",
+		}
+	},
+	\"nothing\": {
+		\"says\": [
+			[face_summoner, \"You're not fully associated at this point.\"],
+			[face_summoner, \"We're going to do some physical exercises, that will help.\"],
+			[face_summoner, \"And we'll learn some grounding activities to perform whenever you feel like that again.\"],
+		],
+		\"next\": \"ready?\"
+	},
+	\"incomplete\": {
+		\"says\": [
+			[face_summoner, \"This is to be expected.\"],
+			[face_summoner, \"The summoning ritual is imperfect, it may have dissociated you somewhat.\"],
+			[face_summoner, \"This will pass, eventually.\"],
+		],
+		\"next\": \"ready?\"
+	},
+	\"trapped\": {
+		\"says\": [
+			[face_summoner, \"We do not intend to keep you locked up.\"],
+			[face_summoner, \"The pentagram is just a basic safety precaution; don' t take it the wrong way.\"],
+			[face_summoner, \"Once you're completely self-associated, we'll let you go.\"],
+		],
+		\"next\": \"ready?\"
+	},
+	\"ready?\": {
+		\"says\": [
+			[face_summoner, \"Now, stand up straight.\"],
+			[face_summoner, \"Are you ready?\"],
+		],
+		\"replies\": {
+			\"Ready!\": \"\",
+			\"For what?\": \"\",
+		}
+	},
+}
+"
+
+[sub_resource type="Curve2D" id=29]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 490, 550, 0, 0, 0, 0, 560, 500, 0, 0, 0, 0, 580, 440 )
+}
+
+[sub_resource type="Animation" id=30]
+resource_name = "Walk"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("PathFollow2D:unit_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+
+[sub_resource type="Curve2D" id=31]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 580, 440, 0, 0, 0, 0, 360, 440, 0, 0, 0, 0, 200, 530 )
+}
+
+[sub_resource type="Animation" id=32]
+resource_name = "Walk"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("PathFollow2D:unit_offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 2.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
 
 [sub_resource type="Animation" id=26]
 length = 2.0
@@ -412,6 +631,7 @@ scale = Vector2( 1.26667, 1.26667 )
 texture = ExtResource( 2 )
 
 [node name="Objects" type="Node2D" parent="."]
+editor/display_folded = true
 
 [node name="Door" parent="Objects" instance=ExtResource( 3 )]
 editor/display_folded = true
@@ -435,6 +655,7 @@ shape = SubResource( 1 )
 script = SubResource( 2 )
 
 [node name="TheInfintratorObj" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
 position = Vector2( 90, 510 )
 
 [node name="Sprite" parent="Objects/TheInfintratorObj" index="0"]
@@ -480,16 +701,16 @@ position = Vector2( 70, 30 )
 
 [node name="ClickArea" parent="Objects/Chair" index="2"]
 ActivatorName = "The Summoner"
-activation_type = "From interaction point"
 
 [node name="CollisionShape2D" parent="Objects/Chair/ClickArea" index="0"]
 position = Vector2( -10, -10 )
 shape = SubResource( 7 )
 
 [node name="Activator" parent="Objects/Chair" index="3"]
-script = SubResource( 8 )
+script = SubResource( 28 )
 
 [node name="ControlPanel" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
 position = Vector2( 570, 390 )
 
 [node name="Sprite" parent="Objects/ControlPanel" index="0"]
@@ -561,6 +782,7 @@ shape = SubResource( 13 )
 script = SubResource( 14 )
 
 [node name="Window" parent="Objects" instance=ExtResource( 3 )]
+editor/display_folded = true
 position = Vector2( 520, 20 )
 
 [node name="Sprite" parent="Objects/Window" index="0"]
@@ -599,6 +821,8 @@ texture = ExtResource( 14 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Objects/Pentagram_flare"]
 anims/Flare = SubResource( 18 )
 
+[node name="Lines" type="Node2D" parent="."]
+
 [node name="NavMesh" type="Navigation2D" parent="."]
 editor/display_folded = true
 visible = false
@@ -616,12 +840,6 @@ script = SubResource( 21 )
 visible = false
 navpoly = SubResource( 22 )
 
-[node name="NavVisualizer" type="Line2D" parent="."]
-visible = false
-points = PoolVector2Array( -201.105, 535.526, -119, 469.211, -197.947, 357.632 )
-texture_mode = 137
-script = SubResource( 23 )
-
 [node name="TheSpirit" parent="." instance=ExtResource( 15 )]
 editor/display_folded = true
 position = Vector2( 800, 430 )
@@ -637,6 +855,29 @@ margin_bottom = 80.0
 
 [node name="Dialogue" type="Node" parent="Director"]
 script = SubResource( 25 )
+
+[node name="SummonerWalk1" type="Path2D" parent="Director"]
+editor/display_folded = true
+curve = SubResource( 29 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Director/SummonerWalk1"]
+position = Vector2( 490, 550 )
+rotation = -0.620242
+loop = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Director/SummonerWalk1"]
+anims/Walk = SubResource( 30 )
+
+[node name="SummonerWalk2" type="Path2D" parent="Director"]
+curve = SubResource( 31 )
+
+[node name="PathFollow2D" type="PathFollow2D" parent="Director/SummonerWalk2"]
+position = Vector2( 580, 440 )
+rotation = -3.14158
+loop = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Director/SummonerWalk2"]
+anims/Walk = SubResource( 32 )
 
 [node name="BlackOverlay" type="Control" parent="."]
 editor/display_folded = true

@@ -76,8 +76,9 @@ func _input_event(viewport, event, shape_idx):
 func _on_ClickArea_mouse_entered():
 	if get_node(\"/root/DialogueWindow\").is_up():
 		return
-	cursor_manager.hand_cursor()
-	floatie.display(ActivatorName)
+	if cursor_manager.is_mouse_active:
+		cursor_manager.hand_cursor()
+		floatie.display(ActivatorName)
 
 
 func _on_ClickArea_mouse_exited():
