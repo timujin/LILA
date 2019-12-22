@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Untitled.png-30da513a925d9064453decddf41ecbd4.stex"
+path="res://.import/WhiffCloud.png-cba823c3fd54b908ef5bfb956a543032.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Untitled.png"
-dest_files=[ "res://.import/Untitled.png-30da513a925d9064453decddf41ecbd4.stex" ]
+source_file="res://Bullets/Graphics/WhiffCloud.png"
+dest_files=[ "res://.import/WhiffCloud.png-cba823c3fd54b908ef5bfb956a543032.stex" ]
 
 [params]
 

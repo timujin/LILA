@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+enum GameMode { WORLDSPACE, COMBATSPACE, SPECIALSPACE }
+
+var mode:int = GameMode.SPECIALSPACE"
+
+[node name="ModeController" type="Node"]
+script = SubResource( 1 )

@@ -18,6 +18,8 @@ func show_dialogue(text:String, speaker:Texture, position: Vector2, color:Color 
 	rect_position = position
 	#yield(get_tree(), \"idle_frame\")
 	call_deferred(\"safe_popup\")
+	#call_deferred(\"is_up\")
+	return
 	
 var unskippable: = false
 func safe_popup():

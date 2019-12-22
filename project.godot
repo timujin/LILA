@@ -27,9 +27,10 @@ config/icon="res://icon.png"
 [autoload]
 
 MouseCursorManager="*res://Autoload/MouseCursorManager.tscn"
-DialogueWindow="*res://Autoload/DialogueWindow.tscn"
 Floatie="*res://Autoload/Floatie.tscn"
 DialogueReply="*res://Autoload/DialogueReply.tscn"
+DialogueWindow="*res://Autoload/DialogueWindow.tscn"
+ModeController="*res://Autoload/ModeController.tscn"
 
 [display]
 

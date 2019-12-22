@@ -28,11 +28,14 @@ onready var interaction_point = get_parent().get_node(\"InteractionPoint\")
 onready var activator = get_parent().get_node(\"Activator\")
 onready var cursor_manager = get_node(\"/root/MouseCursorManager\")
 onready var floatie = get_node(\"/root/Floatie\")
+onready var mode_controller = get_node(\"/root/ModeController\")
 
 export var ActivatorName : String = \"Unnamed\"
 export(String, \"From interaction point\", \"Remote\", \"Background\") var activation_type
 
 func _input_event(viewport, event, shape_idx):
+	if mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
+		return
 	if not event is InputEventMouseButton:
 		return
 	if event.button_index != BUTTON_LEFT or not event.pressed:
@@ -74,6 +77,8 @@ func _input_event(viewport, event, shape_idx):
 			printerr (\"Incorrect activation type for %s: %s\" % [ActivatorName, activation_type])
 
 func _on_ClickArea_mouse_entered():
+	if mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
+		return
 	if get_node(\"/root/DialogueWindow\").is_up():
 		return
 	if cursor_manager.is_mouse_active:
@@ -82,6 +87,8 @@ func _on_ClickArea_mouse_entered():
 
 
 func _on_ClickArea_mouse_exited():
+	if mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
+		return
 	if get_node(\"/root/DialogueWindow\").is_up():
 		return
 	cursor_manager.base_cursor()

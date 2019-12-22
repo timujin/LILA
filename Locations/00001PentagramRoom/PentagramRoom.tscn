@@ -64,7 +64,7 @@ tracks/0/keys = {
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 40, 70 )
 
-[sub_resource type="GDScript" id=28]
+[sub_resource type="GDScript" id=8]
 script/source = "extends Activator
 
 func on_activate():
@@ -187,15 +187,18 @@ vertices = PoolVector2Array( 850, 240, 960, 400, 950, 400, 850, 250, 860, 550, 8
 polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 2, 1, 4, 5 ), PoolIntArray( 5, 4, 6, 7 ), PoolIntArray( 7, 6, 8, 9 ), PoolIntArray( 9, 8, 0, 3 ) ]
 outlines = [ PoolVector2Array( 670, 290, 850, 240, 960, 400, 860, 550, 670, 490 ), PoolVector2Array( 690, 300, 690, 480, 850, 530, 950, 400, 850, 250 ) ]
 
-[sub_resource type="GDScript" id=24]
+[sub_resource type="GDScript" id=23]
 script/source = "extends Node
 
 onready var dialogue_window = get_tree().get_root().get_node(\"/root/DialogueWindow\")
 onready var mouse_cursor_manager = get_tree().get_root().get_node(\"/root/MouseCursorManager\")
 onready var spirit_presentation = get_node(\"../TheSpirit/Presentation\")
+onready var mode_controller = get_node(\"/root/ModeController\")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	mode_controller.mode = mode_controller.GameMode.WORLDSPACE
+	
 	var black_overlay = get_node(\"../BlackOverlay\")
 	var black_overlay_anim = get_node(\"../BlackOverlay/AnimationPlayer\")
 	
@@ -266,7 +269,7 @@ func alert_the_summoner():
 		dialogue_window.show_dialogue(line[1], line[0], $MusingPoint.rect_position, Color.white)
 		yield(dialogue_window, \"popup_hide\")
 	
-		
+	\"\"\"	
 	var summoner = get_node(\"../Objects/TheSummoner\")
 	summoner.swap_bang()
 	yield(get_tree().create_timer(1.0), \"timeout\")
@@ -310,8 +313,19 @@ func alert_the_summoner():
 		yield(dialogue_window, \"popup_hide\")
 	
 	yield(run_dialogue_1(), \"completed\")
+	\"\"\"
+	#get_parent().get_node(\"PauseOverlay\").turn_on()
+	#get_parent().get_node(\"PauseController\").paused = true
+	var combatspace = preload(\"res://Locations/00001PentagramRoom/TutorialCombat.tscn\").instance()
+	get_tree().get_root().add_child(combatspace)
+	combatspace.get_node(\"Director\").connect(\"combat_over\", self, \"on_tutorial_combat_over\")
+	mode_controller.mode = mode_controller.GameMode.COMBATSPACE
+	#get_parent().paused = true
 		
 	mouse_cursor_manager.enable_cursor()
+	
+func on_tutorial_combat_over():
+	print(\"Tutorial over\")
 
 func run_dialogue_1():
 	print(\"Run dialogue 1\")
@@ -346,7 +360,7 @@ func run_dialogue_1():
 func set_up_normal():
 	pass"
 
-[sub_resource type="GDScript" id=25]
+[sub_resource type="GDScript" id=24]
 script/source = "extends Node
 
 
@@ -517,12 +531,12 @@ var dialogue_before_combat = {
 }
 "
 
-[sub_resource type="Curve2D" id=29]
+[sub_resource type="Curve2D" id=25]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 490, 550, 0, 0, 0, 0, 560, 500, 0, 0, 0, 0, 580, 440 )
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=26]
 resource_name = "Walk"
 length = 1.5
 tracks/0/type = "value"
@@ -538,12 +552,12 @@ tracks/0/keys = {
 "values": [ 0.0, 1.0 ]
 }
 
-[sub_resource type="Curve2D" id=31]
+[sub_resource type="Curve2D" id=27]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 580, 440, 0, 0, 0, 0, 360, 440, 0, 0, 0, 0, 200, 530 )
 }
 
-[sub_resource type="Animation" id=32]
+[sub_resource type="Animation" id=28]
 resource_name = "Walk"
 length = 2.5
 tracks/0/type = "value"
@@ -559,7 +573,7 @@ tracks/0/keys = {
 "values": [ 0.0, 1.0 ]
 }
 
-[sub_resource type="Animation" id=26]
+[sub_resource type="Animation" id=29]
 length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("In:color")
@@ -600,7 +614,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=27]
+[sub_resource type="Animation" id=30]
 length = 2.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("In:color")
@@ -707,7 +721,7 @@ position = Vector2( -10, -10 )
 shape = SubResource( 7 )
 
 [node name="Activator" parent="Objects/Chair" index="3"]
-script = SubResource( 28 )
+script = SubResource( 8 )
 
 [node name="ControlPanel" parent="Objects" instance=ExtResource( 3 )]
 editor/display_folded = true
@@ -845,7 +859,8 @@ editor/display_folded = true
 position = Vector2( 800, 430 )
 
 [node name="Director" type="Node" parent="."]
-script = SubResource( 24 )
+editor/display_folded = true
+script = SubResource( 23 )
 
 [node name="MusingPoint" type="Control" parent="Director"]
 margin_left = 310.0
@@ -854,11 +869,11 @@ margin_right = 350.0
 margin_bottom = 80.0
 
 [node name="Dialogue" type="Node" parent="Director"]
-script = SubResource( 25 )
+script = SubResource( 24 )
 
 [node name="SummonerWalk1" type="Path2D" parent="Director"]
 editor/display_folded = true
-curve = SubResource( 29 )
+curve = SubResource( 25 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Director/SummonerWalk1"]
 position = Vector2( 490, 550 )
@@ -866,10 +881,10 @@ rotation = -0.620242
 loop = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Director/SummonerWalk1"]
-anims/Walk = SubResource( 30 )
+anims/Walk = SubResource( 26 )
 
 [node name="SummonerWalk2" type="Path2D" parent="Director"]
-curve = SubResource( 31 )
+curve = SubResource( 27 )
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Director/SummonerWalk2"]
 position = Vector2( 580, 440 )
@@ -877,7 +892,7 @@ rotation = -3.14158
 loop = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Director/SummonerWalk2"]
-anims/Walk = SubResource( 32 )
+anims/Walk = SubResource( 28 )
 
 [node name="BlackOverlay" type="Control" parent="."]
 editor/display_folded = true
@@ -901,8 +916,8 @@ margin_bottom = 510.0
 color = Color( 0, 0, 0, 1 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="BlackOverlay"]
-anims/FadeOutAll = SubResource( 26 )
-anims/FadeOutCircle = SubResource( 27 )
+anims/FadeOutAll = SubResource( 29 )
+anims/FadeOutCircle = SubResource( 30 )
 
 [editable path="Objects/Door"]
 
