@@ -5,7 +5,7 @@ script/source = "extends Node
 
 enum GameMode { WORLDSPACE, COMBATSPACE, SPECIALSPACE }
 
-var mode:int = GameMode.SPECIALSPACE"
+var mode:int = GameMode.WORLDSPACE"
 
 [node name="ModeController" type="Node"]
 script = SubResource( 1 )

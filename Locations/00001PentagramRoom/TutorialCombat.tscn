@@ -5,12 +5,12 @@
 [ext_resource path="res://Assets/Sprites/combat_spirit.png" type="Texture" id=3]
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=4]
 
-[sub_resource type="Gradient" id=12]
+[sub_resource type="Gradient" id=1]
 
-[sub_resource type="GradientTexture" id=13]
-gradient = SubResource( 12 )
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 signal combat_over
@@ -147,7 +147,7 @@ func round2():
 #	pass
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Control
 
 # Declare member variables here. Examples:
@@ -163,12 +163,11 @@ func display(text:String):
 	$Panel/Label.text = text
 	$AnimationPlayer.play(\"Appear\")"
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=5]
 size = 21
 font_data = ExtResource( 4 )
 
-[sub_resource type="Animation" id=4]
-resource_name = "Appear"
+[sub_resource type="Animation" id=6]
 length = 5.0
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:visible")
@@ -210,33 +209,33 @@ func spawn_bullet(bullet:PackedScene, position:Vector2 = Vector2(0,0), parent:No
 		res.position = position
 	return res"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=8]
 script/source = "extends Node
 
 func start():
 	pass"
 
-[sub_resource type="Curve2D" id=8]
+[sub_resource type="Curve2D" id=9]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, -150, 500, 0, 0, 0, 0, 40, 540, 0, 0, 0, 0, 80, 530, 0, 0, 0, 0, 110, 510, 0, 0, 0, 0, 160, 500, 0, 0, 0, 0, 190, 480, 0, 0, 0, 0, 230, 480, 0, 0, 0, 0, 270, 480, 0, 0, 0, 0, 330, 480, 0, 0, 0, 0, 370, 480, 0, 0, 0, 0, 390, 480 )
 }
 
-[sub_resource type="Curve2D" id=9]
+[sub_resource type="Curve2D" id=10]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 1060, 520, 0, 0, 0, 0, 960, 510, 0, 0, 0, 0, 880, 500, 0, 0, 0, 0, 800, 490, 0, 0, 0, 0, 760, 500, 0, 0, 0, 0, 690, 510, 0, 0, 0, 0, 650, 500 )
 }
 
-[sub_resource type="Curve2D" id=10]
+[sub_resource type="Curve2D" id=11]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, -60, 190, 0, 0, 0, 0, 40, 200, 0, 0, 0, 0, 120, 230, 0, 0, 0, 0, 160, 260, 0, 0, 0, 0, 220, 290, 0, 0, 0, 0, 320, 360, 0, 0, 0, 0, 380, 360, 0, 0, 0, 0, 410, 370, 0, 0, 0, 0, 420, 380 )
 }
 
-[sub_resource type="Curve2D" id=11]
+[sub_resource type="Curve2D" id=12]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 1130, 190, 0, 0, 0, 0, 1000, 200, 0, 0, 0, 0, 870, 240, 0, 0, 0, 0, 790, 310, 0, 0, 0, 0, 690, 380, 0, 0, 0, 0, 610, 380 )
 }
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=13]
 script/source = "extends Control
 
 signal clicked_ready
@@ -267,7 +266,7 @@ func _on_Button_pressed():
 [node name="BCKG" type="Sprite" parent="."]
 position = Vector2( 512, 299.75 )
 scale = Vector2( 0.5, 600.5 )
-texture = SubResource( 13 )
+texture = SubResource( 2 )
 
 [node name="Enemies" type="Node" parent="."]
 
@@ -285,7 +284,7 @@ position = Vector2( 510, 480 )
 texture = ExtResource( 3 )
 
 [node name="Director" type="Node" parent="."]
-script = SubResource( 1 )
+script = SubResource( 3 )
 
 [node name="DialoguePoint" type="Control" parent="Director"]
 margin_left = 20.0
@@ -301,7 +300,7 @@ margin_top = 120.0
 margin_right = 670.0
 margin_bottom = 160.0
 mouse_filter = 2
-script = SubResource( 2 )
+script = SubResource( 4 )
 
 [node name="Panel" type="Panel" parent="Director/Cookie"]
 anchor_right = 1.0
@@ -310,17 +309,17 @@ anchor_bottom = 1.0
 [node name="Label" type="Label" parent="Director/Cookie/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 5 )
 text = "CookieText"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Director/Cookie"]
-anims/Appear = SubResource( 4 )
+anims/Appear = SubResource( 6 )
 
 [node name="Bulletspace" type="Node2D" parent="."]
 script = SubResource( 7 )
 
 [node name="Round1" type="Node" parent="Bulletspace"]
-script = SubResource( 5 )
+script = SubResource( 8 )
 
 [node name="SpawnPoint1" type="Node2D" parent="Bulletspace/Round1"]
 position = Vector2( 330, 260 )
@@ -337,16 +336,16 @@ position = Vector2( 710, 260 )
 [node name="Round2" type="Node" parent="Bulletspace"]
 
 [node name="Bullet1" type="Path2D" parent="Bulletspace/Round2"]
-curve = SubResource( 8 )
-
-[node name="Bullet2" type="Path2D" parent="Bulletspace/Round2"]
 curve = SubResource( 9 )
 
-[node name="Bullet3" type="Path2D" parent="Bulletspace/Round2"]
+[node name="Bullet2" type="Path2D" parent="Bulletspace/Round2"]
 curve = SubResource( 10 )
 
-[node name="Bullet4" type="Path2D" parent="Bulletspace/Round2"]
+[node name="Bullet3" type="Path2D" parent="Bulletspace/Round2"]
 curve = SubResource( 11 )
+
+[node name="Bullet4" type="Path2D" parent="Bulletspace/Round2"]
+curve = SubResource( 12 )
 
 [node name="Tacticalspace" type="Control" parent="."]
 visible = false
@@ -354,7 +353,7 @@ margin_left = 670.0
 margin_top = 430.0
 margin_right = 1010.0
 margin_bottom = 590.0
-script = SubResource( 6 )
+script = SubResource( 13 )
 
 [node name="Panel" type="Panel" parent="Tacticalspace"]
 anchor_right = 1.0

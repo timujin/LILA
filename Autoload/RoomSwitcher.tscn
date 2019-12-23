@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var default_room = load(\"res://Locations/FFFFFTestinghall/BaseRoom.tscn\")
+onready var player       = preload(\"res://Objects/TheSpirit/TheSpirit.tscn\")
+
+var room:Node2D = null
+
+var switch_parameters:Dictionary = {
+	\"spawn_point\": \"SpiritSpawnDefault\",
+}
+
+func _ready():
+	call_deferred(\"try_load_default_room\")
+
+func try_load_default_room():
+	print(\"try load\")
+	# If no room is loaded (aka we went in from Main), load default room
+	# If a room exists (aka we launched a room directly), do nothing
+	if $\"/root/Room\" == null:
+		print(\"Loading default room\")
+		room = default_room.instance()
+		get_tree().get_root().add_child(room)
+	else:
+		room = $\"/root/Room\"
+		
+func on_room_loaded():
+	print(\"Loaded\")
+	spawn_player()
+	
+func spawn_player():
+	var p = player.instance()
+	room.add_child(p)
+	#print(\"Room/ReferencePoints/%s\" % switch_parameters[\"spawn_point\"])
+	var player_pos = get_tree().get_root().get_node(\"/root/Room/ReferencePoints/%s\" % switch_parameters[\"spawn_point\"])
+	if player_pos == null:
+		printerr(\"Spawn point not set: %s\" % switch_parameters[\"spawn_point\"])
+		player_pos = get_tree().get_root().get_node(\"/root/Room/ReferencePoints/SpiritSpawnDefault\")
+	
+	player_pos = player_pos.position
+	p.position = player_pos
+	
+func switch_room(to_room:PackedScene):
+	$\"/root/Room\".name = \"Todelete_room\"
+	$\"/root/Todelete_room\".queue_free()
+	room = to_room.instance()
+	get_tree().get_root().add_child(room)
+	"
+
+[node name="RoomSwitcher" type="Node2D"]
+script = SubResource( 1 )

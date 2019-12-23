@@ -632,7 +632,6 @@ tracks/0/keys = {
 [node name="Node2D" type="Node2D"]
 
 [node name="RoomGeometry" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="Background" type="Sprite" parent="RoomGeometry"]
 position = Vector2( 510, 300 )
@@ -645,7 +644,6 @@ scale = Vector2( 1.26667, 1.26667 )
 texture = ExtResource( 2 )
 
 [node name="Objects" type="Node2D" parent="."]
-editor/display_folded = true
 
 [node name="Door" parent="Objects" instance=ExtResource( 3 )]
 editor/display_folded = true
@@ -724,7 +722,6 @@ shape = SubResource( 7 )
 script = SubResource( 8 )
 
 [node name="ControlPanel" parent="Objects" instance=ExtResource( 3 )]
-editor/display_folded = true
 position = Vector2( 570, 390 )
 
 [node name="Sprite" parent="Objects/ControlPanel" index="0"]
@@ -838,7 +835,6 @@ anims/Flare = SubResource( 18 )
 [node name="Lines" type="Node2D" parent="."]
 
 [node name="NavMesh" type="Navigation2D" parent="."]
-editor/display_folded = true
 visible = false
 
 [node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="NavMesh"]

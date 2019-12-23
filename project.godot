@@ -31,6 +31,7 @@ Floatie="*res://Autoload/Floatie.tscn"
 DialogueReply="*res://Autoload/DialogueReply.tscn"
 DialogueWindow="*res://Autoload/DialogueWindow.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
+RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 
 [display]
 
