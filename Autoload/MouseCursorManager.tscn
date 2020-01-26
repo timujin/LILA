@@ -3,6 +3,8 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+# TODO this whole class is an unusable mess
+
 var base = preload(\"res://Assets/Cursors/base.png\")
 var hand = preload(\"res://Assets/Cursors/hand.png\")
 
@@ -12,8 +14,9 @@ var is_mouse_active : bool = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	enable_cursor()
-	base_cursor()
+	pass
+	#enable_cursor()
+	#base_cursor()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

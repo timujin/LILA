@@ -16,7 +16,12 @@ func _ready():
 ###### MOVEMENT ##
 ##################
 
+signal reached_destination
+
+var activation_intent:Node = null setget set_activation_intent
+
 var speed: = 400
+onready var sprite_allowance = 50
 var is_moving: = false
 var target: = Vector2()
 var in_control: = true # Whether the user can control player's movement
@@ -37,6 +42,8 @@ func tick_movement(delta:float)->void:
 	var distance_to_target = (target - position).length()
 	if distance_to_move >= distance_to_target:
 		position = target
+		emit_signal(\"reached_destination\")
+		activate_goal()
 		freeze()
 	else:
 		var direction_to_target = (target-position).normalized()
@@ -54,6 +61,7 @@ func _unhandled_input(event):
 	if event.button_index != BUTTON_LEFT or not event.pressed:
 		return
 	var pos = clamp_to_railroad(get_global_mouse_position ( ))
+	set_activation_intent(null)
 	initialize_movement(pos)
 	
 func clamp_to_railroad(pos:Vector2) -> Vector2:
@@ -62,7 +70,7 @@ func clamp_to_railroad(pos:Vector2) -> Vector2:
 	if rleft == null or rright == null:
 		print_debug(\"Invalid room geometry\")
 		return pos
-	var x = clamp(pos.x, rleft.position.x, rright.position.x)
+	var x = clamp(pos.x, rleft.position.x+sprite_allowance, rright.position.x-sprite_allowance)
 	var y = rleft.position.y
 	return Vector2(x,y)
 	
@@ -72,7 +80,33 @@ func initialize_movement(pos):
 	
 func freeze():
 	is_moving = false
-	sprite.freeze()"
+	sprite.freeze()
+	
+func set_activation_intent(goal:Node):
+	print(\"Intent:\")
+	print(goal)
+	activation_intent = goal
+	
+func activate_goal():
+	print(activation_intent)
+	if activation_intent == null:
+		return
+	activation_intent.activate()
+	activation_intent = null
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -131,12 +165,14 @@ func snap_to_geometry()->void:
 #	pass
 "
 
-[node name="Player" type="Node2D"]
+[node name="Player" type="Node2D" groups=[
+"player",
+]]
 script = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-position = Vector2( 2.14978, -6.52736 )
-scale = Vector2( 2.11124, 2.11124 )
+position = Vector2( 1.91187, 18.1181 )
+scale = Vector2( 1.35936, 1.35936 )
 frames = SubResource( 2 )
 animation = "Walk"
 offset = Vector2( 0, -97.29 )
@@ -144,6 +180,8 @@ script = SubResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+limit_top = 0
+limit_bottom = 1050
 limit_smoothed = true
 smoothing_enabled = true
 drag_margin_left = 0.3

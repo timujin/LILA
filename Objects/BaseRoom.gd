@@ -1,8 +1,13 @@
 extends Node2D
+class_name BaseRoom
 
 onready var room_switcher = $"/root/RoomSwitcher"
+signal room_loaded
 
 func _ready():
+	connect("room_loaded", room_switcher, "on_room_loaded")
+	room_switcher.room = self
+	call_deferred("emit_signal", "room_loaded")
 	print("Room "+self.get_script().get_path()+" loaded")
 	
 	
@@ -31,5 +36,5 @@ func get_contains_player()->bool:
 func get_default_parameters()->Dictionary:
 	return {}
 	
-func get_player_spawn_point(parameters:Dictionary)->String:
+func get_player_spawn_point()->String:
 	return "DefaultSpiritSpawn"

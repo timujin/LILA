@@ -2,14 +2,23 @@
 
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
 
+[sub_resource type="GDScript" id=8]
+script/source = "extends BaseRoom
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [sub_resource type="GDScript" id=1]
-script/source = "extends Control
-
-func noplayer():
-	# A placeholder function the presense of which means that the player character should not be placed in this room
-	pass"
-
-[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 signal user_proceed
@@ -89,7 +98,7 @@ func proceed():
 #	pass
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 enum Speaker { GEE, GLD, TAS }
 
@@ -182,7 +191,7 @@ func _ready():
 #	pass
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends VBoxContainer
 
 # Declare member variables here. Examples:
@@ -242,13 +251,13 @@ func clean_up():
 func letteringend():
 	currently_typing = false"
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=4]
 size = 22
 outline_size = 1
 outline_color = Color( 0.45098, 0.0666667, 0.407843, 1 )
 font_data = ExtResource( 1 )
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:percent_visible")
 tracks/0/interp = 1
@@ -290,7 +299,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=6]
 script/source = "extends VBoxContainer
 
 signal player_reply
@@ -343,7 +352,7 @@ func player_click(extra_arg_0):
 	click_reply(extra_arg_0)
 "
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=7]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:visible")
 tracks/0/interp = 1
@@ -372,13 +381,13 @@ tracks/1/keys = {
 [node name="Room" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = SubResource( 1 )
+script = SubResource( 8 )
 
 [node name="Director" type="Node" parent="."]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="DialogueTree" type="Node" parent="Director"]
-script = SubResource( 3 )
+script = SubResource( 2 )
 
 [node name="Panel" type="Panel" parent="."]
 modulate = Color( 0, 0, 0, 1 )
@@ -394,7 +403,7 @@ margin_top = -4096.0
 margin_right = 318.0
 margin_bottom = 427.0
 alignment = 2
-script = SubResource( 4 )
+script = SubResource( 3 )
 
 [node name="SayPrototype" type="RichTextLabel" parent="Says"]
 visible = false
@@ -402,7 +411,7 @@ margin_top = 4498.0
 margin_right = 614.0
 margin_bottom = 4523.0
 rect_min_size = Vector2( 0, 25 )
-custom_fonts/normal_font = SubResource( 5 )
+custom_fonts/normal_font = SubResource( 4 )
 custom_colors/default_color = Color( 1, 1, 1, 1 )
 bbcode_enabled = true
 bbcode_text = "[color=red]fdsfdsfsdffsdfsf[/color] 	h"
@@ -410,7 +419,7 @@ text = "fdsfdsfsdffsdfsf 	h"
 scroll_active = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Says/SayPrototype"]
-anims/Lettering = SubResource( 6 )
+anims/Lettering = SubResource( 5 )
 
 [node name="Replies" type="VBoxContainer" parent="."]
 anchor_top = 1.0
@@ -420,32 +429,32 @@ margin_left = 150.0
 margin_top = -116.0
 margin_right = -150.0
 alignment = 1
-script = SubResource( 7 )
+script = SubResource( 6 )
 
 [node name="r0" type="Button" parent="Replies"]
 margin_top = 12.0
-margin_right = 724.0
+margin_right = 1100.0
 margin_bottom = 32.0
 text = "[REPLY TEXT]"
 flat = true
 
 [node name="r1" type="Button" parent="Replies"]
 margin_top = 36.0
-margin_right = 724.0
+margin_right = 1100.0
 margin_bottom = 56.0
 text = "[REPLY TEXT]"
 flat = true
 
 [node name="r2" type="Button" parent="Replies"]
 margin_top = 60.0
-margin_right = 724.0
+margin_right = 1100.0
 margin_bottom = 80.0
 text = "[REPLY TEXT]"
 flat = true
 
 [node name="r3" type="Button" parent="Replies"]
 margin_top = 84.0
-margin_right = 724.0
+margin_right = 1100.0
 margin_bottom = 104.0
 text = "[REPLY TEXT]"
 flat = true
@@ -457,7 +466,7 @@ mouse_filter = 2
 color = Color( 1, 1, 1, 0 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
-anims/Fadein = SubResource( 8 )
+anims/Fadein = SubResource( 7 )
 
 [node name="Room" type="Node2D" parent="."]
 [connection signal="pressed" from="Replies/r0" to="Replies" method="click_reply" binds= [ 0 ]]
