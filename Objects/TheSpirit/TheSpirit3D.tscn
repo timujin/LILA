@@ -1,0 +1,219 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Objects/TheSpirit/SpiritFront.png" type="Texture" id=1]
+[ext_resource path="res://Objects/TheSpirit/SpiritBack.png" type="Texture" id=2]
+[ext_resource path="res://Objects/TheSpirit/SpiritBack2.png" type="Texture" id=3]
+[ext_resource path="res://Objects/TheSpirit/SpiritSide.png" type="Texture" id=4]
+[ext_resource path="res://Objects/TheSpirit/SpiritFront2.png" type="Texture" id=5]
+[ext_resource path="res://Objects/TheSpirit/SpiritSide2.png" type="Texture" id=6]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "LookForward",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
+"loop": true,
+"name": "WalkBack",
+"speed": 2.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "LookLeft",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "WalkFront",
+"speed": 2.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": true,
+"name": "LookBack",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ), ExtResource( 6 ) ],
+"loop": true,
+"name": "WalkLeft",
+"speed": 2.0
+} ]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+var navmesh = null
+
+var walking_path : PoolVector2Array setget set_walking_path
+var moving: = false
+export var speed : int = 400
+
+var activation_intent = null
+
+func _ready():
+	connect_movement()
+	
+func connect_movement() -> void:
+	navmesh = get_node(\"../../NavMesh\")
+	if not (navmesh == null):
+		print(\"Navmesh loaded\")
+	else:
+		print(\"Navmesh not found\")
+
+func _unhandled_input(event):
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+	if navmesh == null:
+		return
+	if navmesh.get_closest_point(event.global_position) != event.global_position:
+		# Click outside of a navmesh
+		return
+	initialize_movement(event.global_position)
+
+func initialize_movement(point):
+	var start = owner.position
+	set_walking_path(navmesh.get_simple_path(start, point))
+	
+func stop_movement():
+	moving = false
+	activation_intent = null
+
+func destination_reached():
+	if activation_intent != null:
+		if activation_intent.has_method(\"activate\"):
+			activation_intent.activate()
+		else:
+			printerr(\"Intent to activate a non-activator\")
+	activation_intent = null
+	
+func _process(delta):
+	if moving:
+		var distance = delta * speed
+		var start_position = owner.position
+		move_along_path(distance)
+		var end_position = owner.position
+		rotate_sprite(start_position, end_position)
+	else:
+		rotate_sprite()
+		
+var current_anim = \"\"
+func rotate_sprite(start_position:Vector2=Vector2(0,0), end_position:Vector2=Vector2(0,0)):
+	var direction_vector = end_position - start_position
+	var direction_type = \"\"
+	var x = direction_vector.x
+	var y = direction_vector.y
+	if    x > 0 and (abs(y) < x):
+		direction_type = \"right\"
+	elif  x < 0 and (abs(y) < -x):
+		direction_type = \"left\"
+	elif y > 0 and (abs(x) <= y):
+		direction_type = \"down\"
+	elif  y < 0 and (abs(x) <= -y):
+		direction_type = \"up\"
+	elif x == 0 and y > 0:
+		direction_type = \"down\"
+	elif x == 0 and y < 0:
+		direction_type = \"up\"
+	elif y == 0 and x > 0 :
+		direction_type = \"right\"
+	elif y == 0 and x < 0:
+		direction_type = \"left\"
+	elif x == 0 and y == 0:
+		direction_type = \"stay\"
+		
+	#print(direction_vector)
+	#print(direction_type)
+	
+	if current_anim == direction_type:
+		return
+		
+	var spr:AnimatedSprite = owner.get_node(\"AnimatedSprite\")
+	if direction_type == \"left\":
+		spr.play(\"WalkLeft\")
+		spr.flip_h = false
+		current_anim = \"left\"
+	if direction_type == \"right\":
+		spr.play(\"WalkLeft\")
+		spr.flip_h = true
+		current_anim = \"right\"
+	if direction_type == \"up\":
+		spr.play(\"WalkBack\")
+		spr.flip_h = false
+		current_anim = \"up\"
+	if direction_type == \"down\":
+		spr.play(\"WalkFront\")
+		spr.flip_h = false
+		current_anim = \"down\"
+	if direction_type == \"stay\":
+		spr.stop()
+		current_anim = \"stay\"
+		
+	
+func set_walking_path(value:PoolVector2Array):
+	activation_intent = null
+	walking_path = value
+	if walking_path.size() > 0:
+		moving = true
+
+func move_along_path(distance : float):
+	if walking_path.size() == 0:
+		moving = false
+		destination_reached()
+		return
+	var start = owner.position
+	var dist_to_next = start.distance_to(walking_path[0])
+	if distance < dist_to_next and distance > 0.0:
+		owner.position = start.linear_interpolate(walking_path[0], distance / dist_to_next)
+	elif distance <= 0.0:
+		owner.position = walking_path[0]
+		moving = false
+		destination_reached()
+	else:
+		distance = distance - dist_to_next
+		owner.position = walking_path[0]
+		walking_path.remove(0)
+		move_along_path(distance)
+		"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+onready var ghost = get_node(\"../ghost\")
+onready var anim_player = get_node(\"../AnimationPlayer\")
+
+func state_lay_down():
+	pass #ghost.rotation_degrees = 90
+	
+func state_stand_up():
+	ghost.rotation_degrees = 0
+
+
+func anim_slowly_stand_up():
+	anim_player.play(\"StandUp\")
+	return anim_player
+
+	
+#func _ready():
+#	state_lay_down()"
+
+[sub_resource type="Animation" id=4]
+
+[node name="TheSpirit" type="Node2D" groups=[
+"player",
+]]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "WalkLeft"
+
+[node name="Movement" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="Presentation" type="Node" parent="."]
+script = SubResource( 3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/StandUp = SubResource( 4 )

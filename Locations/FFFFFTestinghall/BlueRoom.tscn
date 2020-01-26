@@ -4,10 +4,10 @@
 [ext_resource path="res://Locations/FFFFFTestinghall/Graphics/BlueRoom.png" type="Texture" id=2]
 [ext_resource path="res://Objects/BaseObject.tscn" type="PackedScene" id=3]
 
-[sub_resource type="RectangleShape2D" id=4]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 20, 60 )
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Activator
 
 # Declare member variables here. Examples:
@@ -50,10 +50,10 @@ position = Vector2( 40, 50 )
 
 [node name="CollisionShape2D" parent="Objects/DoorToRedRoom/ClickArea" index="0"]
 position = Vector2( 100, 10 )
-shape = SubResource( 4 )
+shape = SubResource( 1 )
 
 [node name="Activator" parent="Objects/DoorToRedRoom" index="3"]
-script = SubResource( 5 )
+script = SubResource( 2 )
 
 [node name="NavMesh" parent="." index="2"]
 visible = false
@@ -66,5 +66,9 @@ position = Vector2( 70, 430 )
 
 [node name="FromTheRight" type="Node2D" parent="ReferencePoints" index="2"]
 position = Vector2( 950, 420 )
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." index="4"]
+visible = false
+color = Color( 1, 0, 0, 1 )
 
 [editable path="Objects/DoorToRedRoom"]

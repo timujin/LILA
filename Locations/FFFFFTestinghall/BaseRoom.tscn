@@ -3,7 +3,7 @@
 [ext_resource path="res://Assets/Sprites/Rooms/GhostRoom.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Sprites/Gizmos/ReferencePoint.png" type="Texture" id=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 signal room_loaded
@@ -20,7 +20,7 @@ func _ready():
 #	pass
 "
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 
@@ -28,7 +28,7 @@ func _ready():
 	visible = false"
 
 [node name="Room" type="Node2D"]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="RoomGeometry" type="Node2D" parent="."]
 editor/display_folded = true
@@ -47,7 +47,7 @@ position = Vector2( 0, 3.05176e-005 )
 
 [node name="SpiritSpawnDefault" type="Node2D" parent="ReferencePoints"]
 position = Vector2( 490, 420 )
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="Gizmo" type="Sprite" parent="ReferencePoints/SpiritSpawnDefault"]
 scale = Vector2( 0.5, 0.5 )

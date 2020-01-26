@@ -3,44 +3,90 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-onready var default_room = load(\"res://Locations/FFFFFTestinghall/BaseRoom.tscn\")
+#####################
+## ROOM PARAMETERS ##
+#####################
+# PATH TO ROOM -> PARAMETER -> VALUE
+# Ideally this is a part of what gets saved to the savefile
+var roomsParameters:Dictionary = {}
+
+func initialize_room_values(path:String)->void:
+	if not roomsParameters.has(path):
+		roomsParameters[path] = load_room_params(path)
+	else:
+		pass
+	
+func set_room_value(path:String, key:String, value):
+	initialize_room_values(path)
+	roomsParameters[path][key] = value
+
+func get_room_value(path:String, key:String, default):
+	initialize_room_values(path)
+	if roomsParameters.has(path) and roomsParameters[path].has(key):
+		return roomsParameters[path][key]
+	else:
+		return default
+		
+func load_room_params(path:String)->Dictionary:
+	var state:SceneState = load(path).get_state()
+	var root_node = null
+	var root_prop = null
+	for i in range(state.get_node_count()):
+		print(state.get_node_name(i))
+		if state.get_node_name(i) == \"Room\":
+			root_node = i
+			break
+	if root_node == null:
+		printerr(\"Not a valid room: \" + path)
+	for i in range(state.get_node_property_count(root_node)):
+		print(state.get_node_property_name(root_node, i))
+		if state.get_node_property_name(root_node, i) == \"script\":
+			root_prop = i
+			break
+	if root_prop == null:
+		printerr(\"Room doesn't have a script attached: \" + path)
+	return state.get_node_property_value(root_node, root_prop).new().get_default_parameters()
+
+
+#func update_room_value(id:String, key:String, 
+
 onready var player       = preload(\"res://Objects/TheSpirit/TheSpirit.tscn\")
 
 var room:Node2D = null
 
-var switch_parameters:Dictionary = {
-	\"spawn_point\": \"SpiritSpawnDefault\",
-}
-
 func _ready():
-	call_deferred(\"try_load_default_room\")
+	pass
 
 func try_load_default_room():
+	return
 	print(\"try load\")
 	# If no room is loaded (aka we went in from Main), load default room
 	# If a room exists (aka we launched a room directly), do nothing
 	if $\"/root/Room\" == null:
 		print(\"Loading default room\")
-		room = default_room.instance()
+		#room = default_room.instance()
 		get_tree().get_root().add_child(room)
 	else:
 		room = $\"/root/Room\"
 		
 func on_room_loaded():
 	print(\"Loaded\")
-	spawn_player()
+	if room.has_method(\"noplayer\"):
+		pass
+	#spawn_player()
 	
 func spawn_player():
-	var p = player.instance()
-	room.add_child(p)
+	return
+	#var p = player.instance()
+	#room.add_child(p)
 	#print(\"Room/ReferencePoints/%s\" % switch_parameters[\"spawn_point\"])
-	var player_pos = get_tree().get_root().get_node(\"/root/Room/ReferencePoints/%s\" % switch_parameters[\"spawn_point\"])
-	if player_pos == null:
-		printerr(\"Spawn point not set: %s\" % switch_parameters[\"spawn_point\"])
-		player_pos = get_tree().get_root().get_node(\"/root/Room/ReferencePoints/SpiritSpawnDefault\")
+	#var player_pos = null # get_tree().get_root().get_node(\"/root/Room/ReferencePoints/%s\" % switch_parameters[\"spawn_point\"])
+	#if player_pos == null:
+	#	printerr(\"Spawn point not set: %s\" % switch_parameters[\"spawn_point\"])
+	#	player_pos = get_tree().get_root().get_node(\"/root/Room/ReferencePoints/SpiritSpawnDefault\")
 	
-	player_pos = player_pos.position
-	p.position = player_pos
+	#player_pos = player_pos.position
+	#p.position = player_pos
 	
 func switch_room(to_room:PackedScene):
 	$\"/root/Room\".name = \"Todelete_room\"
