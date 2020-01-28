@@ -1,0 +1,69 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var p = $Control
+onready var t = $Control/PopupPanel/RichTextLabel
+
+func _ready():
+	p.visible = false
+
+func display(text:String, at:Node2D):
+	p.visible = true
+	t.bbcode_text = text
+	$Timer.stop()
+	$Timer.start()
+	call_deferred(\"reparent\",at)
+
+func reparent(at:Node2D):
+	print(\"Rect\")
+	print(p.rect_position)
+	var pos = at.get_global_transform_with_canvas().get_origin()
+	print(\"orig\")
+	print(pos)
+	p.rect_position = pos
+	
+	#p.get_parent().remove_child(p) # error here  
+	#at.add_child(p) 
+
+func _on_Timer_timeout():
+	p.visible = false
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+use_filter = true
+font_data = ExtResource( 1 )
+
+[node name="InteractionBlurb" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+
+[node name="PopupPanel" type="Panel" parent="Control"]
+margin_left = -270.0
+margin_top = -110.0
+margin_right = 296.0
+margin_bottom = -4.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/PopupPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+mouse_filter = 1
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center]This is a short interaction floatie that is expected to only appear for a few seconds. [/center]"
+text = "This is a short interaction floatie that is expected to only appear for a few seconds. "
+scroll_active = false
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

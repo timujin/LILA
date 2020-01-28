@@ -1,12 +1,14 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Objects/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=2]
 [ext_resource path="res://Assets/Sprites/Decorations/Pentagram.png" type="Texture" id=3]
 [ext_resource path="res://Objects/BaseObject.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Locations/00001PentagramRoom/Graphics/Door.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Sprites/Interactables/Furniture/Drawer.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=7]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends BaseRoom
 
 func get_room_name()->String:
@@ -16,12 +18,48 @@ func get_contains_player()->bool:
 	return true
 	
 func get_default_parameters()->Dictionary:
-	return {}
+	return {
+		\"drawer_looted\": false,
+		\"pentagram_on\" : true,
+		\"door_locked\"  : true,
+	}
+	
+func is_door_locked()->bool:
+	return get_self_parameter(\"door_locked\", true) == true
+	
 	
 func get_player_spawn_point()->String:
-	return \"DefaultSpiritSpawn\""
+	if get_self_parameter(\"pentagram_on\", true) == true:
+		return \"DefaultSpiritSpawn\"
+	else:
+		return \"OutOfDoorSpiritSpawn\"
+		
+################################
 
-[sub_resource type="GDScript" id=1]
+func render()->void:
+	if get_self_parameter(\"pentagram_on\", true):
+		$Geometry.lock_pentagram()
+	else:
+		clear_room()
+		
+func clear_room():
+	$Geometry.unlock_pentagram()
+	$Summoner.queue_free()
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		"
+
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 onready var left_edge_of_room = $RailroadLeft
@@ -38,8 +76,7 @@ func lock_pentagram():
 	if left_edge_of_pent.position.x > left_edge_of_room.position.x:
 		var tmp = left_edge_of_pent.position
 		left_edge_of_pent.position = left_edge_of_room.position
-		left_edge_of_room.position = tmp
-"
+		left_edge_of_room.position = tmp"
 
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 64.1544, 142.23 )
@@ -49,10 +86,45 @@ script/source = "extends Activator
 
 
 func on_activate():
-	get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+		print(\"Locked\")
+		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
+	else:
+		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
-script = SubResource( 2 )
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 60.673, 79.8275 )
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Activator
+
+func on_activate():
+	print(\"Drawer activated!\")"
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 80.4022, 80.7245 )
+
+[sub_resource type="GDScript" id=8]
+script/source = "extends Activator
+
+#func on_activate():
+#	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
+#	$\"/root/Room\".clear_room()
+
+func on_activate():
+	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+		print(\"Locked\")
+		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
+	else:
+		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+
+[node name="Room" instance=ExtResource( 1 )]
+script = SubResource( 1 )
+
+[node name="Director" type="Node" parent="." index="0"]
+
+[node name="Background" parent="." index="1"]
+editor/display_folded = true
 
 [node name="RoomBrickBlack" type="Sprite" parent="Background" index="0"]
 position = Vector2( 797.207, 449.385 )
@@ -64,11 +136,12 @@ position = Vector2( 1092.63, 764.3 )
 scale = Vector2( 1.19912, 1.37323 )
 texture = ExtResource( 3 )
 
-[node name="Geometry" parent="." index="1"]
-script = SubResource( 1 )
+[node name="Geometry" parent="." index="2"]
+editor/display_folded = true
+script = SubResource( 2 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
-position = Vector2( 309.569, 775.382 )
+position = Vector2( 938.964, 777.14 )
 
 [node name="RailroadRight" parent="Geometry" index="1"]
 position = Vector2( 1246.02, 766.957 )
@@ -85,7 +158,10 @@ position = Vector2( 1104.23, 773.347 )
 [node name="LeftEdgeOfPentagram" type="Position2D" parent="Geometry" index="5"]
 position = Vector2( 291.525, 774.563 )
 
-[node name="Door" parent="." index="2" instance=ExtResource( 4 )]
+[node name="OutOfDoorSpiritSpawn" type="Position2D" parent="Geometry" index="6"]
+position = Vector2( 370.956, 777.074 )
+
+[node name="Door" parent="." index="3" instance=ExtResource( 4 )]
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -93,17 +169,75 @@ position = Vector2( -4.76386, -88.5566 )
 scale = Vector2( 1.22454, 1.06758 )
 texture = ExtResource( 5 )
 
-[node name="InteractionPoint" parent="Door" index="1"]
+[node name="BlurbPoint" parent="Door" index="1"]
+position = Vector2( -4.25293, -247.906 )
+z_index = 78
+
+[node name="InteractionPoint" parent="Door" index="2"]
 position = Vector2( 76.4543, 44.3767 )
 
-[node name="ClickArea" parent="Door" index="2"]
+[node name="ClickArea" parent="Door" index="3"]
 ActivatorName = "Door"
 
 [node name="CollisionShape2D" parent="Door/ClickArea" index="0"]
 position = Vector2( -8.36795, -76.2434 )
 shape = SubResource( 3 )
 
-[node name="Activator" parent="Door" index="3"]
+[node name="Activator" parent="Door" index="4"]
 script = SubResource( 4 )
 
+[node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
+editor/display_folded = true
+position = Vector2( 554.412, 675.453 )
+
+[node name="Sprite" parent="Drawer" index="0"]
+position = Vector2( 1.48926, -79.4826 )
+scale = Vector2( 1.9569, 2.01824 )
+texture = ExtResource( 6 )
+
+[node name="BlurbPoint" parent="Drawer" index="1"]
+position = Vector2( 9.52258, -194.533 )
+
+[node name="InteractionPoint" parent="Drawer" index="2"]
+position = Vector2( -2.21606, 38.8365 )
+
+[node name="ClickArea" parent="Drawer" index="3"]
+ActivatorName = "Drawer"
+
+[node name="CollisionShape2D" parent="Drawer/ClickArea" index="0"]
+position = Vector2( 14.802, -82.5406 )
+shape = SubResource( 5 )
+
+[node name="Activator" parent="Drawer" index="4"]
+script = SubResource( 6 )
+
+[node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
+position = Vector2( 616.788, 805.18 )
+
+[node name="Sprite" parent="Summoner" index="0"]
+position = Vector2( 60.7838, -34.3737 )
+scale = Vector2( 1.21872, 1.25692 )
+texture = ExtResource( 7 )
+
+[node name="BlurbPoint" parent="Summoner" index="1"]
+position = Vector2( 45.4228, -153.722 )
+
+[node name="InteractionPoint" parent="Summoner" index="2"]
+position = Vector2( 193.684, 29.4736 )
+
+[node name="ClickArea" parent="Summoner" index="3"]
+ActivatorName = "Sleeping man"
+activation_type = "Remote"
+
+[node name="CollisionShape2D" parent="Summoner/ClickArea" index="0"]
+position = Vector2( 52.0198, -22.6701 )
+shape = SubResource( 7 )
+
+[node name="Activator" parent="Summoner" index="4"]
+script = SubResource( 8 )
+
 [editable path="Door"]
+
+[editable path="Drawer"]
+
+[editable path="Summoner"]

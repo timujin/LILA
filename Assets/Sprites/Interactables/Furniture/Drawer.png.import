@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/combat_spirit.png-c4f3a34f71c42485b28eba2a2ab241ac.stex"
+path="res://.import/Drawer.png-774a6302b7df6cfc42b98cec62536667.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/combat_spirit.png"
-dest_files=[ "res://.import/combat_spirit.png-c4f3a34f71c42485b28eba2a2ab241ac.stex" ]
+source_file="res://Assets/Sprites/Interactables/Furniture/Drawer.png"
+dest_files=[ "res://.import/Drawer.png-774a6302b7df6cfc42b98cec62536667.stex" ]
 
 [params]
 

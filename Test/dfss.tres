@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Test/new_script.gd" type="Script" id=1]
+
+[sub_resource type="CanvasItemMaterial" id=1]
+
+[resource]
+script = ExtResource( 1 )
+health = 0
+sub_resource = SubResource( 1 )
+strings = [  ]

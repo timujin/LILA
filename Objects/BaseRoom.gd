@@ -5,11 +5,15 @@ onready var room_switcher = $"/root/RoomSwitcher"
 signal room_loaded
 
 func _ready():
+	call_deferred("move_to_back")
 	connect("room_loaded", room_switcher, "on_room_loaded")
 	room_switcher.room = self
 	call_deferred("emit_signal", "room_loaded")
+	call_deferred("render")
 	print("Room "+self.get_script().get_path()+" loaded")
 	
+func move_to_back():
+	get_parent().move_child(self,0)
 	
 func get_room_parameter(path:String, key:String, default):
 	return room_switcher.get_room_value(path, key, default)
@@ -38,3 +42,6 @@ func get_default_parameters()->Dictionary:
 	
 func get_player_spawn_point()->String:
 	return "DefaultSpiritSpawn"
+	
+func render()->void:
+	pass

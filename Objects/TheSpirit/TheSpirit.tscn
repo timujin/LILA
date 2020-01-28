@@ -179,6 +179,7 @@ offset = Vector2( 0, -97.29 )
 script = SubResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0.00012207, -10.8152 )
 current = true
 limit_top = 0
 limit_bottom = 1050

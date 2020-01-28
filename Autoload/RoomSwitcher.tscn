@@ -28,26 +28,29 @@ func get_room_value(path:String, key:String, default):
 		return default
 		
 func load_room_params(path:String)->Dictionary:
-	var state:SceneState = load(path).get_state()
-	var root_node = null
-	var root_prop = null
-	for i in range(state.get_node_count()):
-		print(state.get_node_name(i))
-		if state.get_node_name(i) == \"Room\":
-			root_node = i
-			break
-	if root_node == null:
-		printerr(\"Not a valid room: \" + path)
-		return {\"ERROR\":path}
-	for i in range(state.get_node_property_count(root_node)):
-		print(state.get_node_property_name(root_node, i))
-		if state.get_node_property_name(root_node, i) == \"script\":
-			root_prop = i
-			break
-	if root_prop == null:
-		printerr(\"Room doesn't have a script attached: \" + path)
-		return {\"ERROR\":path}
-	return state.get_node_property_value(root_node, root_prop).new().get_default_parameters()
+	#\"\"\"
+	#var state:SceneState = load(path).get_state()
+	#var root_node = null
+	#var root_prop = null
+	#for i in range(state.get_node_count()):
+	#	print(state.get_node_name(i))
+	#	if state.get_node_name(i) == \"Room\":
+	#		root_node = i
+	#		break
+	#if root_node == null:
+	#	printerr(\"Not a valid room: \" + path)
+	#	return {\"ERROR\":path}
+	#for i in range(state.get_node_property_count(root_node)):
+	#	print(state.get_node_property_name(root_node, i))
+	#	if state.get_node_property_name(root_node, i) == \"script\":
+	#		root_prop = i
+	#		break
+	#if root_prop == null:
+	#	printerr(\"Room doesn't have a script attached: \" + path)
+	#	return {\"ERROR\":path}
+	#return state.get_node_property_value(root_node, root_prop).new().get_default_parameters()
+	#\"\"\"
+	return load(path).new().get_default_parameters()
 
 #####################
 ## ROOM LOADING #####

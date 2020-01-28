@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/ReferencePoint.png-80da33ecbd9396b78752d324fc0933d8.stex"
+path="res://.import/SummonerSleeping.png-f7c9bbab2cf7511f85aa42aa53a5f484.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Gizmos/ReferencePoint.png"
-dest_files=[ "res://.import/ReferencePoint.png-80da33ecbd9396b78752d324fc0933d8.stex" ]
+source_file="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png"
+dest_files=[ "res://.import/SummonerSleeping.png-f7c9bbab2cf7511f85aa42aa53a5f484.stex" ]
 
 [params]
 

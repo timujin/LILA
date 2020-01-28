@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "BaseRoom",
 "language": "GDScript",
 "path": "res://Objects/BaseRoom.gd"
+}, {
+"base": "Resource",
+"class": "TestResource",
+"language": "GDScript",
+"path": "res://Test/new_script.gd"
 } ]
 _global_script_class_icons={
 "Activator": "",
-"BaseRoom": ""
+"BaseRoom": "",
+"TestResource": ""
 }
 
 [application]
@@ -32,11 +38,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-MouseCursorManager="*res://Autoload/MouseCursorManager.tscn"
-Floatie="*res://Autoload/Floatie.tscn"
-DialogueReply="*res://Autoload/DialogueReply.tscn"
-DialogueWindow="*res://Autoload/DialogueWindow.tscn"
-ModeController="*res://Autoload/ModeController.tscn"
+InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 
 [display]
