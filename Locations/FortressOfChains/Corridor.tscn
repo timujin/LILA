@@ -39,9 +39,6 @@ func on_activate():
 [node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
-[node name="Background" parent="." index="0"]
-visible = false
-
 [node name="LongCorridor" type="Sprite" parent="Background" index="0"]
 position = Vector2( 1013.96, 428.79 )
 scale = Vector2( 1.57479, 0.92011 )
@@ -69,6 +66,9 @@ position = Vector2( 856.34, 649.688 )
 position = Vector2( -0.885712, -191.341 )
 scale = Vector2( 1.36538, 1.38696 )
 texture = ExtResource( 4 )
+
+[node name="BlurbPoint" parent="BaseObject" index="1"]
+position = Vector2( 0, 2.78955 )
 
 [node name="InteractionPoint" parent="BaseObject" index="2"]
 position = Vector2( -5.87268, 127.846 )

@@ -16,3 +16,5 @@ func activate():
 	if has_method("on_activate"):
 		self.call("on_activate")
 		
+func blurb(text:String):
+	$"/root/InteractionBlurb".display(text, $"../BlurbPoint")

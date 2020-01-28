@@ -87,8 +87,7 @@ script/source = "extends Activator
 
 func on_activate():
 	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
-		print(\"Locked\")
-		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
+		blurb(\"The door is locked\")
 	else:
 		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
 
@@ -107,16 +106,16 @@ extents = Vector2( 80.4022, 80.7245 )
 [sub_resource type="GDScript" id=8]
 script/source = "extends Activator
 
-#func on_activate():
-#	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
-#	$\"/root/Room\".clear_room()
-
 func on_activate():
-	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
-		print(\"Locked\")
-		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
-	else:
-		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
+	$\"/root/Room\".clear_room()
+
+#func on_activate():
+#	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+#		print(\"Locked\")
+#		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
+#	else:
+#		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
 
 [node name="Room" instance=ExtResource( 1 )]
 script = SubResource( 1 )
@@ -170,7 +169,7 @@ scale = Vector2( 1.22454, 1.06758 )
 texture = ExtResource( 5 )
 
 [node name="BlurbPoint" parent="Door" index="1"]
-position = Vector2( -4.25293, -247.906 )
+position = Vector2( -2.49487, -253.18 )
 z_index = 78
 
 [node name="InteractionPoint" parent="Door" index="2"]
