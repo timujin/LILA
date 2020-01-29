@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Autoload/Inventory/InventoryItem.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Fortune cookie"
+description = "The taste of future"
+long_description = "Eat it when you're stuck"
+hint = ""
+actions = "Eat"
+type = "Consumable"
+equipment_slot = ""
+category = "Food"
+countable = true

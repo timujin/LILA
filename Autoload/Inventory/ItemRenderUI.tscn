@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Autoload/Inventory/DefaultIcon.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+signal selected
+
+onready var iicon = $HBoxContainer/MarginContainer/Icon
+onready var title = $HBoxContainer/VBoxContainer/Name
+onready var tagline = $HBoxContainer/VBoxContainer/Tagline
+onready var counter = $HBoxContainer/VBoxContainer/Amount
+
+var id := \"MISSINGNO\"
+var amount := 1
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+func render(item:ItemRender, amount:int = 1)->void:
+	iicon.texture = item.icon
+	title.text   = item.resource.name
+	tagline.text = item.resource.description
+	counter.text = str(amount)
+	id = item.script.id
+	self.amount = amount
+
+func _on_ItemPrototype_pressed():
+	emit_signal(\"selected\", self.id)
+"
+
+[node name="ItemPrototype" type="Button"]
+margin_right = 716.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 0, 80 )
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = SubResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1006.0
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+margin_right = 171.0
+margin_bottom = 80.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer/MarginContainer"]
+margin_right = 171.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+texture = ExtResource( 1 )
+expand = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 175.0
+margin_right = 1722.0
+margin_bottom = 80.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.03
+
+[node name="Name" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 7.0
+margin_right = 1547.0
+margin_bottom = 21.0
+size_flags_vertical = 6
+text = "Item name"
+
+[node name="Tagline" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 40.0
+margin_right = 1547.0
+margin_bottom = 54.0
+size_flags_vertical = 6
+text = "Item tagline"
+
+[node name="Amount" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 66.0
+margin_right = 1547.0
+margin_bottom = 80.0
+text = "Amount"
+[connection signal="pressed" from="." to="." method="_on_ItemPrototype_pressed"]

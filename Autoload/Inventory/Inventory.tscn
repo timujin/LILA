@@ -1,0 +1,243 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
+onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
+
+func create_item(item:ItemRender, amount:int=1):
+	var rend = item_prototype.instance()
+	place_for_items.add_child(rend)
+	rend.render(item, amount)
+	rend.visible = true
+	rend.connect(\"selected\", self, \"_on_Item_select\")
+	
+func clear():
+	for child in place_for_items.get_children():
+		child.queue_free()
+		
+func render_all():
+	clear()
+	var items = $Model.items.keys()
+	print(items)
+	for item in items:
+		create_item(ItemRender.new(item), $Model.items[item])
+
+func _on_Item_select(id:String)->void:
+	print(id)
+
+func _on_All_button_down():
+	print(\"event\")
+	render_all()
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+		
+var items:Dictionary = {}
+
+func add_item(id:String, number:int = 1):
+	if items.has(id):
+		items[id] += number
+	else:
+		items[id] = number
+	
+func remove_item(id:String, number:int = -1):
+	if not items.has(id):
+		printerr(\"Warning: trying to remove a nonexistent item: %s\" % id)
+		return
+	items[id] -= number
+	if items[id] <= 0 or number == -1:
+		items.erase(id)
+		
+func has_item(id:String, number:int = 1)->bool:
+	if not items.has(id):
+		return false
+	return items[id] >= number
+	
+func get_all_of_type(type:String):
+	# blah blah separate by shit
+	return items
+		
+func _ready():
+	self.items = {
+		\"CoolHat\": 5,
+		\"FortuneCookie\": 1,
+		\"StarterKnife\": 0,
+		\"BlahBlah\": 88
+		}"
+
+[sub_resource type="DynamicFont" id=3]
+size = 21
+font_data = ExtResource( 1 )
+
+[node name="Inventory" type="CanvasLayer"]
+script = SubResource( 1 )
+
+[node name="Model" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="Modal" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.439216 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Window" type="PanelContainer" parent="Modal"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -722.5
+margin_top = -389.5
+margin_right = 722.5
+margin_bottom = 389.5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Modal/Window"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1438.0
+margin_bottom = 772.0
+alignment = 1
+
+[node name="Left" type="VBoxContainer" parent="Modal/Window/HBoxContainer"]
+margin_right = 395.0
+margin_bottom = 765.0
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
+margin_right = 395.0
+margin_bottom = 380.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
+margin_top = 384.0
+margin_right = 395.0
+margin_bottom = 765.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+margin_right = 395.0
+margin_bottom = 25.0
+custom_fonts/font = SubResource( 3 )
+text = "INFO"
+align = 1
+valign = 1
+
+[node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+margin_top = 29.0
+margin_right = 395.0
+margin_bottom = 43.0
+text = "<ITEM NAME>"
+align = 1
+valign = 1
+
+[node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+margin_top = 47.0
+margin_right = 395.0
+margin_bottom = 78.0
+text = "Item description.
+May be multiline"
+align = 1
+
+[node name="Label" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+margin_top = 82.0
+margin_right = 395.0
+margin_bottom = 113.0
+text = "Item hint
+Increases your nothing by zero"
+align = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+editor/display_folded = true
+margin_top = 117.0
+margin_right = 395.0
+margin_bottom = 137.0
+alignment = 1
+
+[node name="Button" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
+margin_left = 116.0
+margin_right = 164.0
+margin_bottom = 20.0
+text = "Apply"
+
+[node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
+margin_left = 168.0
+margin_right = 215.0
+margin_bottom = 20.0
+text = "Equip"
+
+[node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
+margin_left = 219.0
+margin_right = 279.0
+margin_bottom = 20.0
+text = "Discard"
+
+[node name="Right" type="PanelContainer" parent="Modal/Window/HBoxContainer"]
+margin_left = 399.0
+margin_right = 1431.0
+margin_bottom = 765.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.61
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1025.0
+margin_bottom = 758.0
+
+[node name="Title" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
+margin_right = 1018.0
+margin_bottom = 58.0
+size_flags_vertical = 3
+
+[node name="Equipment" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
+margin_right = 81.0
+margin_bottom = 58.0
+text = "Equipment"
+
+[node name="Consumable" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
+margin_left = 85.0
+margin_right = 176.0
+margin_bottom = 58.0
+text = "Consumable"
+
+[node name="Misc" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
+margin_left = 180.0
+margin_right = 222.0
+margin_bottom = 58.0
+text = "Misc"
+
+[node name="All" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
+margin_left = 226.0
+margin_right = 255.0
+margin_bottom = 58.0
+text = "All"
+
+[node name="Delimeter" type="Panel" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
+margin_top = 62.0
+margin_right = 1018.0
+margin_bottom = 67.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
+margin_top = 71.0
+margin_right = 1018.0
+margin_bottom = 751.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 11.6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
+margin_right = 1018.0
+size_flags_horizontal = 3
+custom_constants/separation = 23
+[connection signal="button_down" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/All" to="." method="_on_All_button_down"]

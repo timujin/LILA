@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Autoload/Inventory/InventoryItem.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Knife"
+description = "Technically not a weapon"
+long_description = "Small, dull, generally lackluster. But gets things done."
+hint = "Equip it"
+actions = ""
+type = ""
+equipment_slot = "Main"
+category = "Blades"
+countable = false

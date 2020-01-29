@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Autoload/Inventory/InventoryItem.gd" type="Script" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Walkie-Talkie"
+description = "You talk with it as you walk with it"
+long_description = "A device that lets you communicate with other bearers of a Walkie-Talkie"
+hint = ""
+actions = "Use"
+type = "Misc"
+equipment_slot = ""
+category = "Devices"
+countable = false
+test = SubResource( 1 )
