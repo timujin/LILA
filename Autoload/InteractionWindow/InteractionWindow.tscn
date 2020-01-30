@@ -1,0 +1,87 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+onready var reply = preload(\"res://Autoload/InteractionWindow/Reply.tscn\")
+onready var say   = preload(\"res://Autoload/InteractionWindow/DialogueAtom.tscn\")
+onready var default_face = preload(\"res://Autoload/InteractionWindow/DefaultFace.png\")
+
+onready var reply_container = $\"Modal/PanelContainer/MarginContainer/VBoxContainer\"
+onready var say_container   = $\"Modal/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer\"
+
+func clear_replies():
+	for child in reply_container.get_children():
+		if child.has_method(\"is_a_reply\"):
+			child.queue_free()
+	
+func clear_dialogue():
+	for child in say_container.get_children():
+		child.queue_free()
+		
+func clear():
+	clear_replies()
+	clear_dialogue()
+	
+func say(text:String, defface:=false, face:Texture=null):
+	var x = say.instance()
+	say_container.add_child(x)
+	if defface:
+		x.init(text, default_face)
+	else:
+		x.init(text, face)
+		
+func add_reply(text:String, listener:Node, fname:String):
+	var x = reply.instance()
+	reply_container.add_child(x)
+	x.init(text, listener, fname)
+	
+func hide():
+	$Modal.visible = false
+	
+func unhide():
+	$Modal.visible = true
+	
+func start():
+	clear()
+	unhide()
+	
+func _ready():
+	hide()"
+
+[node name="InteractionWindow" type="CanvasLayer"]
+layer = 60
+script = SubResource( 1 )
+
+[node name="Modal" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.392157 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Modal"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -701.0
+margin_top = -373.5
+margin_right = 701.0
+margin_bottom = 373.5
+
+[node name="MarginContainer" type="MarginContainer" parent="Modal/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1395.0
+margin_bottom = 740.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/PanelContainer/MarginContainer"]
+margin_right = 1388.0
+margin_bottom = 733.0
+alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Modal/PanelContainer/MarginContainer/VBoxContainer"]
+margin_right = 1388.0
+margin_bottom = 733.0
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]

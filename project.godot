@@ -60,6 +60,7 @@ InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 Inventory="*res://Autoload/Inventory/Inventory.tscn"
 LootingWindow="*res://Autoload/LootingWindow/LootingWindow.tscn"
+InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
 
 [display]
 

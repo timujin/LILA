@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Objects/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=2]
@@ -59,6 +59,34 @@ func clear_room():
 		
 		"
 
+[sub_resource type="GDScript" id=9]
+script/source = "extends Node
+
+onready var interaction_window = $\"/root/InteractionWindow\"
+
+func activate_summoner():
+	interaction_window.start()
+	interaction_window.say(\"The Summoner is chilling in his chair\")
+	interaction_window.add_reply(\"Print into console\", self, \"print_into_console\")
+	interaction_window.add_reply(\"Wake him up\", self, \"wake_up_summoner\")
+	interaction_window.add_reply(\"Leave him be\", self, \"leave_him_be\")
+	
+func print_into_console():
+	print(\"Action activated\")
+	interaction_window.say(\"OK, this should be printed\")
+	
+func wake_up_summoner():
+	interaction_window.say(\"The summoner is woken up\")
+	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
+	$\"/root/Room\".clear_room()
+	interaction_window.clear_replies()
+	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")
+	
+func leave_him_be():
+	interaction_window.say(\"You decide to not interrupt him\")
+	interaction_window.clear_replies()
+	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")"
+
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
@@ -106,21 +134,25 @@ extents = Vector2( 80.4022, 80.7245 )
 [sub_resource type="GDScript" id=8]
 script/source = "extends Activator
 
-func on_activate():
-	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
-	$\"/root/Room\".clear_room()
+#func on_activate():
+#	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
+#	$\"/root/Room\".clear_room()
 
 #func on_activate():
 #	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
 #		print(\"Locked\")
 #		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
 #	else:
-#		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+#		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))
 
-[node name="Room" instance=ExtResource( 1 )]
+func on_activate():
+	$\"/root/Room/Director\".activate_summoner()"
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]
+script = SubResource( 9 )
 
 [node name="Background" parent="." index="1"]
 editor/display_folded = true
@@ -187,6 +219,7 @@ shape = SubResource( 3 )
 script = SubResource( 4 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -211,7 +244,6 @@ shape = SubResource( 5 )
 script = SubResource( 6 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
