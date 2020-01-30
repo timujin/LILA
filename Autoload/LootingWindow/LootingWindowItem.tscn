@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+var on_press_callback = null
+
+func set_callback(value):
+	on_press_callback = value
+	
+func set_label(label:String):
+	text = label
+
+func press():
+	if on_press_callback != null:
+		on_press_callback.call_func()
+	queue_free()
+		
+func init(label:String, callback):
+	set_callback(callback)
+	set_label(label)
+
+func _on_Button_pressed():
+	press()
+"
+
+[node name="Button" type="Button"]
+margin_right = 668.0
+margin_bottom = 65.57
+rect_min_size = Vector2( 0, 65.57 )
+text = "[Looted item]"
+script = SubResource( 1 )
+[connection signal="pressed" from="." to="." method="_on_Button_pressed"]

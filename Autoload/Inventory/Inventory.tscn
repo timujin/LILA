@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
 
@@ -7,6 +7,7 @@ script/source = "extends CanvasLayer
 
 var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
 onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
+onready var info_panel = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
 
 func create_item(item:ItemRender, amount:int=1):
 	var rend = item_prototype.instance()
@@ -27,12 +28,14 @@ func render_all():
 		create_item(ItemRender.new(item), $Model.items[item])
 
 func _on_Item_select(id:String)->void:
-	print(id)
+	info_panel.render(ItemRender.new(id), 0)
 
 func _on_All_button_down():
 	print(\"event\")
 	render_all()
-"
+
+func _ready():
+	$Modal.visible = false"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -70,6 +73,38 @@ func _ready():
 		\"StarterKnife\": 0,
 		\"BlahBlah\": 88
 		}"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends VBoxContainer
+
+onready var itemname = $\"ItemName\"
+onready var itemdescription = $\"ItemDescription\"
+onready var itemhint = $\"ItemHint\"
+
+onready var butt1 = $\"Buttons/Button\"
+onready var butt2 = $\"Buttons/Button2\"
+onready var butt3 = $\"Buttons/Button3\"
+
+func render(item:ItemRender, amount:int):
+	itemname.text = item.resource.name
+	itemdescription.text = item.resource.long_description
+	itemhint.text = item.resource.hint
+	
+	butt1.visible = false
+	butt2.visible = false
+	butt3.visible = false
+	var btns = item.resource.actions.split('\\n')
+	if btns[0] == \"\":
+		return
+	if btns.size () >= 1:
+		butt1.visible = true
+		butt1.text = btns[0]
+	if btns.size () >= 2:
+		butt2.visible = true
+		butt2.text = btns[1]
+	if btns.size () >= 3:
+		butt3.visible = true
+		butt3.text = btns[2]"
 
 [sub_resource type="DynamicFont" id=3]
 size = 21
@@ -120,11 +155,12 @@ margin_right = 395.0
 margin_bottom = 765.0
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
+[node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+script = SubResource( 4 )
 
-[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_right = 395.0
 margin_bottom = 25.0
 custom_fonts/font = SubResource( 3 )
@@ -132,7 +168,7 @@ text = "INFO"
 align = 1
 valign = 1
 
-[node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+[node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_top = 29.0
 margin_right = 395.0
 margin_bottom = 43.0
@@ -140,7 +176,7 @@ text = "<ITEM NAME>"
 align = 1
 valign = 1
 
-[node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+[node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_top = 47.0
 margin_right = 395.0
 margin_bottom = 78.0
@@ -148,7 +184,7 @@ text = "Item description.
 May be multiline"
 align = 1
 
-[node name="Label" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
+[node name="ItemHint" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_top = 82.0
 margin_right = 395.0
 margin_bottom = 113.0
@@ -156,28 +192,30 @@ text = "Item hint
 Increases your nothing by zero"
 align = 1
 
-[node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer"]
-editor/display_folded = true
+[node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_top = 117.0
 margin_right = 395.0
-margin_bottom = 137.0
+margin_bottom = 117.0
 alignment = 1
 
-[node name="Button" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
+[node name="Button" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
+visible = false
 margin_left = 116.0
 margin_right = 164.0
 margin_bottom = 20.0
 text = "Apply"
 
-[node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
-margin_left = 168.0
-margin_right = 215.0
+[node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
+visible = false
+margin_left = 142.0
+margin_right = 189.0
 margin_bottom = 20.0
 text = "Equip"
 
-[node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/VBoxContainer/Buttons"]
-margin_left = 219.0
-margin_right = 279.0
+[node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
+visible = false
+margin_left = 167.0
+margin_right = 227.0
 margin_bottom = 20.0
 text = "Discard"
 

@@ -8,7 +8,11 @@ name = "Cool hat"
 description = "Handy to overclock the brain"
 long_description = "the hat is cools"
 hint = ""
-actions = ""
+actions = "1
+2
+3
+4
+5"
 type = ""
 equipment_slot = "Head"
 category = "Headwear"

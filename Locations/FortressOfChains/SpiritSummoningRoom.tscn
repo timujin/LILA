@@ -161,6 +161,7 @@ position = Vector2( 291.525, 774.563 )
 position = Vector2( 370.956, 777.074 )
 
 [node name="Door" parent="." index="3" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -186,7 +187,6 @@ shape = SubResource( 3 )
 script = SubResource( 4 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -211,6 +211,7 @@ shape = SubResource( 5 )
 script = SubResource( 6 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]

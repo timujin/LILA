@@ -58,6 +58,8 @@ config/icon="res://icon.png"
 
 InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
+Inventory="*res://Autoload/Inventory/Inventory.tscn"
+LootingWindow="*res://Autoload/LootingWindow/LootingWindow.tscn"
 
 [display]
 
