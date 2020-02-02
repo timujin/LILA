@@ -37,17 +37,57 @@ func _on_LineEdit_text_entered(new_text):
 	$Modal/LineEdit.clear()
 	$Interpreter.interpret(new_text)
 
-func echo(text:String):
+func echo(text:String, repeat_in_stdout=true):
 	var x = $Modal/VBoxContainer/GreetingLabel.duplicate()
 	$Modal/VBoxContainer.add_child(x)
 	x.text = text
-"
+	if repeat_in_stdout:
+		print(text)"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
-func interpret(command:String):
-	return command"
+func echoerr(text:String):
+	get_parent().echo(\"!!! \" + text)
+	
+func echowarn(text:String):
+	get_parent().echo(\"??? \" + text)
+	
+func echo(text:String):
+	get_parent().echo(text)
+
+func interpret(input:String):
+	var parsed = input.split(\" \")
+	if parsed.size() == 0:
+		return
+	var command = parsed[0]
+	parsed.remove(0)
+	match command:
+		\"warp\": warp(parsed)
+		_     : echoerr(\"Command not found: \"+command)
+		
+func warp(args):
+	if $\"/root/ModeController\".is_player_controllable == false:
+		echowarn(\"Trying to warp during a cutscene! This may cause unintended and undefined behaviour\")
+	if args.size() == 1:
+		var location = args[0]
+		var room = $\"/root/RoomSwitcher\".load_room(location)
+		if room == null:
+			echoerr(\"No room found: \" + args[0])
+		else:
+			$\"/root/RoomSwitcher\".switch_room(room)
+	elif args.size() == 2:
+		var location = args[0]
+		var destination = args[1]
+		var room = $\"/root/RoomSwitcher\".load_room(location)
+		if room == null:
+			echoerr(\"No room found: \" + args[0])
+		else:
+			$\"/root/RoomSwitcher\".switch_room(room, destination)
+	else:
+		echoerr(\"'warp' expects 1 or 2 arguments!\")
+		return
+	echo(\"Warped\")"
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2
