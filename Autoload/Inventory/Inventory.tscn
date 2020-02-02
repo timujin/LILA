@@ -35,7 +35,11 @@ func _on_All_button_down():
 	render_all()
 
 func _ready():
-	$Modal.visible = false"
+	$Modal.visible = false
+	
+func _input(ev):
+    if ev is InputEventKey and ev.scancode == KEY_K and not ev.echo:
+        $Modal.visible = !($Modal.visible)"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -74,7 +78,7 @@ func _ready():
 		\"BlahBlah\": 88
 		}"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends VBoxContainer
 
 onready var itemname = $\"ItemName\"
@@ -106,7 +110,7 @@ func render(item:ItemRender, amount:int):
 		butt3.visible = true
 		butt3.text = btns[2]"
 
-[sub_resource type="DynamicFont" id=3]
+[sub_resource type="DynamicFont" id=4]
 size = 21
 font_data = ExtResource( 1 )
 
@@ -158,12 +162,12 @@ size_flags_vertical = 3
 [node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = SubResource( 4 )
+script = SubResource( 3 )
 
 [node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_right = 395.0
 margin_bottom = 25.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "INFO"
 align = 1
 valign = 1

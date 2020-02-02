@@ -59,7 +59,7 @@ func clear_room():
 		
 		"
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 onready var interaction_window = $\"/root/InteractionWindow\"
@@ -87,7 +87,7 @@ func leave_him_be():
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")"
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node2D
 
 onready var left_edge_of_room = $RailroadLeft
@@ -106,10 +106,10 @@ func lock_pentagram():
 		left_edge_of_pent.position = left_edge_of_room.position
 		left_edge_of_room.position = tmp"
 
-[sub_resource type="RectangleShape2D" id=3]
+[sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 64.1544, 142.23 )
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Activator
 
 
@@ -119,19 +119,19 @@ func on_activate():
 	else:
 		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
 
-[sub_resource type="RectangleShape2D" id=5]
+[sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 60.673, 79.8275 )
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=7]
 script/source = "extends Activator
 
 func on_activate():
 	print(\"Drawer activated!\")"
 
-[sub_resource type="RectangleShape2D" id=7]
+[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 80.4022, 80.7245 )
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=9]
 script/source = "extends Activator
 
 #func on_activate():
@@ -152,7 +152,7 @@ func on_activate():
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]
-script = SubResource( 9 )
+script = SubResource( 2 )
 
 [node name="Background" parent="." index="1"]
 editor/display_folded = true
@@ -169,7 +169,7 @@ texture = ExtResource( 3 )
 
 [node name="Geometry" parent="." index="2"]
 editor/display_folded = true
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
 position = Vector2( 938.964, 777.14 )
@@ -213,10 +213,10 @@ ActivatorName = "Door"
 
 [node name="CollisionShape2D" parent="Door/ClickArea" index="0"]
 position = Vector2( -8.36795, -76.2434 )
-shape = SubResource( 3 )
+shape = SubResource( 4 )
 
 [node name="Activator" parent="Door" index="4"]
-script = SubResource( 4 )
+script = SubResource( 5 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -238,10 +238,10 @@ ActivatorName = "Drawer"
 
 [node name="CollisionShape2D" parent="Drawer/ClickArea" index="0"]
 position = Vector2( 14.802, -82.5406 )
-shape = SubResource( 5 )
+shape = SubResource( 6 )
 
 [node name="Activator" parent="Drawer" index="4"]
-script = SubResource( 6 )
+script = SubResource( 7 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
 position = Vector2( 616.788, 805.18 )
@@ -263,10 +263,10 @@ activation_type = "Remote"
 
 [node name="CollisionShape2D" parent="Summoner/ClickArea" index="0"]
 position = Vector2( 52.0198, -22.6701 )
-shape = SubResource( 7 )
+shape = SubResource( 8 )
 
 [node name="Activator" parent="Summoner" index="4"]
-script = SubResource( 8 )
+script = SubResource( 9 )
 
 [editable path="Door"]
 
