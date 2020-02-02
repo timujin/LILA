@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+var ui_console_pressed = false
+func _process(delta):
+	if Input.is_action_pressed(\"ui_devconsole\"):
+		if not ui_console_pressed:
+			ui_console_pressed = true
+			if is_console_open:
+				close_console()
+			else:
+				open_console()
+	elif ui_console_pressed:
+		ui_console_pressed = false
+	## done once when the key is released
+	
+var is_console_open = false
+
+func _ready():
+	close_console()
+	
+func close_console():
+	is_console_open = false
+	$Modal.visible = false
+	get_tree().paused = false
+	
+func open_console():
+	is_console_open = true
+	$Modal.visible = true
+	$Modal/LineEdit.grab_focus()
+	get_tree().paused = true
+
+func _on_LineEdit_text_entered(new_text):
+	echo(\"> \"+new_text)
+	$Modal/LineEdit.clear()
+	$Interpreter.interpret(new_text)
+
+func echo(text:String):
+	var x = $Modal/VBoxContainer/GreetingLabel.duplicate()
+	$Modal/VBoxContainer.add_child(x)
+	x.text = text
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+func interpret(command:String):
+	return command"
+
+[node name="DeveloperConsole" type="CanvasLayer"]
+pause_mode = 2
+layer = 100
+script = SubResource( 1 )
+
+[node name="Modal" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.156863 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal"]
+anchor_bottom = 1.0
+margin_left = 56.0
+margin_top = 47.0
+margin_right = 1534.0
+margin_bottom = -129.0
+alignment = 2
+
+[node name="GreetingLabel" type="Label" parent="Modal/VBoxContainer"]
+margin_top = 710.0
+margin_right = 1478.0
+margin_bottom = 724.0
+text = "Enter commands here."
+
+[node name="LineEdit" type="LineEdit" parent="Modal"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 33.0
+margin_top = -68.0
+margin_right = -37.0
+margin_bottom = -34.0
+
+[node name="Interpreter" type="Node" parent="."]
+script = SubResource( 2 )
+[connection signal="text_entered" from="Modal/LineEdit" to="." method="_on_LineEdit_text_entered"]

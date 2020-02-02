@@ -7,6 +7,7 @@
 script/source = "extends Node2D
 
 onready var sprite: = get_node(\"AnimatedSprite\")
+onready var mode_controller = $\"/root/ModeController\"
 
 func _ready():
 	print (\"SPIRIT READY\")
@@ -21,17 +22,9 @@ signal reached_destination
 var activation_intent:Node = null setget set_activation_intent
 
 var speed: = 400
-onready var sprite_allowance = 50
+onready var sprite_allowance = 50 # to account for the fact that the sprite as an X-axis thickness
 var is_moving: = false
 var target: = Vector2()
-var in_control: = true # Whether the user can control player's movement
-
-func assume_direct_control():
-	freeze()
-	in_control = false
-	
-func deassume_direct_control():
-	in_control = true
 
 func _physics_process(delta):
 	if is_moving:
@@ -54,7 +47,7 @@ func tick_movement(delta:float)->void:
 			sprite.walk_right()
 	
 func _unhandled_input(event):
-	if not in_control:
+	if mode_controller.is_player_controllable == false:
 		return
 	if not event is InputEventMouseButton:
 		return
@@ -81,14 +74,12 @@ func initialize_movement(pos):
 func freeze():
 	is_moving = false
 	sprite.freeze()
+	activation_intent = null
 	
 func set_activation_intent(goal:Node):
-	print(\"Intent:\")
-	print(goal)
 	activation_intent = goal
 	
 func activate_goal():
-	print(activation_intent)
 	if activation_intent == null:
 		return
 	activation_intent.activate()
@@ -119,10 +110,6 @@ animations = [ {
 [sub_resource type="GDScript" id=3]
 script/source = "extends AnimatedSprite
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
 func walk_left():
 	animation = \"Walk\"
 	playing = true
@@ -140,9 +127,7 @@ func freeze():
 [sub_resource type="GDScript" id=4]
 script/source = "extends Camera2D
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -158,12 +143,7 @@ func snap_to_geometry()->void:
 	else:
 		limit_left = left_limit.position.x
 		limit_right = right_limit.position.x
-		
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-"
+		"
 
 [node name="Player" type="Node2D" groups=[
 "player",

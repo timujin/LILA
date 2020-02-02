@@ -28,28 +28,6 @@ func get_room_value(path:String, key:String, default):
 		return default
 		
 func load_room_params(path:String)->Dictionary:
-	#\"\"\"
-	#var state:SceneState = load(path).get_state()
-	#var root_node = null
-	#var root_prop = null
-	#for i in range(state.get_node_count()):
-	#	print(state.get_node_name(i))
-	#	if state.get_node_name(i) == \"Room\":
-	#		root_node = i
-	#		break
-	#if root_node == null:
-	#	printerr(\"Not a valid room: \" + path)
-	#	return {\"ERROR\":path}
-	#for i in range(state.get_node_property_count(root_node)):
-	#	print(state.get_node_property_name(root_node, i))
-	#	if state.get_node_property_name(root_node, i) == \"script\":
-	#		root_prop = i
-	#		break
-	#if root_prop == null:
-	#	printerr(\"Room doesn't have a script attached: \" + path)
-	#	return {\"ERROR\":path}
-	#return state.get_node_property_value(root_node, root_prop).new().get_default_parameters()
-	#\"\"\"
 	return load(path).new().get_default_parameters()
 
 #####################
@@ -57,15 +35,25 @@ func load_room_params(path:String)->Dictionary:
 #####################
 
 onready var player = preload(\"res://Objects/TheSpirit/TheSpirit.tscn\")
+var destination_spawnpoint:String = \"\"
 
 var room:Node2D = null
 
 func on_room_loaded():
-	print(room)
+	print(\"Loaded room: \" + str(room))
 	if room.get_contains_player():
-		spawn_player(get_node(\"/root/Room/Geometry/\"+room.get_player_spawn_point()))
+		var destination
+		if destination_spawnpoint == \"\":
+			destination = get_node(\"/root/Room/Geometry/\"+\"DefaultSpiritSpawn\")
+		else:
+			destination = get_node(\"/root/Room/Geometry/\"+destination_spawnpoint)
+		if destination == null:
+			printerr(\"Spawn point not found: \" + destination_spawnpoint)
+		else:
+			spawn_player(destination)
 	
-func switch_room(to_room:PackedScene):
+func switch_room(to_room:PackedScene, destination=\"\"):
+	destination_spawnpoint = destination
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
 	room = to_room.instance()
@@ -73,9 +61,6 @@ func switch_room(to_room:PackedScene):
 	
 	
 func spawn_player(at:Node2D):
-	if at == null:
-		printerr(\"Spawn point not found: \"+room.get_player_spawn_point())
-		return
 	var p = player.instance()
 	room.add_child(p)
 	p.position = at.position

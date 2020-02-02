@@ -37,9 +37,26 @@ func _on_All_button_down():
 func _ready():
 	$Modal.visible = false
 	
-func _input(ev):
-    if ev is InputEventKey and ev.scancode == KEY_K and not ev.echo:
-        $Modal.visible = !($Modal.visible)"
+	
+var ui_inventory_pressed = false
+func _process(delta):
+    if Input.is_action_pressed(\"ui_inventory\"):
+        if not ui_inventory_pressed:
+            ui_inventory_pressed = true
+            $Modal.visible = !($Modal.visible)
+    elif ui_inventory_pressed:
+        ui_inventory_pressed = false
+        ## done once when the key is released
+	
+#func _process(delta):
+#	if Input.is_action_pressed(\"ui_inventory\"):
+#		$Modal.visible = !($Modal.visible)
+		
+# curiously, this makes the inventory visible _while_ the keys is pressed. 
+#Might be useful elsewhere	
+#func _input(ev):
+#    if ev is InputEventKey and ev.scancode == KEY_K and not ev.echo:
+#        $Modal.visible = !($Modal.visible)"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -78,7 +95,7 @@ func _ready():
 		\"BlahBlah\": 88
 		}"
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=5]
 script/source = "extends VBoxContainer
 
 onready var itemname = $\"ItemName\"
@@ -162,7 +179,7 @@ size_flags_vertical = 3
 [node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = SubResource( 3 )
+script = SubResource( 5 )
 
 [node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_right = 395.0

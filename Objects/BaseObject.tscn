@@ -8,7 +8,6 @@ script/source = "extends Area2D
 
 onready var interaction_point = get_parent().get_node(\"InteractionPoint\")
 onready var activator = get_parent().get_node(\"Activator\")
-onready var cursor_manager = get_node(\"/root/MouseCursorManager\")
 onready var floatie = get_node(\"/root/Floatie\")
 onready var mode_controller = get_node(\"/root/ModeController\")
 
@@ -16,26 +15,24 @@ export var ActivatorName : String = \"Unnamed\"
 export(String, \"From interaction point\", \"Remote\", \"Background\") var activation_type
 
 func _input_event(viewport, event, shape_idx):
-	if false: #mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
+	if mode_controller.is_cutscene:
 		return
 	if not event is InputEventMouseButton:
 		return
 	if event.button_index != BUTTON_LEFT or not event.pressed:
 		return
-	if false: #cursor_manager.is_mouse_active == false:
-		return
-	print(\"Clicked %s\" % ActivatorName) 
+		
+	trigger_activator()
 	
+func trigger_activator():
 	if activator == null:
 		printerr(\"No activator set for %s\" % ActivatorName)
 		return
 	
-	var player = get_tree().get_nodes_in_group(\"player\")
-	if player.size() == 0:
+	var player = $\"/root/Room/Player\"
+	if player == null:
 		# player not active
 		return
-	else:
-		player = player[0]
 	
 	match activation_type:
 		\"From interaction point\":
@@ -43,13 +40,8 @@ func _input_event(viewport, event, shape_idx):
 				printerr(\"No interaction point for %s\" % ActivatorName)
 				return
 			player.freeze()
-			if interaction_point.global_position.distance_to(player.position) < 0.01:
-				activator.activate()
-			else:
-				print(\"Activator:\")
-				print(activator)
-				player.set_activation_intent(activator)
-				player.initialize_movement(interaction_point.global_position)
+			player.set_activation_intent(activator)
+			player.initialize_movement(interaction_point.global_position)
 		\"Remote\":
 			player.freeze()
 			activator.activate()
@@ -57,25 +49,6 @@ func _input_event(viewport, event, shape_idx):
 			activator.activate()
 		_:
 			printerr (\"Incorrect activation type for %s: %s\" % [ActivatorName, activation_type])
-
-func _on_ClickArea_mouse_entered():
-	if false: #mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
-		return
-	if false: #get_node(\"/root/DialogueWindow\").is_up():
-		return
-	return
-	if cursor_manager.is_mouse_active:
-		cursor_manager.hand_cursor()
-		floatie.display(ActivatorName)
-
-
-func _on_ClickArea_mouse_exited():
-	if false: #mode_controller.mode != mode_controller.GameMode.WORLDSPACE:
-		return
-	if false: #get_node(\"/root/DialogueWindow\").is_up():
-		return
-	#cursor_manager.base_cursor()
-	#floatie.stop_displaying()
 "
 
 [sub_resource type="RectangleShape2D" id=2]

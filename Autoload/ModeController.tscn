@@ -3,9 +3,12 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-enum GameMode { WORLDSPACE, COMBATSPACE, SPECIALSPACE }
+var is_cutscene = false
+var is_modal_window = false
+var is_player_controllable = true setget ,get_is_player_controllable
 
-var mode:int = GameMode.WORLDSPACE"
+func get_is_player_controllable():
+	return (!is_cutscene) and (!is_modal_window)"
 
 [node name="ModeController" type="Node"]
 script = SubResource( 1 )

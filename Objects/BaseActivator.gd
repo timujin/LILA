@@ -5,6 +5,7 @@ class_name Activator
 signal activated
 
 onready var clickarea = get_parent().get_node("ClickArea")
+onready var blurbpoint = $"../BlurbPoint"
 
 func activate():
 	if clickarea != null:
@@ -17,4 +18,7 @@ func activate():
 		self.call("on_activate")
 		
 func blurb(text:String):
-	$"/root/InteractionBlurb".display(text, $"../BlurbPoint")
+	if blurbpoint == null:
+		printerr("No blurb point set!")
+	else:
+		$"/root/InteractionBlurb".display(text, blurbpoint)

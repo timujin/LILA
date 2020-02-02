@@ -30,13 +30,13 @@ script/source = "extends Activator
 #	get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/SpiritSummoningRoom.tscn\"))
 
 func on_activate():
-	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+	if $\"/root/Room\".get_self_parameter(\"door_locked\", false):
 		print(\"Locked\")
 		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
 	else:
-		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/SpiritSummoningRoom.tscn\"), \"OutOfDoorSpiritSpawn\")"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="LongCorridor" type="Sprite" parent="Background" index="0"]

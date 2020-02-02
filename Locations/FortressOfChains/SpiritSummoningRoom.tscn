@@ -21,7 +21,7 @@ func get_default_parameters()->Dictionary:
 	return {
 		\"drawer_looted\": false,
 		\"pentagram_on\" : true,
-		\"door_locked\"  : true,
+		\"door_locked\"  : false,
 	}
 	
 func is_door_locked()->bool:
@@ -168,7 +168,6 @@ scale = Vector2( 1.19912, 1.37323 )
 texture = ExtResource( 3 )
 
 [node name="Geometry" parent="." index="2"]
-editor/display_folded = true
 script = SubResource( 3 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
