@@ -14,8 +14,14 @@ func activate():
 		printerr("Activation area not set!")
 	emit_signal("activated")
 	
-	if has_method("on_activate"):
-		self.call("on_activate")
+	if $"/root/ModeController".get_is_player_holding_item():
+		apply_item($"/root/ModeController".holding_callback)
+	else:
+		if has_method("on_activate"):
+			self.call("on_activate")
+		
+func apply_item(callback):
+	callback.call_func(self)
 		
 func blurb(text:String):
 	if blurbpoint == null:

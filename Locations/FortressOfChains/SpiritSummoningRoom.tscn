@@ -205,10 +205,15 @@ script/source = "extends Activator
 onready var interaction_window = $\"/root/InteractionWindow\"
 
 func on_activate():
+	#$\"/root/ModeController\".hold(preload(\"res://ambush.PNG\"), funcref(self, \"try_activate\"))
+	#return
 	interaction_window.start()
 	interaction_window.say(\"The package is on the floor\")
 	interaction_window.add_reply(\"Pick up\", self, \"pick_up\")
 	interaction_window.add_reply(\"Leave it be\", interaction_window, \"hide\")
+
+#func try_activate(target:Node2D):
+#	print(\"Test activated\")
 
 func pick_up():
 	$\"/root/Room\".remove_package()
@@ -217,6 +222,8 @@ func pick_up():
 	interaction_window.present_item(\"StarterKnife\")
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"Read the note\", self, \"read_note\")
+	$\"/root/Inventory/Model\".add_item(\"StarterKnife\")
+	$\"/root/Inventory/Model\".add_item(\"SpiritSummoningRoomKey\")
 	
 func read_note():
 	$\"/root/BookReader\".display_book(\"This is Shady's note\")
@@ -347,6 +354,7 @@ shape = SubResource( 8 )
 script = SubResource( 9 )
 
 [node name="Package" parent="." index="6" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 465.129, 784.964 )
 
 [node name="ClickArea" parent="Package" index="3"]

@@ -21,7 +21,11 @@ func _input_event(viewport, event, shape_idx):
 		return
 	if event.button_index != BUTTON_LEFT or not event.pressed:
 		return
-
+		
+	#if $\"/root/ModeController\".get_is_player_holding_item():
+	#	print(\"Holding item\")
+	#	$\"/root/ModeController\".apply_item(self)
+	#else:
 	trigger_activator()
 
 func trigger_activator():

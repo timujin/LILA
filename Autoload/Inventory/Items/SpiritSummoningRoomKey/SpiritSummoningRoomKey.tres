@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Autoload/Inventory/InventoryItem.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+name = "Shady's key"
+description = "It opens locks"
+long_description = "It opens locks all day long"
+hint = "Use it to open a lock"
+actions = "Use"
+type = "Misc"
+equipment_slot = ""
+category = "Keys"
+countable = false

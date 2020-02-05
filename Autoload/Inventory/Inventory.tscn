@@ -37,15 +37,19 @@ func _on_All_button_down():
 func _ready():
 	$Modal.visible = false
 	
+func hide():
+	$Modal.visible = false
+	
 	
 var ui_inventory_pressed = false
 func _process(delta):
-    if Input.is_action_pressed(\"ui_inventory\"):
-        if not ui_inventory_pressed:
-            ui_inventory_pressed = true
-            $Modal.visible = !($Modal.visible)
-    elif ui_inventory_pressed:
-        ui_inventory_pressed = false
+	if Input.is_action_pressed(\"ui_inventory\"):
+		if not ui_inventory_pressed:
+			ui_inventory_pressed = true
+			$Modal.visible = !($Modal.visible)
+			render_all()
+	elif ui_inventory_pressed:
+		ui_inventory_pressed = false
         ## done once when the key is released
 	
 #func _process(delta):
@@ -88,6 +92,7 @@ func get_all_of_type(type:String):
 	return items
 		
 func _ready():
+	return
 	self.items = {
 		\"CoolHat\": 5,
 		\"FortuneCookie\": 1,
@@ -132,12 +137,14 @@ size = 21
 font_data = ExtResource( 1 )
 
 [node name="Inventory" type="CanvasLayer"]
+layer = 40
 script = SubResource( 1 )
 
 [node name="Model" type="Node" parent="."]
 script = SubResource( 2 )
 
 [node name="Modal" type="Panel" parent="."]
+editor/display_folded = true
 self_modulate = Color( 1, 1, 1, 0.439216 )
 anchor_right = 1.0
 anchor_bottom = 1.0

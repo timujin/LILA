@@ -7,8 +7,44 @@ var is_cutscene = false
 var is_modal_window = false
 var is_player_controllable = true setget ,get_is_player_controllable
 
+var holding_item = null
+var holding_callback = null
+
 func get_is_player_controllable():
-	return (!is_cutscene) and (!is_modal_window)"
+	return (!is_cutscene) and (!is_modal_window)
+	
+func get_is_player_holding_item():
+	return (holding_item != null)
+	
+func hold(icon:Texture, callback):
+	#print(\"Hold\")
+	holding_item = icon
+	holding_callback = callback
+	$\"/root/Inventory\".hide()
+	Input.set_custom_mouse_cursor(icon)
+	
+#func apply_item(obj:Node2D):
+#	if get_is_player_holding_item():
+#		holding_callback.call_func(obj)
+#	else:
+#		printerr(\"No item held!\")
+
+func drop():
+	holding_item = null
+	holding_callback = null
+	Input.set_custom_mouse_cursor(null)
+	
+func _unhandled_input (  event:InputEvent ) :
+	if !(self.get_is_player_holding_item()):
+		return
+	if self.is_cutscene:
+		return
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_RIGHT or not event.pressed:
+		return
+		
+	drop()"
 
 [node name="ModeController" type="Node"]
 script = SubResource( 1 )
