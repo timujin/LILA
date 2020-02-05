@@ -27,8 +27,8 @@ func _init(id:String):
 		icon = defaultIcon
 	if iscript == null:
 		iscript = defaultScript
-	iscript = iscript.new(id)
-	print(iscript.id)
+	iscript = iscript.new(id, icon)
+	#print(iscript.id)
 	
 		
 func pr():
