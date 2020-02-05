@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Locations/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=2]
@@ -17,11 +17,15 @@ func get_room_name()->String:
 func get_contains_player()->bool:
 	return true
 	
+func get_ui_enabled()->bool:
+	return true
+	
 func get_default_parameters()->Dictionary:
 	return {
 		\"drawer_looted\": false,
 		\"pentagram_on\" : true,
-		\"door_locked\"  : true,
+		\"door_locked\"  : false,
+		\"package_on_ground\" : false
 	}
 	
 func is_door_locked()->bool:
@@ -41,12 +45,26 @@ func render()->void:
 		$Geometry.lock_pentagram()
 	else:
 		clear_room()
+	if get_self_parameter(\"package_on_ground\", false):
+		$Package.visible = true
+	else:
+		$Package.visible = false
 		
 func clear_room():
 	$Geometry.unlock_pentagram()
 	$Summoner.queue_free()
+	$\"Door/Activator\".make_accessible()
+	$\"Drawer/Activator\".make_accessible()
 		
-		
+func place_package():
+	$Package.visible = true
+	set_self_parameter(\"package_on_ground\", true)
+	
+func remove_package():
+	$Package.visible = false
+	set_self_parameter(\"package_on_ground\", false)
+	
+
 		
 		
 		
@@ -80,13 +98,22 @@ func wake_up_summoner():
 	interaction_window.say(\"The summoner is woken up\")
 	$\"/root/Room\".set_self_parameter(\"pentagram_on\", false)
 	$\"/root/Room\".clear_room()
+	$\"/root/Room\".place_package()
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")
 	
 func leave_him_be():
 	interaction_window.say(\"You decide to not interrupt him\")
 	interaction_window.clear_replies()
-	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")"
+	interaction_window.add_reply(\"OK\", interaction_window, \"hide\")
+
+func _on_Room_room_loaded():
+	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", true):
+		interaction_window.start()
+		interaction_window.say(\"You awaken in the middle of a pentagram\")
+		interaction_window.add_reply(\"OK\", interaction_window, \"hide\")
+	
+"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node2D
@@ -113,21 +140,45 @@ extents = Vector2( 64.1544, 142.23 )
 [sub_resource type="GDScript" id=5]
 script/source = "extends Activator
 
+var accessible = false
 
 func on_activate():
-	if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
-		blurb(\"The door is locked\")
+	if accessible:
+		if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+			blurb(\"The door is locked\")
+		else:
+			get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))
 	else:
-		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))"
+		blurb(\"I can't reach the door.\")
+		
+func make_accessible():
+	accessible = true
+	$\"../ClickArea\".activation_type = \"From interaction point\"
+	
+func make_inaccessible():
+	accessible = false
+	$\"../ClickArea\".activation_type = \"Remote\""
 
 [sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 60.673, 79.8275 )
 
 [sub_resource type="GDScript" id=7]
 script/source = "extends Activator
+var accessible = false
 
 func on_activate():
-	print(\"Drawer activated!\")"
+	if accessible:
+		blurb(\"This sure is a drawer\")
+	else:
+		blurb(\"I can't reach the drawer.\")
+		
+func make_accessible():
+	accessible = true
+	$\"../ClickArea\".activation_type = \"From interaction point\"
+	
+func make_inaccessible():
+	accessible = false
+	$\"../ClickArea\".activation_type = \"Remote\""
 
 [sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 80.4022, 80.7245 )
@@ -149,11 +200,28 @@ script/source = "extends Activator
 func on_activate():
 	$\"/root/Room/Director\".activate_summoner()"
 
-[node name="Room" instance=ExtResource( 1 )]
+[sub_resource type="GDScript" id=10]
+script/source = "extends Activator
+onready var interaction_window = $\"/root/InteractionWindow\"
+
+func on_activate():
+	interaction_window.start()
+	interaction_window.say(\"The package is on the floor\")
+	interaction_window.add_reply(\"Pick up\", self, \"pick_up\")
+	interaction_window.add_reply(\"Leave it be\", interaction_window, \"hide\")
+
+func pick_up():
+	$\"/root/Room\".remove_package()
+	interaction_window.hide()"
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]
 script = SubResource( 2 )
+
+[node name="Background" parent="." index="1"]
+editor/display_folded = true
 
 [node name="RoomBrickBlack" type="Sprite" parent="Background" index="0"]
 position = Vector2( 797.207, 449.385 )
@@ -166,6 +234,7 @@ scale = Vector2( 1.19912, 1.37323 )
 texture = ExtResource( 3 )
 
 [node name="Geometry" parent="." index="2"]
+editor/display_folded = true
 script = SubResource( 3 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
@@ -190,6 +259,7 @@ position = Vector2( 291.525, 774.563 )
 position = Vector2( 370.956, 777.074 )
 
 [node name="Door" parent="." index="3" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -206,6 +276,7 @@ position = Vector2( 76.4543, 44.3767 )
 
 [node name="ClickArea" parent="Door" index="3"]
 ActivatorName = "Door"
+activation_type = "Remote"
 
 [node name="CollisionShape2D" parent="Door/ClickArea" index="0"]
 position = Vector2( -8.36795, -76.2434 )
@@ -215,6 +286,7 @@ shape = SubResource( 4 )
 script = SubResource( 5 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -230,6 +302,7 @@ position = Vector2( -2.21606, 38.8365 )
 
 [node name="ClickArea" parent="Drawer" index="3"]
 ActivatorName = "Drawer"
+activation_type = "Remote"
 
 [node name="CollisionShape2D" parent="Drawer/ClickArea" index="0"]
 position = Vector2( 14.802, -82.5406 )
@@ -239,6 +312,7 @@ shape = SubResource( 6 )
 script = SubResource( 7 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
+editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
@@ -263,8 +337,20 @@ shape = SubResource( 8 )
 [node name="Activator" parent="Summoner" index="4"]
 script = SubResource( 9 )
 
+[node name="Package" parent="." index="6" instance=ExtResource( 4 )]
+position = Vector2( 465.129, 784.964 )
+
+[node name="ClickArea" parent="Package" index="3"]
+ActivatorName = "Package"
+
+[node name="Activator" parent="Package" index="4"]
+script = SubResource( 10 )
+[connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
+
 [editable path="Door"]
 
 [editable path="Drawer"]
 
 [editable path="Summoner"]
+
+[editable path="Package"]

@@ -21,19 +21,19 @@ func _input_event(viewport, event, shape_idx):
 		return
 	if event.button_index != BUTTON_LEFT or not event.pressed:
 		return
-		
+
 	trigger_activator()
-	
+
 func trigger_activator():
 	if activator == null:
 		printerr(\"No activator set for %s\" % ActivatorName)
 		return
-	
+
 	var player = $\"/root/Room/Player\"
 	if player == null:
 		# player not active
 		return
-	
+
 	match activation_type:
 		\"From interaction point\":
 			if interaction_point == null:
