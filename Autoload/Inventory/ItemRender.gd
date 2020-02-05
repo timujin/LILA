@@ -2,7 +2,7 @@ class_name ItemRender
 
 var resource:InventoryItem 
 var icon    :Texture
-var script  :ItemScript
+var iscript  :ItemScript
 var iid     :String
 
 const defaultIcon = preload("res://Autoload/Inventory/DefaultIcon.png")
@@ -13,26 +13,26 @@ func _init(id:String):
 	print("Loading..."+id)
 	resource = load("res://Autoload/Inventory/Items/%s/%s.tres" % [id,id])
 	icon = load("res://Autoload/Inventory/Items/%s/%s.png"  % [id,id])
-	script = load("res://Autoload/Inventory/Items/%s/%s.gd"   % [id,id])
+	iscript = load("res://Autoload/Inventory/Items/%s/%s.gd"   % [id,id])
 	if resource == null:
 		resource = load("res://Autoload/Inventory/Items/%s/%s.tres" % [errorItem,errorItem]).duplicate(true)
 		resource.name = id
 		resource.long_description = "Item not found: " + id
 		icon = load("res://Autoload/Inventory/Items/%s/%s.png"  % [errorItem,errorItem])
-		script = load("res://Autoload/Inventory/Items/%s/%s.gd"   % [errorItem,errorItem])
+		iscript = load("res://Autoload/Inventory/Items/%s/%s.gd"   % [errorItem,errorItem])
 		#id = errorItem
 		print("Loading:")
 		print(resource.long_description)
 	if icon == null:
 		icon = defaultIcon
-	if script == null:
-		script = defaultScript
-	script = script.new(id)
+	if iscript == null:
+		iscript = defaultScript
+	iscript = iscript.new(id)
 	
 		
 func pr():
 	print(resource)
 	print(icon)
-	print(script)
+	print(iscript)
 	print(resource.long_description)
-	script.party()
+	iscript.party()

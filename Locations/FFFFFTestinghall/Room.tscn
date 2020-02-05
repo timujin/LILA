@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Objects/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Locations/BaseRoom.tscn" type="PackedScene" id=1]
+
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends \"res://Objects/BaseRoom.gd\"

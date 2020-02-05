@@ -1,0 +1,64 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var card_prefab = preload(\"res://Combat/Card.tscn\")"
+
+[node name="Combat" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="Bulletin" type="Node2D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 120
+
+[node name="Control" type="Control" parent="UI"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="UtilityBelt" type="MarginContainer" parent="UI/Control"]
+editor/display_folded = true
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -75.0
+
+[node name="Label" type="Label" parent="UI/Control/UtilityBelt"]
+margin_top = 30.0
+margin_right = 1600.0
+margin_bottom = 44.0
+text = "Here be utility belt"
+align = 1
+valign = 1
+
+[node name="Hand" type="MarginContainer" parent="UI/Control"]
+editor/display_folded = true
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 187.0
+margin_bottom = 369.0
+
+[node name="Label" type="Label" parent="UI/Control/Hand"]
+margin_top = 84.0
+margin_right = 1600.0
+margin_bottom = 98.0
+text = "Here be player's cards"
+align = 1
+valign = 1
+
+[node name="EnemyHand" type="MarginContainer" parent="UI/Control"]
+editor/display_folded = true
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_bottom = 198.0
+
+[node name="Label" type="Label" parent="UI/Control/EnemyHand"]
+margin_top = 92.0
+margin_right = 1600.0
+margin_bottom = 106.0
+text = "Here be enemy's cards"
+align = 1
+valign = 1

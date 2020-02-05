@@ -1,21 +1,35 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Locations/BaseRoom.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends BaseRoom
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
+func get_room_name()->String:
+	return \"Bardo\"
+	
+func get_contains_player()->bool:
+	return false
+	
+func get_ui_enabled()->bool:
+	return false
+	
+func get_default_parameters()->Dictionary:
+	return {}
+func get_player_spawn_point()->String:
+	return \"DefaultSpiritSpawn\"
+		
+################################
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+func render()->void:
+	pass
+		
+		
+		
+		
+		
+		
+		
 "
 
 [sub_resource type="GDScript" id=2]
@@ -25,24 +39,12 @@ signal user_proceed
 
 var state
 var complete: = false
-onready var reply_buttons = get_node(\"../Replies\")
+onready var reply_buttons = $\"../Dialogue/Margin/VBoxContainer/Replies\"
 
 enum Speaker { GEE, GLD, TAS }
 
 func say(speaker:int, text:String):
-	get_node(\"../Says\").say(speaker, text)
-
-\"\"\"func scenario():
-	yield(self,\"user_proceed\")
-	say(Speaker.GEE, \"Test154545345453534\")
-	var reply = yield(get_node(\"../Replies\"), \"player_reply\")
-	say(Speaker.GLD, reply)
-	yield(self,\"user_proceed\")
-	say(Speaker.TAS, \"Test2\")
-	yield(self,\"user_proceed\")
-	say(Speaker.GLD, \"Test4\")
-	complete = true
-	yield()\"\"\"
+	$\"../Dialogue/Margin/VBoxContainer/Says\".say(speaker, text)
 	
 func scenario():
 	reply_buttons.clear()
@@ -71,9 +73,9 @@ func scenario():
 			current_branch = dialogue_tree[current_branch[\"next\"]]
 		else:
 			printerr(\"Dialogue tree incoherent\")
-	get_node(\"../ColorRect/AnimationPlayer\").play(\"Fadein\")
-	yield(get_node(\"../ColorRect/AnimationPlayer\"), \"animation_finished\")
-	get_tree().change_scene(\"res://Locations/00001PentagramRoom/PentagramRoom.tscn\")
+	#get_node(\"../ColorRect/AnimationPlayer\").play(\"Fadein\")
+	#yield(get_node(\"../ColorRect/AnimationPlayer\"), \"animation_finished\")
+	get_tree().change_scene(\"res://Locations/FortressOfChains/SpiritSummoningRoom.tscn\")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -81,8 +83,8 @@ func _ready():
 	
 func _input(event):
 	if Input.is_action_pressed(\"ui_proceed\"):
-		if get_node(\"../Says\").currently_typing:
-			get_node(\"../Says\").autocomplete()
+		if $\"../Dialogue/Margin/VBoxContainer/Says\".currently_typing:
+			$\"../Dialogue/Margin/VBoxContainer/Says\".autocomplete()
 		else:
 			emit_signal(\"user_proceed\")
 
@@ -98,7 +100,7 @@ func proceed():
 #	pass
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=6]
 script/source = "extends Node
 enum Speaker { GEE, GLD, TAS }
 
@@ -180,18 +182,9 @@ var tree = {
 			\"Proceed\": \"\",
 		}
 	},
-}
+}"
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-"
-
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends VBoxContainer
 
 # Declare member variables here. Examples:
@@ -205,7 +198,7 @@ var currently_typing:= false
 #export(PackedScene) var sayBox
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	get_node(\"../Director\").proceed()
+	get_node(\"/root/Room/Director\").proceed()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -251,13 +244,7 @@ func clean_up():
 func letteringend():
 	currently_typing = false"
 
-[sub_resource type="DynamicFont" id=5]
-size = 22
-outline_size = 1
-outline_color = Color( 0.45098, 0.0666667, 0.407843, 1 )
-font_data = ExtResource( 1 )
-
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=4]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:percent_visible")
 tracks/0/interp = 1
@@ -285,7 +272,7 @@ tracks/1/keys = {
 } ]
 }
 tracks/2/type = "method"
-tracks/2/path = NodePath("../../Director")
+tracks/2/path = NodePath("../../../../../Director")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -299,7 +286,7 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=5]
 script/source = "extends VBoxContainer
 
 signal player_reply
@@ -342,6 +329,7 @@ func clear():
 	return show_replies([])
 	
 func click_reply(i:int):
+	print(\"Click reply\")
 	if (i < 0) or (i>3):
 		printerr(\"Trying to click: %d\" % i)
 		return
@@ -350,125 +338,126 @@ func click_reply(i:int):
 
 func player_click(extra_arg_0):
 	click_reply(extra_arg_0)
+
+
+func _on_r0_pressed():
+	pass # Replace with function body.
 "
 
-[sub_resource type="Animation" id=8]
-tracks/0/type = "value"
-tracks/0/path = NodePath(".:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 1,
-"values": [ true ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath(".:color")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0, 1 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 0,
-"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
-}
-
-[node name="Room" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
-[node name="Director" type="Node" parent="."]
+[node name="Director" type="Node" parent="." index="0"]
 script = SubResource( 2 )
 
-[node name="DialogueTree" type="Node" parent="Director"]
+[node name="DialogueTree" type="Node" parent="Director" index="0"]
+script = SubResource( 6 )
+
+[node name="Background" parent="." index="1"]
+editor/display_folded = true
+
+[node name="ColorRect" type="ColorRect" parent="Background" index="0"]
+margin_left = -276.0
+margin_top = -185.0
+margin_right = 1975.0
+margin_bottom = 1162.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Geometry" parent="." index="2"]
+editor/display_folded = true
+
+[node name="RailroadLeft" parent="Geometry" index="0"]
+position = Vector2( 14.4199, 648.907 )
+
+[node name="RailroadRight" parent="Geometry" index="1"]
+position = Vector2( 1622.27, 710.193 )
+
+[node name="CameraLimitLeft" parent="Geometry" index="2"]
+position = Vector2( 11.4916, 648.799 )
+
+[node name="CameraLimitRight" parent="Geometry" index="3"]
+position = Vector2( 1624.84, 696.905 )
+
+[node name="DefaultSpiritSpawn" parent="Geometry" index="4"]
+position = Vector2( 790.071, 1124.38 )
+
+[node name="Dialogue" type="Control" parent="." index="3"]
+margin_right = 1608.0
+margin_bottom = 909.0
+
+[node name="Margin" type="MarginContainer" parent="Dialogue" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/Margin" index="0"]
+margin_right = 1508.0
+margin_bottom = 809.0
+
+[node name="Says" type="VBoxContainer" parent="Dialogue/Margin/VBoxContainer" index="0"]
+margin_right = 1508.0
+margin_bottom = 724.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 9.04
+alignment = 2
 script = SubResource( 3 )
 
-[node name="Panel" type="Panel" parent="."]
-modulate = Color( 0, 0, 0, 1 )
-self_modulate = Color( 0, 0, 0, 1 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Says" type="VBoxContainer" parent="."]
-anchor_left = 0.5
-anchor_right = 0.5
-margin_left = -296.0
-margin_top = -4096.0
-margin_right = 318.0
-margin_bottom = 427.0
-alignment = 2
-script = SubResource( 4 )
-
-[node name="SayPrototype" type="RichTextLabel" parent="Says"]
-margin_top = 4498.0
-margin_right = 614.0
-margin_bottom = 4523.0
+[node name="SayPrototype" type="RichTextLabel" parent="Dialogue/Margin/VBoxContainer/Says" index="0"]
+visible = false
+margin_top = 688.0
+margin_right = 1508.0
+margin_bottom = 713.0
 rect_min_size = Vector2( 0, 25 )
-custom_fonts/normal_font = SubResource( 5 )
-custom_colors/default_color = Color( 1, 1, 1, 1 )
+size_flags_horizontal = 3
 bbcode_enabled = true
-bbcode_text = "[color=red]fdsfdsfsdffsdfsf[/color] 	h"
-text = "fdsfdsfsdffsdfsf 	h"
-scroll_active = false
+bbcode_text = "[color=red]fdsfdsfsdffsdfsf[/color] 
+"
+text = "fdsfdsfsdffsdfsf 
+"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Says/SayPrototype"]
-anims/Lettering = SubResource( 6 )
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Dialogue/Margin/VBoxContainer/Says/SayPrototype" index="1"]
+anims/Lettering = SubResource( 4 )
 
-[node name="Replies" type="VBoxContainer" parent="."]
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 150.0
-margin_top = -116.0
-margin_right = -150.0
-alignment = 1
-script = SubResource( 7 )
+[node name="Replies" type="VBoxContainer" parent="Dialogue/Margin/VBoxContainer" index="1"]
+margin_top = 728.0
+margin_right = 1508.0
+margin_bottom = 809.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = SubResource( 5 )
 
-[node name="r0" type="Button" parent="Replies"]
-margin_top = 12.0
-margin_right = 1300.0
-margin_bottom = 32.0
-text = "[REPLY TEXT]"
+[node name="r0" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="0"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
 flat = true
 
-[node name="r1" type="Button" parent="Replies"]
-margin_top = 36.0
-margin_right = 1300.0
-margin_bottom = 56.0
-text = "[REPLY TEXT]"
+[node name="r1" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="1"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
 flat = true
 
-[node name="r2" type="Button" parent="Replies"]
-margin_top = 60.0
-margin_right = 1300.0
-margin_bottom = 80.0
-text = "[REPLY TEXT]"
+[node name="r2" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="2"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
 flat = true
 
-[node name="r3" type="Button" parent="Replies"]
-margin_top = 84.0
-margin_right = 1300.0
-margin_bottom = 104.0
-text = "[REPLY TEXT]"
+[node name="r3" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="3"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
 flat = true
-
-[node name="ColorRect" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-mouse_filter = 2
-color = Color( 1, 1, 1, 0 )
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
-anims/Fadein = SubResource( 8 )
-
-[node name="Room" type="Node2D" parent="."]
-[connection signal="pressed" from="Replies/r0" to="Replies" method="click_reply" binds= [ 0 ]]
-[connection signal="pressed" from="Replies/r1" to="Replies" method="player_click" binds= [ 1 ]]
-[connection signal="pressed" from="Replies/r2" to="Replies" method="player_click" binds= [ 2 ]]
-[connection signal="pressed" from="Replies/r3" to="Replies" method="player_click" binds= [ 3 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r0" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 0 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r1" to="." method="click_reply" binds= [ 1 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r2" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 2 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r3" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 3 ]]

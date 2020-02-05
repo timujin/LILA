@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "BaseRoom",
 "language": "GDScript",
-"path": "res://Objects/BaseRoom.gd"
+"path": "res://Locations/BaseRoom.gd"
 }, {
 "base": "Resource",
 "class": "InventoryItem",
@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://Locations/FortressOfChains/SpiritSummoningRoom.tscn"
 config/icon="res://icon.png"
 
 [autoload]

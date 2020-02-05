@@ -68,7 +68,7 @@ func interpret(input:String):
 		
 func warp(args):
 	if $\"/root/ModeController\".is_player_controllable == false:
-		echowarn(\"Trying to warp during a cutscene! This may cause unintended and undefined behaviour\")
+		echowarn(\"Trying to warp during a cutscene or an open dialog! This may cause unintended and undefined behaviour\")
 	if args.size() == 1:
 		var location = args[0]
 		var room = $\"/root/RoomSwitcher\".load_room(location)

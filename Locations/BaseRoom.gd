@@ -37,6 +37,9 @@ func get_room_name()->String:
 func get_contains_player()->bool:
 	return false
 	
+func get_ui_enabled()->bool:
+	return true
+	
 func get_default_parameters()->Dictionary:
 	return {}
 	
