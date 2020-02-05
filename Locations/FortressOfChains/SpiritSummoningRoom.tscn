@@ -23,9 +23,9 @@ func get_ui_enabled()->bool:
 func get_default_parameters()->Dictionary:
 	return {
 		\"drawer_looted\": false,
-		\"pentagram_on\" : true,
+		\"pentagram_on\" : false,
 		\"door_locked\"  : false,
-		\"package_on_ground\" : false
+		\"package_on_ground\" : true
 	}
 	
 func is_door_locked()->bool:
@@ -212,7 +212,16 @@ func on_activate():
 
 func pick_up():
 	$\"/root/Room\".remove_package()
-	interaction_window.hide()"
+	interaction_window.say(\"You pick up and open the package!\")
+	interaction_window.present_item(\"SpiritSummoningRoomKey\")
+	interaction_window.present_item(\"StarterKnife\")
+	interaction_window.clear_replies()
+	interaction_window.add_reply(\"Read the note\", self, \"read_note\")
+	
+func read_note():
+	$\"/root/BookReader\".display_book(\"This is Shady's note\")
+	interaction_window.clear_replies()
+	interaction_window.add_reply(\"OK cool\", interaction_window, \"hide\")"
 
 [node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )

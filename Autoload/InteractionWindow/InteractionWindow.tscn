@@ -5,6 +5,7 @@ script/source = "extends CanvasLayer
 
 onready var reply = preload(\"res://Autoload/InteractionWindow/Reply.tscn\")
 onready var say   = preload(\"res://Autoload/InteractionWindow/DialogueAtom.tscn\")
+onready var present = preload(\"res://Autoload/InteractionWindow/ItemGetAtom.tscn\")
 onready var default_face = preload(\"res://Autoload/InteractionWindow/DefaultFace.png\")
 
 onready var reply_container = $\"Modal/PanelContainer/MarginContainer/VBoxContainer\"
@@ -30,6 +31,16 @@ func say(text:String, defface:=false, face:Texture=null):
 		x.init(text, default_face)
 	else:
 		x.init(text, face)
+		
+func present(name:String, descr:String, icon:Texture=null):
+	var x = present.instance()
+	say_container.add_child(x)
+	x.init(name,descr,icon)
+	
+func present_item(id:String):
+	var x = present.instance()
+	say_container.add_child(x)
+	x.init_item(id)
 		
 func add_reply(text:String, listener:Node, fname:String):
 	var x = reply.instance()

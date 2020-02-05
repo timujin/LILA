@@ -57,6 +57,7 @@ LootingWindow="*res://Autoload/LootingWindow/LootingWindow.tscn"
 InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
+BookReader="*res://Autoload/BookReader/BookReader.tscn"
 
 [display]
 
