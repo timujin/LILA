@@ -24,7 +24,8 @@ func render(item:ItemRender, amount:int = 1)->void:
 	title.text   = item.resource.name
 	tagline.text = item.resource.description
 	counter.text = str(amount)
-	id = item.script.id
+	print(item)
+	id = item.iscript.id
 	self.amount = amount
 
 func _on_ItemPrototype_pressed():

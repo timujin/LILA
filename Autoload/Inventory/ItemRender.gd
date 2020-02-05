@@ -28,6 +28,7 @@ func _init(id:String):
 	if iscript == null:
 		iscript = defaultScript
 	iscript = iscript.new(id)
+	print(iscript.id)
 	
 		
 func pr():
