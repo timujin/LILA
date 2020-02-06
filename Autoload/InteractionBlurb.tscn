@@ -21,19 +21,16 @@ func display(text:String, at:Node2D):
 	call_deferred(\"reparent\",at)
 
 func reparent(at:Node2D):
-	print(\"Rect\")
-	print(p.rect_position)
 	var pos = at.get_global_transform_with_canvas().get_origin()
-	print(\"orig\")
-	print(pos)
 	p.rect_position = pos
-	
-	#p.get_parent().remove_child(p) # error here  
-	#at.add_child(p) 
 
 func _on_Timer_timeout():
 	p.visible = false
-"
+
+func _input(event):
+    if event is InputEventMouseButton:
+        if event.pressed:
+            p.visible = false"
 
 [sub_resource type="DynamicFont" id=2]
 size = 25
@@ -66,6 +63,6 @@ text = "This is a short interaction floatie that is expected to only appear for 
 scroll_active = false
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 4.0
+wait_time = 3.0
 one_shot = true
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

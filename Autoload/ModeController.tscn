@@ -10,6 +10,15 @@ var is_player_controllable = true setget ,get_is_player_controllable
 var holding_item = null
 var holding_callback = null
 
+signal ui_reset
+
+func reset():
+	emit_signal(\"reset\")
+	is_cutscene = false
+	is_modal_window = false
+	drop()
+	
+
 func get_is_player_controllable():
 	return (!is_cutscene) and (!is_modal_window)
 	
@@ -17,10 +26,9 @@ func get_is_player_holding_item():
 	return (holding_item != null)
 	
 func hold(icon:Texture, callback):
-	#print(\"Hold\")
 	holding_item = icon
 	holding_callback = callback
-	$\"/root/Inventory\".hide()
+	$\"/root/HUD\".hide_all()
 	Input.set_custom_mouse_cursor(icon)
 	
 #func apply_item(obj:Node2D):

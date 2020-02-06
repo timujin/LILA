@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Placeholders/ironallyswords.png" type="Texture" id=1]
+[ext_resource path="res://Content/Items/StarterKnife/StarterKnifeStarterKnife.gd" type="Script" id=2]
+[ext_resource path="res://BasicEntities/Item/InventoryItem.gd" type="Script" id=3]
+
+[resource]
+script = ExtResource( 3 )
+id = "StarterKnife"
+icon = ExtResource( 1 )
+iscript = ExtResource( 2 )
+name = "Knife"
+description = "It's a weapon. It deals damage. What else do you need?"
+long_description = "Small, dull, generally lackluster. But gets things done."
+hint = "Deals damage based on your Warfare skill.
+Equip it."
+actions = "Use"
+type = ""
+equipment_slot = "Main"
+category = "Blades"
+countable = false

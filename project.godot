@@ -12,41 +12,35 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Activator",
 "language": "GDScript",
-"path": "res://Objects/BaseActivator.gd"
+"path": "res://BasicEntities/Interactable/BaseActivator.gd"
 }, {
 "base": "Node2D",
 "class": "BaseRoom",
 "language": "GDScript",
-"path": "res://Locations/BaseRoom.gd"
+"path": "res://BasicEntities/Room/BaseRoom.gd"
 }, {
 "base": "Resource",
 "class": "InventoryItem",
 "language": "GDScript",
-"path": "res://Autoload/Inventory/InventoryItem.gd"
-}, {
-"base": "Reference",
-"class": "ItemRender",
-"language": "GDScript",
-"path": "res://Autoload/Inventory/ItemRender.gd"
+"path": "res://BasicEntities/Item/InventoryItem.gd"
 }, {
 "base": "GDScript",
 "class": "ItemScript",
 "language": "GDScript",
-"path": "res://Autoload/Inventory/ItemScript.gd"
+"path": "res://BasicEntities/Item/ItemScript.gd"
 } ]
 _global_script_class_icons={
 "Activator": "",
 "BaseRoom": "",
 "InventoryItem": "",
-"ItemRender": "",
 "ItemScript": ""
 }
 
 [application]
 
 config/name="LILA"
-run/main_scene="res://Locations/FortressOfChains/SpiritSummoningRoom.tscn"
-config/icon="res://icon.png"
+run/main_scene="res://Content/Locations/FortressOfChains/SpiritSummoningRoom.tscn"
+config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
@@ -58,6 +52,8 @@ InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
 BookReader="*res://Autoload/BookReader/BookReader.tscn"
+Global="*res://Autoload/Global.tscn"
+HUD="*res://Autoload/HUD.tscn"
 
 [display]
 
@@ -87,7 +83,3 @@ ui_devconsole={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":96,"unicode":0,"echo":false,"script":null)
  ]
 }
-
-[rendering]
-
-environment/default_environment="res://default_env.tres"

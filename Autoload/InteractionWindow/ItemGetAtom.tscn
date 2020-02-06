@@ -11,7 +11,7 @@ func init(name:String, descr:String, icon:Texture=null):
 	$Description.text = descr
 	
 func init_item(id:String):
-	var itemrender = ItemRender.new(id)
+	var itemrender = null#ItemRender.new(id)
 	self.init(itemrender.resource.name, itemrender.resource.description, itemrender.icon)"
 
 [node name="ItemGetAtom" type="HBoxContainer"]

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Content/Items/MissingNo/Collectible_Missing_No._icon.png" type="Texture" id=1]
+[ext_resource path="res://BasicEntities/Item/InventoryItem.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+id = "MissingNo"
+icon = ExtResource( 1 )
+name = "Error: item could not be loaded"
+description = ""
+long_description = ""
+hint = "Report this to the developer"
+actions = ""
+type = "Misc"
+equipment_slot = ""
+category = "ERROR"
+countable = true

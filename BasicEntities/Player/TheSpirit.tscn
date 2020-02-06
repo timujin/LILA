@@ -1,0 +1,175 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://BasicEntities/Player/SpiritSide.png" type="Texture" id=1]
+[ext_resource path="res://BasicEntities/Player/SpiritSide2.png" type="Texture" id=2]
+
+
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+onready var sprite: = get_node(\"AnimatedSprite\")
+onready var mode_controller = $\"/root/ModeController\"
+
+func _ready():
+	print (\"SPIRIT READY\")
+	sprite.freeze()
+
+##################
+###### MOVEMENT ##
+##################
+
+signal reached_destination
+
+var activation_intent:Node = null setget set_activation_intent
+
+var speed: = 400
+onready var sprite_allowance = 50 # to account for the fact that the sprite as an X-axis thickness
+var is_moving: = false
+var target: = Vector2()
+
+func _physics_process(delta):
+	if is_moving:
+		tick_movement(delta)
+	
+func tick_movement(delta:float)->void:
+	var distance_to_move   = delta*speed
+	var distance_to_target = (target - position).length()
+	if distance_to_move >= distance_to_target:
+		position = target
+		emit_signal(\"reached_destination\")
+		activate_goal()
+		freeze()
+	else:
+		var direction_to_target = (target-position).normalized()
+		position = direction_to_target * distance_to_move + position
+		if direction_to_target.x < 0:
+			sprite.walk_left()
+		if direction_to_target.x > 0:
+			sprite.walk_right()
+	
+func _unhandled_input(event):
+	if mode_controller.is_player_controllable == false:
+		return
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+	var pos = clamp_to_railroad(get_global_mouse_position ( ))
+	set_activation_intent(null)
+	initialize_movement(pos)
+	
+func clamp_to_railroad(pos:Vector2) -> Vector2:
+	var rleft = $\"/root/Room/Geometry/RailroadLeft\"
+	var rright= $\"/root/Room/Geometry/RailroadRight\"
+	if rleft == null or rright == null:
+		print_debug(\"Invalid room geometry\")
+		return pos
+	var x = clamp(pos.x, rleft.position.x+sprite_allowance, rright.position.x-sprite_allowance)
+	var y = rleft.position.y
+	return Vector2(x,y)
+	
+func initialize_movement(pos):
+	is_moving = true
+	target = clamp_to_railroad(pos)
+	
+func freeze():
+	is_moving = false
+	sprite.freeze()
+	activation_intent = null
+	
+func set_activation_intent(goal:Node):
+	activation_intent = goal
+	
+func activate_goal():
+	if activation_intent == null:
+		return
+	activation_intent.activate()
+	activation_intent = null
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	"
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "Walk",
+"speed": 5.0
+} ]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends AnimatedSprite
+
+func walk_left():
+	animation = \"Walk\"
+	playing = true
+	flip_h = false
+	
+
+func walk_right():
+	animation = \"Walk\"
+	playing = true
+	flip_h = true
+	
+func freeze():
+	playing = false"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Camera2D
+
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	snap_to_geometry()
+	
+func snap_to_geometry()->void:
+	var left_limit = $\"/root/Room/Geometry/CameraLimitLeft\"
+	var right_limit = $\"/root/Room/Geometry/CameraLimitRight\"
+	if left_limit == null or right_limit == null:
+		print_debug(\"No room limits found\")
+		limit_left = -1000000000
+		limit_right = 1000000000
+	else:
+		limit_left = left_limit.position.x
+		limit_right = right_limit.position.x
+		"
+
+[node name="Player" type="Node2D" groups=[
+"player",
+]]
+script = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+position = Vector2( 1.91187, 18.1181 )
+scale = Vector2( 1.35936, 1.35936 )
+frames = SubResource( 2 )
+animation = "Walk"
+offset = Vector2( 0, -97.29 )
+script = SubResource( 3 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0.00012207, -10.8152 )
+current = true
+limit_top = 0
+limit_bottom = 1050
+limit_smoothed = true
+smoothing_enabled = true
+drag_margin_left = 0.3
+drag_margin_top = 0.3
+drag_margin_right = 0.3
+drag_margin_bottom = 0.3
+editor_draw_limits = true
+script = SubResource( 4 )
