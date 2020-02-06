@@ -193,6 +193,7 @@ margin_bottom = 772.0
 alignment = 1
 
 [node name="Left" type="VBoxContainer" parent="Modal/Window/HBoxContainer"]
+editor/display_folded = true
 margin_right = 395.0
 margin_bottom = 765.0
 size_flags_horizontal = 3
@@ -334,7 +335,6 @@ size_flags_stretch_ratio = 11.6
 [node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
 margin_right = 1018.0
 size_flags_horizontal = 3
-custom_constants/separation = 23
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" method="_on_Button_pressed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" method="_on_Button_pressed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" method="_on_Button_pressed"]

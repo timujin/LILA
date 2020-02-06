@@ -9,18 +9,23 @@ onready var icon = $\"Base/VBoxContainer/TextureRect\"
 onready var text = $\"Base/VBoxContainer/TextEdit\"
 
 func init(icon:Texture, text:String):
-	self.icon.texture = icon
+	if icon != null:
+		self.icon.texture = icon
 	self.text.text = text"
 
 [node name="Card" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_right = 0.154
+anchor_bottom = 0.364
+margin_right = -0.400024
+margin_bottom = 0.399994
+rect_min_size = Vector2( 241.18, 0 )
 script = SubResource( 1 )
 
 [node name="Base" type="Panel" parent="."]
-margin_left = -1.0
-margin_top = -325.0
-margin_right = 238.0
+margin_left = 3.2959
+margin_top = 2.91977
+margin_right = 242.296
+margin_bottom = 327.92
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Base"]
 anchor_right = 1.0
