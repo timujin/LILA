@@ -30,8 +30,8 @@ func render(item, amount:int = -1)->void:
 		counter.text = str(amount)
 
 func _on_ItemPrototype_pressed():
-	print(\"onpress\")
-	print(self.item == null)
+	#print(\"onpress\")
+	#print(self.item == null)
 	emit_signal(\"selected\", self.item)
 "
 

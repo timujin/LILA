@@ -3,10 +3,11 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
+onready var mode = $\"/root/ModeController\"
+
 onready var reply = preload(\"res://Autoload/InteractionWindow/Reply.tscn\")
 onready var say   = preload(\"res://Autoload/InteractionWindow/DialogueAtom.tscn\")
 onready var present = preload(\"res://Autoload/InteractionWindow/ItemGetAtom.tscn\")
-onready var default_face = preload(\"res://Autoload/InteractionWindow/DefaultFace.png\")
 
 onready var reply_container = $\"Modal/PanelContainer/MarginContainer/VBoxContainer\"
 onready var say_container   = $\"Modal/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer\"
@@ -28,7 +29,7 @@ func say(text:String, defface:=false, face:Texture=null):
 	var x = say.instance()
 	say_container.add_child(x)
 	if defface:
-		x.init(text, default_face)
+		x.init(text)
 	else:
 		x.init(text, face)
 		
@@ -37,10 +38,10 @@ func present(name:String, descr:String, icon:Texture=null):
 	say_container.add_child(x)
 	x.init(name,descr,icon)
 	
-func present_item(id:String):
+func present_item(item):
 	var x = present.instance()
 	say_container.add_child(x)
-	x.init_item(id)
+	x.init_item(item)
 		
 func add_reply(text:String, listener:Node, fname:String):
 	var x = reply.instance()
@@ -58,6 +59,11 @@ func start():
 	unhide()
 	
 func _ready():
+	mode.connect(\"reset\", self, \"on_reset\")
+	hide()
+	
+func on_reset():
+	clear()
 	hide()"
 
 [node name="InteractionWindow" type="CanvasLayer"]

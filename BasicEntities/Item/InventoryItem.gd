@@ -11,10 +11,10 @@ export(String, MULTILINE) var long_description
 export(String, MULTILINE) var hint
 export(String, MULTILINE) var actions
 
-export(String, "Equipment", "Consumable", "Tool", "Misc") var type
+export(String, "Equipment", "Consumable", "Tool", "Misc") var type = "Misc"
 export(String, \
 	"None", "Head", "Chest", "Main", "Off", "Gloves", "Lapel", "Pants", "Shoes", "Ring", "Amulet", "Accessory")\
-	 var equipment_slot
+	 var equipment_slot = "None"
 
 export(String) var category
 export(bool)   var countable

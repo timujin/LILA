@@ -9,12 +9,8 @@ script/source = "extends CanvasLayer
 onready var mode = $\"/root/ModeController\"
 
 var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
-var slot_prototype = preload(\"res://Autoload/Inventory/EquipmentSlot.tscn\")
-
 onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
-onready var place_for_slots = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
 onready var info_panel = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
-onready var char_doll = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
 
 var current_item = null
 
@@ -28,38 +24,19 @@ func create_item(item, amount:int=1):
 func clear():
 	for child in place_for_items.get_children():
 		child.queue_free()
-	for child in place_for_slots.get_children():
-		child.queue_free()
 		
 func render_all():
 	clear()
 	var items = $Model.items.keys()
 	print(items)
 	for item in items:
-		if $Model.is_equipped(item):
-			continue
 		var it = InventoryItem.load_by_id(item)
 		create_item(it, $Model.items[item])
-	render_equipment()
-		
-func render_equipment():
-	for slot in $Model.equipment_slots:
-		var equipped = $Model.equipped.get(slot)
-		var rend = slot_prototype.instance()
-		rend.connect(\"selected\", self, \"_on_Equipment_select\")
-		rend.connect(\"equip\", self, \"_on_Equip\")
-		rend.connect(\"unequip\", self, \"_on_Unequip\")
-		rend.init(slot)
-		place_for_slots.add_child(rend)
-		if equipped != null:
-			equipped = InventoryItem.load_by_id(equipped)
-			rend.equip(equipped.id, equipped.name, equipped.icon)
-		
 		
 func filter(t:String):
 	var ch = place_for_items.get_children()
 	for child in ch:
-		#print(\">%s %s<\" %[t, child.item.type])
+		print(\">%s %s<\" %[t, child.item.type])
 		if t == \"All\" or t == child.item.type:
 			child.visible = true
 		else:
@@ -68,11 +45,6 @@ func filter(t:String):
 func _on_Item_select(item)->void:
 	info_panel.render(item, 0)
 	current_item = item
-	
-func _on_Equipment_select(item)->void:
-	var it = InventoryItem.load_by_id(item)
-	info_panel.render(it, 0)
-	current_item = it
 
 func _ready():
 	hide()
@@ -107,67 +79,13 @@ func on_using_item(action:String):
 	
 func _on_Cancel_pressed():
 	hide()
-
-func _on_Unequip(slot:String):
-	$Model.unequip(slot)
-	render_all()
-	
-func _on_Equip(slot:String):
-	if current_item != null:
-		if $Model.is_equippable(current_item, slot):
-			$Model.equip(current_item.id, slot)
-	render_all()
-
-
-
-
-
 "
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
+
 		
-var items:Dictionary = {} # ID -> amount
-
-var equipment_slots = [
-	\"Head\", \"Chest\", \"Main\", \"Off\", \"Gloves\", \"Lapel\", \"Pants\", \"Shoes\", \"Amulet\", 
-	\"Ring1\",\"Ring2\",
-	\"Accessory1\",\"Accessory2\",\"Accessory3\",\"Accessory4\",\"Accessory5\"
-]
-
-var equipped:Dictionary = {} # Equipment slot -> ID
-
-func try_equip(id:String, slot:String):
-	if !equipment_slots.has(slot):
-		printerr(\"No such slot exists: %s\" % slot)
-		return
-	if InventoryItem.load_by_id(id).equipment_slot != slot_type(slot):
-		print(\"Can't equip into this slot\")
-		return
-	unequip(slot)
-	equip(id, slot)
-	
-func equip(id:String, slot:String):
-	equipped[slot] = id
-	
-func unequip(slot:String):
-	equipped.erase(slot)
-	
-func is_equipped(id:String)->bool:
-	for slot in equipped.keys():
-		if equipped[slot] == id:
-			return true
-	return false
-	
-static func is_equippable(current_item, slot:String):
-	return current_item.equipment_slot == slot_type(slot)
-
-static func slot_type(slot:String)->String:
-	if [\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"0\"].has(slot[slot.length()-1]):
-		return slot_type(slot.substr(0,slot.length()-1))
-	return slot
-
-
+var items:Dictionary = {}
 
 func add_item(id:String, number:int = 1):
 	if items.has(id):
@@ -182,14 +100,6 @@ func remove_item(id:String, number:int = -1):
 	items[id] -= number
 	if items[id] <= 0 or number == -1:
 		items.erase(id)
-		var todelete = null
-		for key in equipped.keys():
-			if id == equipped.get(key):
-				todelete = key
-				break
-		if todelete != null:
-			unequip(todelete)
-	
 		
 func has_item(id:String, number:int = 1)->bool:
 	if not items.has(id):
@@ -197,21 +107,13 @@ func has_item(id:String, number:int = 1)->bool:
 	return items[id] >= number
 		
 func _ready():
+	#return
 	self.items = {
 		\"CoolHat\": 5,
 		\"FortuneCookie\": 1,
 		\"StarterKnife\": 0,
 		\"BlahBlah\": 88
-		}
-	self.equipped = {
-		\"Head\": \"CoolHat\",
-		\"Main\": \"StarterKnife\",
-		\"Lapel\": \"ErrorItem\"
-		}
-
-func _on_Misc_pressed():
-	pass # Replace with function body.
-"
+		}"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends VBoxContainer
@@ -279,7 +181,7 @@ func _on_Button_pressed():
 	$\"/root/Inventory\".on_using_item(self.text)
 "
 
-[node name="Inventory" type="CanvasLayer"]
+[node name="Character" type="CanvasLayer"]
 layer = 40
 script = SubResource( 1 )
 
@@ -324,10 +226,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Panel/ScrollContainer"]
-margin_right = 395.0
-margin_bottom = 380.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
 margin_top = 384.0

@@ -239,7 +239,7 @@ func read_note():
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK cool\", interaction_window, \"hide\")"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]

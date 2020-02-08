@@ -15,7 +15,7 @@ long_description = "Small, dull, generally lackluster. But gets things done."
 hint = "Deals damage based on your Warfare skill.
 Equip it."
 actions = "Use"
-type = ""
+type = "Equipment"
 equipment_slot = "Main"
 category = "Blades"
 countable = false

@@ -3,8 +3,6 @@
 [ext_resource path="res://BasicEntities/Player/SpiritSide.png" type="Texture" id=1]
 [ext_resource path="res://BasicEntities/Player/SpiritSide2.png" type="Texture" id=2]
 
-
-
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
@@ -164,7 +162,7 @@ script = SubResource( 3 )
 position = Vector2( 0.00012207, -10.8152 )
 current = true
 limit_top = 0
-limit_bottom = 1050
+limit_bottom = 900
 limit_smoothed = true
 smoothing_enabled = true
 drag_margin_left = 0.3
