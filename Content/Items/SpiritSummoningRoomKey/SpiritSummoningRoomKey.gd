@@ -1,7 +1,7 @@
 extends ItemScript
 
 static func use(action:String, item:InventoryItem, tree):
-	print("Use!")
+	print("Use!>" +action + "<")
 	if action == "Use":
 		tree.get_root().get_node("Inventory").hide()
 		tree.get_root().get_node("ModeController").hold(item.icon, item.iscript, "unlock")

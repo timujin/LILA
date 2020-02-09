@@ -233,7 +233,12 @@ func render(item, amount:int):
 	butt1.visible = false
 	butt2.visible = false
 	butt3.visible = false
-	var btns = item.actions.split('\\n')
+	#print(item.actions)
+	var btnss = item.actions.split('\\n')
+	var btns = []
+	for btn in btnss:
+		btns.append(btn.strip_edges())
+	#print(btns)
 	if btns[0] == \"\":
 		return
 	if btns.size () >= 1:

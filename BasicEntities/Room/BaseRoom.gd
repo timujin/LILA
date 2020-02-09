@@ -20,13 +20,13 @@ func get_room_parameter(path:String, key:String, default):
 	return room_switcher.get_room_value(path, key, default)
 	
 func get_self_parameter(key:String, default):
-	return get_room_parameter(self.get_script().get_path(), key, default)
+	return get_room_parameter(self.get_path(), key, default)
 	
 func set_room_parameter(path:String, key:String, value):
 	return room_switcher.set_room_value(path, key, value)
 	
 func set_self_parameter(key:String, value):
-	return set_room_parameter(self.get_script().get_path(), key, value)
+	return set_room_parameter(self.get_path(), key, value)
 	
 func unpickle():
 	var picklers = get_tree().get_nodes_in_group("picklers")
@@ -51,7 +51,7 @@ func get_contains_player()->bool:
 func get_hud_enabled()->bool:
 	return true
 	
-func get_default_parameters()->Dictionary:
+static func get_default_parameters()->Dictionary:
 	return {}
 	
 func get_player_spawn_point()->String:
