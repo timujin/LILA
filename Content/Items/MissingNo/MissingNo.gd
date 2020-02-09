@@ -1,5 +1,5 @@
 extends ItemScript
 
 
-func use(action:String, tree):
+static func use(action:String, tree):
 	print("Not interactive")

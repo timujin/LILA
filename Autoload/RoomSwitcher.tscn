@@ -20,7 +20,7 @@ func initialize_room_values(path:String)->void:
 		pass
 		
 func load_room_params(path:String)->Dictionary:
-	return load(path).new().get_default_parameters()
+	return load(path).get_script().get_default_parameters()
 	
 func set_room_value(path:String, key:String, value):
 	initialize_room_values(path)

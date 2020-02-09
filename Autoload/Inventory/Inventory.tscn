@@ -100,10 +100,11 @@ func _process(delta):
 	
 	
 func on_using_item(action:String):
+	print(current_item)
 	if current_item == null:
 		printerr(\"Trying to use an unselected item!\")
 		return
-	current_item.iscript.use(action, get_tree())
+	current_item.iscript.use(action, current_item, get_tree())
 	
 func _on_Cancel_pressed():
 	hide()
@@ -373,7 +374,6 @@ Increases your nothing by zero"
 align = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-editor/display_folded = true
 margin_top = 117.0
 margin_right = 395.0
 margin_bottom = 117.0

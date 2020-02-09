@@ -7,6 +7,7 @@ var is_cutscene = false
 var is_modal_window = false
 var is_player_controllable = true setget ,get_is_player_controllable
 
+var holding_icon = null
 var holding_item = null
 var holding_callback = null
 
@@ -25,22 +26,28 @@ func get_is_player_controllable():
 func get_is_player_holding_item():
 	return (holding_item != null)
 	
-func hold(icon:Texture, callback):
-	holding_item = icon
-	holding_callback = callback
+func hold(icon:Texture, item, callback_str):
+	holding_icon = icon
+	holding_item = item
+	holding_callback = callback_str
 	$\"/root/HUD\".hide_all()
 	Input.set_custom_mouse_cursor(icon)
+	Input.set_custom_mouse_cursor(icon, Input.CURSOR_POINTING_HAND)
 	
-#func apply_item(obj:Node2D):
-#	if get_is_player_holding_item():
-#		holding_callback.call_func(obj)
-#	else:
-#		printerr(\"No item held!\")
+func apply_item(obj):
+	if get_is_player_holding_item():
+		#holding_callback.call_func(obj)
+		print(holding_item)
+		print(holding_callback)
+		holding_item.call(holding_callback, obj)
+	else:
+		printerr(\"No item held!\")
 
 func drop():
 	holding_item = null
 	holding_callback = null
 	Input.set_custom_mouse_cursor(null)
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_POINTING_HAND)
 	
 func _unhandled_input (  event:InputEvent ) :
 	if !(self.get_is_player_holding_item()):

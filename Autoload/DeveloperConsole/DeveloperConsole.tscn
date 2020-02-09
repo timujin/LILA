@@ -3,6 +3,8 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
+signal skip_cutscene
+
 var ui_console_pressed = false
 func _process(delta):
 	if Input.is_action_pressed(\"ui_devconsole\"):
@@ -71,6 +73,7 @@ func interpret(input:String):
 	parsed.remove(0)
 	match command:
 		\"warp\": warp(parsed)
+		\"skip\": skip()
 		_     : echoerr(\"Command not found: \"+command)
 		
 func warp(args):
@@ -94,7 +97,10 @@ func warp(args):
 	else:
 		echoerr(\"'warp' expects 1 or 2 arguments!\")
 		return
-	echo(\"Warped\")"
+	echo(\"Warped\")
+	
+func skip():
+	$'..'.emit_signal(\"skip_cutscene\")"
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2

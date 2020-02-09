@@ -1,14 +1,15 @@
 extends ItemScript
 
-func use(action:String, item:InventoryItem, tree):
+static func use(action:String, item:InventoryItem, tree):
+	print("Use!")
 	if action == "Use":
 		tree.get_root().get_node("Inventory").hide()
-		tree.get_root().get_node("ModeController").hold(item.icon, funcref(self, "unlock"))
+		tree.get_root().get_node("ModeController").hold(item.icon, item.iscript, "unlock")
 		
 	else:
 		.use(action, item, tree)
 		
-func unlock(door:Node):
+static func unlock(door:Node):
 	var unlockable = door.get_node("Unlockable")
 	if unlockable == null:
 		door.blurb("This has no keyhole")
