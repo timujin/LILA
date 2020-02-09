@@ -1,66 +1,13 @@
 [gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=2]
-[ext_resource path="res://Assets/Sprites/Decorations/Pentagram.png" type="Texture" id=3]
-[ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Content/Locations/00001PentagramRoom/Graphics/Door.png" type="Texture" id=5]
-[ext_resource path="res://Assets/Sprites/Interactables/Furniture/Drawer.png" type="Texture" id=6]
-[ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=7]
-
-[sub_resource type="GDScript" id=1]
-script/source = "extends BaseRoom
-
-func get_room_name()->String:
-	return \"Spirit Summoning Room\"
-	
-func get_contains_player()->bool:
-	return true
-	
-func get_ui_enabled()->bool:
-	return true
-	
-static func get_default_parameters()->Dictionary:
-	return {
-		\"drawer_looted\": false,
-		\"pentagram_on\" : false,
-		\"door_locked\"  : false,
-		\"package_on_ground\" : true
-	}
-	
-func is_door_locked()->bool:
-	return get_self_parameter(\"door_locked\", true) == true
-	
-	
-func get_player_spawn_point()->String:
-	if get_self_parameter(\"pentagram_on\", true) == true:
-		return \"DefaultSpiritSpawn\"
-	else:
-		return \"OutOfDoorSpiritSpawn\"
-		
-################################
-
-func render()->void:
-	if get_self_parameter(\"pentagram_on\", true):
-		$Geometry.lock_pentagram()
-	else:
-		clear_room()
-		
-func clear_room():
-	$Geometry.unlock_pentagram()
-	$Summoner.queue_free()
-	$\"Door/Activator\".make_accessible()
-	$\"Drawer/Activator\".make_accessible()
-		
-func place_package():
-	$Package.visible = true
-	$Package/Pickler.is_looted = false
-	set_self_parameter(\"package_on_ground\", true)
-	
-func remove_package():
-	$Package.visible = false
-	$Package/Pickler.is_looted = true
-	set_self_parameter(\"package_on_ground\", false)"
+[ext_resource path="res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=3]
+[ext_resource path="res://Assets/Sprites/Decorations/Pentagram.png" type="Texture" id=4]
+[ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Content/Locations/00001PentagramRoom/Graphics/Door.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Sprites/Interactables/Furniture/Drawer.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=8]
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -128,7 +75,7 @@ func on_activate():
 		if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
 			blurb(\"The door is locked\")
 		else:
-			get_node(\"/root/RoomSwitcher\").switch_room_by_name(\"res://Content/Locations/FortressOfChains/Corridor.tscn\")
+			get_node(\"/root/RoomSwitcher\").switch_room_by_name(\"res://Content/Locations/FortressOfChains/Corridor/Corridor.tscn\")
 	else:
 		blurb(\"I can't reach the door.\")
 		
@@ -271,8 +218,8 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"is_looted\": false}"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
-script = SubResource( 1 )
+[node name="Room" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
 script = SubResource( 2 )
@@ -283,12 +230,12 @@ editor/display_folded = true
 [node name="RoomBrickBlack" type="Sprite" parent="Background" index="0"]
 position = Vector2( 797.207, 449.385 )
 scale = Vector2( 1.47361, 1.50161 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 
 [node name="Pentagram" type="Sprite" parent="Background" index="1"]
 position = Vector2( 1092.63, 764.3 )
 scale = Vector2( 1.19912, 1.37323 )
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
 
 [node name="Geometry" parent="." index="2"]
 editor/display_folded = true
@@ -315,13 +262,13 @@ position = Vector2( 291.525, 774.563 )
 [node name="OutOfDoorSpiritSpawn" type="Position2D" parent="Geometry" index="6"]
 position = Vector2( 370.956, 777.074 )
 
-[node name="Door" parent="." index="3" instance=ExtResource( 4 )]
+[node name="Door" parent="." index="3" instance=ExtResource( 5 )]
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
 position = Vector2( -4.76386, -88.5566 )
 scale = Vector2( 1.22454, 1.06758 )
-texture = ExtResource( 5 )
+texture = ExtResource( 6 )
 
 [node name="BlurbPoint" parent="Door" index="1"]
 position = Vector2( -2.49487, -253.18 )
@@ -347,14 +294,14 @@ script = SubResource( 5 )
 [node name="Pickler" parent="Door" index="5"]
 script = SubResource( 6 )
 
-[node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
+[node name="Drawer" parent="." index="4" instance=ExtResource( 5 )]
 editor/display_folded = true
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
 position = Vector2( 1.48926, -79.4826 )
 scale = Vector2( 1.9569, 2.01824 )
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 
 [node name="BlurbPoint" parent="Drawer" index="1"]
 position = Vector2( 9.52258, -194.533 )
@@ -377,14 +324,14 @@ script = SubResource( 7 )
 [node name="Pickler" parent="Drawer" index="5"]
 script = SubResource( 8 )
 
-[node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
+[node name="Summoner" parent="." index="5" instance=ExtResource( 5 )]
 editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
 position = Vector2( 60.7838, -34.3737 )
 scale = Vector2( 1.21872, 1.25692 )
-texture = ExtResource( 7 )
+texture = ExtResource( 8 )
 
 [node name="BlurbPoint" parent="Summoner" index="1"]
 position = Vector2( 45.4228, -153.722 )
@@ -405,7 +352,7 @@ script = SubResource( 9 )
 [node name="Pickler" parent="Summoner" index="5"]
 script = SubResource( 10 )
 
-[node name="Package" parent="." index="6" instance=ExtResource( 4 )]
+[node name="Package" parent="." index="6" instance=ExtResource( 5 )]
 position = Vector2( 465.129, 784.964 )
 
 [node name="ClickArea" parent="Package" index="3"]

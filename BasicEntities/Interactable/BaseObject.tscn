@@ -4,7 +4,7 @@
 [ext_resource path="res://BasicEntities/Interactable/BaseActivator.gd" type="Script" id=2]
 [ext_resource path="res://BasicEntities/Interactable/BasePickler.gd" type="Script" id=3]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
 onready var interaction_point = get_parent().get_node(\"InteractionPoint\")
@@ -90,7 +90,7 @@ margin_left = -15.0
 margin_top = -30.0
 margin_right = 14.0
 mouse_default_cursor_shape = 2
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [node name="Activator" type="Node" parent="."]
 script = ExtResource( 2 )

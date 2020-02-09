@@ -24,6 +24,9 @@ static func unlock(door:Node):
 		return
 		
 	door.get_node("/root/Room").\
-		set_room_parameter("res://Content/Locations/FortressOfChains/SpiritSummoningRoom.tscn", "door_locked", false)
+		set_room_parameter("res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.gd", "door_locked", false)
+	door.blurb("Door unlocked!")
+	door.get_tree().get_root().get_node("ModeController").drop()
+	door.get_tree().get_root().get_node("Inventory/Model").remove_item("SpiritSummoningRoomKey")
 	
 	

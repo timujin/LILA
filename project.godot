@@ -51,7 +51,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Locations/FortressOfChains/SpiritSummoningRoom.tscn"
+run/main_scene="res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
