@@ -63,7 +63,8 @@ func on_room_loaded():
 	else:
 		hud.disable()
 	
-func switch_room(to_room:PackedScene, destination=\"\"):
+func switch_room(to_room, destination=\"\"):
+	$\"/root/Room\".pickle()
 	destination_spawnpoint = destination
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()

@@ -10,6 +10,7 @@ func _ready():
 	room_switcher.room = self
 	call_deferred("emit_signal", "room_loaded")
 	call_deferred("render")
+	call_deferred("unpickle")
 	print("Room "+self.get_script().get_path()+" loaded")
 	
 func move_to_back():
@@ -27,7 +28,17 @@ func set_room_parameter(path:String, key:String, value):
 func set_self_parameter(key:String, value):
 	return set_room_parameter(self.get_script().get_path(), key, value)
 	
-
+func unpickle():
+	var picklers = get_tree().get_nodes_in_group("picklers")
+	for pickler in picklers:
+		pickler.prepare()
+		
+func pickle():
+	print("Room pickle valled")
+	var picklers = get_tree().get_nodes_in_group("picklers")
+	for pickler in picklers:
+		pickler.pickle()
+	
 	
 ### THESE MUST BE OVERLOADED IN A SUBCLASS
 

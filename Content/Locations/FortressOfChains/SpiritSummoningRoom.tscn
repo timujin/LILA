@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Rooms/RoomBrickBlack.png" type="Texture" id=2]
@@ -24,7 +24,7 @@ func get_default_parameters()->Dictionary:
 	return {
 		\"drawer_looted\": false,
 		\"pentagram_on\" : false,
-		\"door_locked\"  : true,
+		\"door_locked\"  : false,
 		\"package_on_ground\" : true
 	}
 	
@@ -45,10 +45,10 @@ func render()->void:
 		$Geometry.lock_pentagram()
 	else:
 		clear_room()
-	if get_self_parameter(\"package_on_ground\", false):
-		$Package.visible = true
-	else:
-		$Package.visible = false
+	#if get_self_parameter(\"package_on_ground\", false):
+	#	$Package.visible = true
+	#else:
+	#	$Package.visible = false
 		
 func clear_room():
 	$Geometry.unlock_pentagram()
@@ -62,21 +62,7 @@ func place_package():
 	
 func remove_package():
 	$Package.visible = false
-	set_self_parameter(\"package_on_ground\", false)
-	
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-"
+	set_self_parameter(\"package_on_ground\", false)"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -147,7 +133,7 @@ func on_activate():
 		if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
 			blurb(\"The door is locked\")
 		else:
-			get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/Corridor.tscn\"))
+			get_node(\"/root/RoomSwitcher\").switch_room_by_name(\"res://Content/Locations/FortressOfChains/Corridor.tscn\")
 	else:
 		blurb(\"I can't reach the door.\")
 		
@@ -167,6 +153,19 @@ func doorCode():
 	
 func unlock():
 	$\"/root/Room\".set_self_parameter(\"door_locked\", false)"
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends BasePickler
+
+
+func deserialize(params:Dictionary)->void:
+	pass
+
+func serialize()->Dictionary:
+	return {}
+
+func default_parameters()->Dictionary:
+	return {}"
 
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 60.673, 79.8275 )
@@ -189,6 +188,19 @@ func make_inaccessible():
 	accessible = false
 	$\"../ClickArea\".activation_type = \"Remote\""
 
+[sub_resource type="GDScript" id=14]
+script/source = "extends BasePickler
+
+
+func deserialize(params:Dictionary)->void:
+	pass
+
+func serialize()->Dictionary:
+	return {}
+
+func default_parameters()->Dictionary:
+	return {}"
+
 [sub_resource type="RectangleShape2D" id=9]
 extents = Vector2( 80.4022, 80.7245 )
 
@@ -209,6 +221,19 @@ script/source = "extends Activator
 func on_activate():
 	$\"/root/Room/Director\".activate_summoner()"
 
+[sub_resource type="GDScript" id=15]
+script/source = "extends BasePickler
+
+
+func deserialize(params:Dictionary)->void:
+	pass
+
+func serialize()->Dictionary:
+	return {}
+
+func default_parameters()->Dictionary:
+	return {}"
+
 [sub_resource type="GDScript" id=11]
 script/source = "extends Activator
 onready var interaction_window = $\"/root/InteractionWindow\"
@@ -226,6 +251,7 @@ func on_activate():
 
 func pick_up():
 	$\"/root/Room\".remove_package()
+	$\"../Pickler\".is_looted = true
 	interaction_window.say(\"You pick up and open the package!\")
 	interaction_window.present_item(\"SpiritSummoningRoomKey\")
 	interaction_window.present_item(\"StarterKnife\")
@@ -239,7 +265,24 @@ func read_note():
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK cool\", interaction_window, \"hide\")"
 
-[node name="Room" instance=ExtResource( 1 )]
+[sub_resource type="GDScript" id=12]
+script/source = "extends BasePickler
+
+var is_looted:bool = false
+
+
+func deserialize(params:Dictionary)->void:
+	is_looted = params.get(\"is_looted\", false)
+	if is_looted:
+		$\"..\".visible = false
+
+func serialize()->Dictionary:
+	return {\"is_looted\": is_looted}
+
+func default_parameters()->Dictionary:
+	return {\"is_looted\": false}"
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]
@@ -312,8 +355,10 @@ script = SubResource( 5 )
 [node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
 script = SubResource( 6 )
 
+[node name="Pickler" parent="Door" index="5"]
+script = SubResource( 13 )
+
 [node name="Drawer" parent="." index="4" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -328,6 +373,7 @@ position = Vector2( 9.52258, -194.533 )
 position = Vector2( -2.21606, 38.8365 )
 
 [node name="ClickArea" parent="Drawer" index="3"]
+editor/display_folded = true
 ActivatorName = "Drawer"
 activation_type = "Remote"
 
@@ -338,8 +384,10 @@ shape = SubResource( 7 )
 [node name="Activator" parent="Drawer" index="4"]
 script = SubResource( 8 )
 
+[node name="Pickler" parent="Drawer" index="5"]
+script = SubResource( 14 )
+
 [node name="Summoner" parent="." index="5" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
@@ -364,8 +412,10 @@ shape = SubResource( 9 )
 [node name="Activator" parent="Summoner" index="4"]
 script = SubResource( 10 )
 
+[node name="Pickler" parent="Summoner" index="5"]
+script = SubResource( 15 )
+
 [node name="Package" parent="." index="6" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 465.129, 784.964 )
 
 [node name="ClickArea" parent="Package" index="3"]
@@ -373,6 +423,9 @@ ActivatorName = "Package"
 
 [node name="Activator" parent="Package" index="4"]
 script = SubResource( 11 )
+
+[node name="Pickler" parent="Package" index="5"]
+script = SubResource( 12 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
 
 [editable path="Door"]

@@ -1,14 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://BasicEntities/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Rooms/LongCorridor.png" type="Texture" id=2]
 [ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Sprites/Interactables/Doors/Door.png" type="Texture" id=4]
-
-
-
-
-
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends BaseRoom
@@ -39,7 +34,20 @@ func on_activate():
 		print(\"Locked\")
 		$\"/root/InteractionBlurb\".display(\"The door is locked\", $\"../BlurbPoint\")
 	else:
-		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Locations/FortressOfChains/SpiritSummoningRoom.tscn\"), \"OutOfDoorSpiritSpawn\")"
+		get_node(\"/root/RoomSwitcher\").switch_room(load(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom.tscn\"), \"OutOfDoorSpiritSpawn\")"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends BasePickler
+
+
+func deserialize(params:Dictionary)->void:
+	pass
+
+func serialize()->Dictionary:
+	return {}
+
+func default_parameters()->Dictionary:
+	return {}"
 
 [node name="Room" instance=ExtResource( 1 )]
 script = SubResource( 1 )
@@ -87,5 +95,8 @@ shape = SubResource( 2 )
 
 [node name="Activator" parent="BaseObject" index="4"]
 script = SubResource( 3 )
+
+[node name="Pickler" parent="BaseObject" index="5"]
+script = SubResource( 4 )
 
 [editable path="BaseObject"]

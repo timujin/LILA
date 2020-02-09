@@ -1,10 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Placeholders/icon.png" type="Texture" id=1]
 [ext_resource path="res://BasicEntities/Interactable/BaseActivator.gd" type="Script" id=2]
-
-
-
+[ext_resource path="res://BasicEntities/Interactable/BasePickler.gd" type="Script" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Area2D
@@ -83,5 +81,10 @@ shape = SubResource( 2 )
 
 [node name="Activator" type="Node" parent="."]
 script = ExtResource( 2 )
+
+[node name="Pickler" type="Node" parent="." groups=[
+"picklers",
+]]
+script = ExtResource( 3 )
 [connection signal="mouse_entered" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_entered"]
 [connection signal="mouse_exited" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_exited"]
