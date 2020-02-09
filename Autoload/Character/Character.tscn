@@ -1,12 +1,27 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Assets/Placeholders/controlmagic.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Placeholders/steelhordearmor.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
-onready var mode = $\"/root/ModeController\"
+var skill_name_prototype = preload(\"res://Autoload/Character/SkillButton.tscn\")
+
+onready var skill_list = $\"Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/ScrollContainer/SkillNames\"
+
+func _ready():
+	for skill in SkillList.get_skill_list():
+		var s = skill_name_prototype.instance()
+		s.init(skill, skill, 80)
+		s.connect(\"pressed\", self, \"display_skill\", [skill])
+		skill_list.add_child(s)
+
+func display_skill(skill:String):
+	print(SkillList.get_skill_description(skill))
+
+
+\"\"\"onready var mode = $\"/root/ModeController\"
 
 var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
 onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
@@ -79,12 +94,12 @@ func on_using_item(action:String):
 	
 func _on_Cancel_pressed():
 	hide()
-"
+\"\"\""
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
-		
+\"\"\"	
 var items:Dictionary = {}
 
 func add_item(id:String, number:int = 1):
@@ -113,73 +128,9 @@ func _ready():
 		\"FortuneCookie\": 1,
 		\"StarterKnife\": 0,
 		\"BlahBlah\": 88
-		}"
-
-[sub_resource type="GDScript" id=3]
-script/source = "extends VBoxContainer
-
-onready var itemname = $\"ItemName\"
-onready var itemdescription = $\"ItemDescription\"
-onready var itemhint = $\"ItemHint\"
-
-onready var butt1 = $\"Buttons/Button\"
-onready var butt2 = $\"Buttons/Button2\"
-onready var butt3 = $\"Buttons/Button3\"
-
-func render(item, amount:int):
-	itemname.text = item.name
-	itemdescription.text = item.long_description
-	itemhint.text = item.hint
-	
-	butt1.visible = false
-	butt2.visible = false
-	butt3.visible = false
-	var btns = item.actions.split('\\n')
-	if btns[0] == \"\":
-		return
-	if btns.size () >= 1:
-		butt1.visible = true
-		butt1.text = btns[0]
-	if btns.size () >= 2:
-		butt2.visible = true
-		butt2.text = btns[1]
-	if btns.size () >= 3:
-		butt3.visible = true
-		butt3.text = btns[2]
+		}
 		
-func clear():
-	itemname.text = \"Select an item\"
-	itemdescription.text = \"\"
-	itemhint.text = \"\"
-	
-	butt1.visible = false
-	butt2.visible = false
-	butt3.visible = false
-	"
-
-[sub_resource type="DynamicFont" id=4]
-size = 21
-font_data = ExtResource( 1 )
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Button
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_Button_pressed():
-	$\"/root/Inventory\".on_using_item(self.text)
-"
+\"\"\""
 
 [node name="Character" type="CanvasLayer"]
 layer = 40
@@ -203,168 +154,115 @@ margin_top = -389.5
 margin_right = 722.5
 margin_bottom = 389.5
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Modal/Window"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window"]
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 1438.0
 margin_bottom = 772.0
-alignment = 1
 
-[node name="Left" type="VBoxContainer" parent="Modal/Window/HBoxContainer"]
-margin_right = 395.0
-margin_bottom = 765.0
-size_flags_horizontal = 3
-
-[node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
-margin_right = 395.0
-margin_bottom = 380.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Left/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Panel/ScrollContainer"]
-
-[node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
-margin_top = 384.0
-margin_right = 395.0
-margin_bottom = 765.0
-size_flags_vertical = 3
-
-[node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = SubResource( 3 )
-
-[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_right = 395.0
-margin_bottom = 25.0
-custom_fonts/font = SubResource( 4 )
-text = "INFO"
-align = 1
-valign = 1
-
-[node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 29.0
-margin_right = 395.0
-margin_bottom = 43.0
-text = "<ITEM NAME>"
-align = 1
-valign = 1
-
-[node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 47.0
-margin_right = 395.0
-margin_bottom = 78.0
-text = "Item description.
-May be multiline"
-align = 1
-
-[node name="ItemHint" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 82.0
-margin_right = 395.0
-margin_bottom = 113.0
-text = "Item hint
-Increases your nothing by zero"
-align = 1
-
-[node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
+[node name="Tabs" type="HBoxContainer" parent="Modal/Window/VBoxContainer"]
 editor/display_folded = true
-margin_top = 117.0
-margin_right = 395.0
-margin_bottom = 117.0
-alignment = 1
-
-[node name="Button" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
+margin_right = 1431.0
 margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 5 )
 
-[node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
+[node name="Skills" type="Button" parent="Modal/Window/VBoxContainer/Tabs"]
+margin_right = 45.0
 margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 5 )
+text = "Skills"
 
-[node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
+[node name="Perks" type="Button" parent="Modal/Window/VBoxContainer/Tabs"]
+margin_left = 49.0
+margin_right = 96.0
 margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 5 )
+text = "Perks"
 
-[node name="Right" type="PanelContainer" parent="Modal/Window/HBoxContainer"]
-margin_left = 399.0
+[node name="Abilities" type="Button" parent="Modal/Window/VBoxContainer/Tabs"]
+margin_left = 100.0
+margin_right = 165.0
+margin_bottom = 20.0
+text = "Abilities"
+
+[node name="SkillScreen" type="PanelContainer" parent="Modal/Window/VBoxContainer"]
+margin_top = 24.0
 margin_right = 1431.0
 margin_bottom = 765.0
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.61
+size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Modal/Window/VBoxContainer/SkillScreen"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 1025.0
-margin_bottom = 758.0
+margin_right = 1424.0
+margin_bottom = 734.0
 
-[node name="Title" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-margin_right = 1018.0
-margin_bottom = 58.0
-size_flags_vertical = 3
-
-[node name="Equipment" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_right = 81.0
-margin_bottom = 58.0
-text = "Equipment"
-
-[node name="Consumables" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 85.0
-margin_right = 176.0
-margin_bottom = 58.0
-text = "Consumable"
-
-[node name="Tools" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 180.0
-margin_right = 226.0
-margin_bottom = 58.0
-text = "Tools"
-
-[node name="Misc" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 230.0
-margin_right = 272.0
-margin_bottom = 58.0
-text = "Misc"
-
-[node name="All" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 276.0
-margin_right = 305.0
-margin_bottom = 58.0
-text = "All"
-
-[node name="Delimeter" type="Panel" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-margin_top = 62.0
-margin_right = 1018.0
-margin_bottom = 67.0
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-margin_top = 71.0
-margin_right = 1018.0
-margin_bottom = 751.0
-size_flags_vertical = 3
-size_flags_stretch_ratio = 11.6
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
-margin_right = 1018.0
+[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer"]
+margin_right = 245.0
+margin_bottom = 727.0
 size_flags_horizontal = 3
+
+[node name="SkillNames" type="VBoxContainer" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/ScrollContainer"]
+margin_right = 245.0
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer"]
+margin_left = 249.0
+margin_right = 1417.0
+margin_bottom = 727.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.75
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1161.0
+margin_bottom = 720.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/PanelContainer/HBoxContainer"]
+margin_right = 831.0
+margin_bottom = 713.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.61
+
+[node name="TextureRect" type="TextureRect" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/PanelContainer/HBoxContainer/VBoxContainer"]
+margin_right = 831.0
+margin_bottom = 354.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 5
+
+[node name="TextEdit" type="TextEdit" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/PanelContainer/HBoxContainer/VBoxContainer"]
+margin_top = 358.0
+margin_right = 831.0
+margin_bottom = 713.0
+size_flags_vertical = 3
+readonly = true
+
+[node name="ScrollContainer" type="TextEdit" parent="Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/PanelContainer/HBoxContainer"]
+margin_left = 835.0
+margin_right = 1154.0
+margin_bottom = 713.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+readonly = true
+
+[node name="PerkScreen" type="PanelContainer" parent="Modal/Window/VBoxContainer"]
+visible = false
+margin_top = 272.0
+margin_right = 1431.0
+margin_bottom = 516.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AbilityScreen" type="PanelContainer" parent="Modal/Window/VBoxContainer"]
+visible = false
+margin_top = 396.0
+margin_right = 1431.0
+margin_bottom = 765.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Button" type="Button" parent="Modal"]
 anchor_left = 1.0
@@ -374,12 +272,13 @@ margin_top = 45.4262
 margin_right = -56.4758
 margin_bottom = 100.426
 icon = ExtResource( 2 )
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" method="_on_Button_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" method="_on_Button_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" method="_on_Button_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Equipment" to="." method="filter" binds= [ "Equipment" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Consumables" to="." method="filter" binds= [ "Consumable" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Tools" to="." method="filter" binds= [ "Tool" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Misc" to="." method="filter" binds= [ "Misc" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/All" to="." method="filter" binds= [ "All" ]]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/Tabs/Abilities" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/Tabs/Perks" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/SkillScreen" method="show"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/Tabs/Skills" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/AbilityScreen" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/PerkScreen" method="show"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/AbilityScreen" method="show"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/PerkScreen" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/SkillScreen" method="hide"]
 [connection signal="pressed" from="Modal/Button" to="." method="_on_Cancel_pressed"]

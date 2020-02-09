@@ -4,19 +4,90 @@
 script/source = "extends Node2D
 
 onready var card_prefab = preload(\"res://Combat/Card.tscn\")
-onready var card_holder = $\"UI/Control/EnemyHand/VBoxContainer\"
+onready var card_holder = $\"UI/TacticalLayer/Hand/VBoxContainer\"
+onready var start_button = $\"UI/TacticalLayer/StartQTE\"
 
 func _on_StartQTE_pressed():
-	pass # Replace with function body.
+	card_holder.visible = false
+	start_button.visible = false
+	$Director.showtime()
+	
+func finish():
+	card_holder.visible = true
+	start_button.visible = true
 
 func add_card(icon:Texture, text:String):
-	var card = card_prefab.initialize()
+	var card = card_prefab.instance()
 	card_holder.add_child(card)
+	card.init(icon, text)
 
 func clear_cards():
 	for card in card_holder.get_children():
 		card.queue_free()
-		"
+		
+func damage_player(value:float):
+	$\"UI/TacticalLayer/PlayerHPBar\".value -= value
+
+func damage_enemy(value:float):
+	$\"UI/TacticalLayer/EnemyHPBar\".value -= value
+		
+func _ready():
+	pass
+	
+func spawn_bullet(prefab, duration, position):
+	var bullet = prefab.instance()
+	$Bulletin.add_child(bullet)
+	bullet.position = position
+	bullet.connect(\"bullet_activated\", self, \"on_bullet_activated\")
+	bullet.connect(\"bullet_preactivated\", self, \"on_bullet_preactivated\")
+	bullet.connect(\"bullet_finished\", self, \"on_bullet_finished\")
+	bullet.run(duration)
+	
+	
+\"\"\"func spawn_bullets():
+	var left = $\"Director/Left\"
+	var right = $\"Director/Right\"
+	var bottom = $\"Director/Bottom\"
+	
+	print(\"this\")
+	print(left.get_node(\"Sprite\").position)
+	
+	#bullet 1
+	var b = test_bullet.instance()
+	left.add_child(b)
+	b.position = Vector2.ZERO
+	b.connect(\"bullet_activated\", self, \"on_bullet_activated\")
+	b.connect(\"bullet_finished\",  self, \"on_bullet_finished\")
+	
+	yield(get_tree().create_timer(2.0), \"timeout\")
+	#bullet 2
+	b = test_bullet.instance()
+	b.position = Vector2.ZERO
+	right.add_child(b)
+	b.connect(\"bullet_activated\", self, \"on_bullet_activated\")
+	b.connect(\"bullet_finished\",  self, \"on_bullet_finished\")
+	
+	yield(get_tree().create_timer(2.0), \"timeout\")
+	#bullet 2
+	b = test_bullet.instance()
+	b.position = Vector2.ZERO
+	bottom.add_child(b)
+	b.connect(\"bullet_activated\", self, \"on_bullet_activated\")
+	b.connect(\"bullet_finished\",  self, \"on_bullet_finished\")
+	
+	yield(get_tree().create_timer(5.0), \"timeout\")
+	
+	card_holder.visible = true
+	start_button.visible = true\"\"\"
+	
+func on_bullet_activated():
+	damage_enemy(1)
+	
+func on_bullet_preactivated():
+	damage_player(1)
+	
+func on_bullet_finished():
+	damage_player(1)"
 
 [node name="Combat" type="Node2D"]
 script = SubResource( 1 )
@@ -25,6 +96,14 @@ script = SubResource( 1 )
 
 [node name="Bulletin" type="Node2D" parent="."]
 
+[node name="SpawnPoints" type="Node2D" parent="Bulletin"]
+
+[node name="TopLeft" type="Position2D" parent="Bulletin/SpawnPoints"]
+position = Vector2( 199.866, 164.705 )
+
+[node name="BottomRight" type="Position2D" parent="Bulletin/SpawnPoints"]
+position = Vector2( 1461.98, 723.59 )
+
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 120
 
@@ -32,28 +111,13 @@ layer = 120
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="UtilityBelt" type="MarginContainer" parent="UI/TacticalLayer"]
-anchor_top = 1.0
-anchor_right = 0.851
-anchor_bottom = 1.0
-margin_top = -75.0
-margin_right = 0.400024
-
-[node name="Label" type="Label" parent="UI/TacticalLayer/UtilityBelt"]
-margin_top = 30.0
-margin_right = 1362.0
-margin_bottom = 44.0
-text = "Here be utility belt"
-align = 1
-valign = 1
-
-[node name="EnemyHand" type="MarginContainer" parent="UI/TacticalLayer"]
+[node name="Hand" type="MarginContainer" parent="UI/TacticalLayer"]
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
 margin_bottom = 198.0
 
-[node name="VBoxContainer" type="HBoxContainer" parent="UI/TacticalLayer/EnemyHand"]
+[node name="VBoxContainer" type="HBoxContainer" parent="UI/TacticalLayer/Hand"]
 margin_right = 1600.0
 margin_bottom = 198.0
 size_flags_horizontal = 3
@@ -67,4 +131,18 @@ anchor_bottom = 1.0
 margin_left = -182.0
 margin_top = -61.0
 text = "Start!"
+
+[node name="PlayerHPBar" type="ProgressBar" parent="UI/TacticalLayer"]
+margin_right = 350.0
+margin_bottom = 55.0
+min_value = 1.0
+value = 100.0
+
+[node name="EnemyHPBar" type="ProgressBar" parent="UI/TacticalLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -350.0
+margin_bottom = 55.0
+min_value = 1.0
+value = 100.0
 [connection signal="pressed" from="UI/TacticalLayer/StartQTE" to="." method="_on_StartQTE_pressed"]

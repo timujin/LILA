@@ -28,12 +28,18 @@ _global_script_classes=[ {
 "class": "ItemScript",
 "language": "GDScript",
 "path": "res://BasicEntities/Item/ItemScript.gd"
+}, {
+"base": "GDScript",
+"class": "SkillList",
+"language": "GDScript",
+"path": "res://Autoload/Character/SkillList.gd"
 } ]
 _global_script_class_icons={
 "Activator": "",
 "BaseRoom": "",
 "InventoryItem": "",
-"ItemScript": ""
+"ItemScript": "",
+"SkillList": ""
 }
 
 [application]
@@ -47,7 +53,6 @@ config/icon="res://Assets/Placeholders/icon.png"
 InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 Inventory="*res://Autoload/Inventory/Inventory.tscn"
-LootingWindow="*res://Autoload/LootingWindow/LootingWindow.tscn"
 InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"

@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+signal selected
+
+var skill_id = \"\"
+var skill_name = \"\"
+var skill_amount = 0
+
+func init(id:String, name:String, amount:int):
+	skill_id = id
+	skill_name = name
+	skill_amount = amount
+	text = name
+	$Label.text = str(amount)
+	
+
+
+#func _on_Button_pressed():
+#	emit_signal(\"selected\", skill_id)
+"
+
+[node name="Button" type="Button"]
+margin_right = 245.0
+margin_bottom = 20.0
+text = "Warfare"
+align = 0
+script = SubResource( 1 )
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -24.0
+text = "100"
+[connection signal="pressed" from="." to="." method="_on_Button_pressed"]
