@@ -272,13 +272,13 @@ margin_top = 45.4262
 margin_right = -56.4758
 margin_bottom = 100.426
 icon = ExtResource( 2 )
-[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/Tabs/Abilities" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/Tabs/Perks" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/Tabs/Abilities" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Skills" to="Modal/Window/VBoxContainer/SkillScreen" method="show"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/Tabs/Skills" method="hide"]
-[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/AbilityScreen" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/PerkScreen" method="show"]
-[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/AbilityScreen" method="show"]
-[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/PerkScreen" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/AbilityScreen" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/SkillScreen" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/PerkScreen" method="hide"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/AbilityScreen" method="show"]
 [connection signal="pressed" from="Modal/Button" to="." method="_on_Cancel_pressed"]

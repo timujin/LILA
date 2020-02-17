@@ -9,7 +9,7 @@
 [ext_resource path="res://Assets/Sprites/Interactables/Furniture/Drawer.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=8]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 onready var interaction_window = $\"/root/InteractionWindow\"
@@ -46,7 +46,7 @@ func _on_Room_room_loaded():
 	
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 onready var left_edge_of_room = $RailroadLeft
@@ -65,7 +65,7 @@ func lock_pentagram():
 		left_edge_of_pent.position = left_edge_of_room.position
 		left_edge_of_room.position = tmp"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Activator
 
 var accessible = false
@@ -87,7 +87,7 @@ func make_inaccessible():
 	accessible = false
 	$\"../ClickArea\".activation_type = \"Remote\""
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
 func doorCode():
@@ -96,7 +96,7 @@ func doorCode():
 func unlock():
 	$\"/root/Room\".set_self_parameter(\"door_locked\", false)"
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=5]
 script/source = "extends BasePickler
 
 
@@ -109,7 +109,7 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {}"
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=6]
 script/source = "extends Activator
 var accessible = false
 
@@ -127,7 +127,7 @@ func make_inaccessible():
 	accessible = false
 	$\"../ClickArea\".activation_type = \"Remote\""
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=7]
 script/source = "extends BasePickler
 
 
@@ -140,7 +140,7 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {}"
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=8]
 script/source = "extends Activator
 
 #func on_activate():
@@ -157,7 +157,7 @@ script/source = "extends Activator
 func on_activate():
 	$\"/root/Room/Director\".activate_summoner()"
 
-[sub_resource type="GDScript" id=10]
+[sub_resource type="GDScript" id=9]
 script/source = "extends BasePickler
 
 
@@ -170,7 +170,7 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {}"
 
-[sub_resource type="GDScript" id=11]
+[sub_resource type="GDScript" id=10]
 script/source = "extends Activator
 onready var interaction_window = $\"/root/InteractionWindow\"
 
@@ -201,7 +201,7 @@ func read_note():
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK cool\", interaction_window, \"hide\")"
 
-[sub_resource type="GDScript" id=12]
+[sub_resource type="GDScript" id=11]
 script/source = "extends BasePickler
 
 var is_looted:bool = false
@@ -218,11 +218,11 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"is_looted\": false}"
 
-[node name="Room" instance=ExtResource( 1 )]
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="Background" parent="." index="1"]
 editor/display_folded = true
@@ -239,7 +239,7 @@ texture = ExtResource( 4 )
 
 [node name="Geometry" parent="." index="2"]
 editor/display_folded = true
-script = SubResource( 3 )
+script = SubResource( 2 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
 position = Vector2( 938.964, 777.14 )
@@ -286,13 +286,13 @@ ActivatorName = "Door"
 activation_type = "Remote"
 
 [node name="Activator" parent="Door" index="4"]
-script = SubResource( 4 )
+script = SubResource( 3 )
 
 [node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="Pickler" parent="Door" index="5"]
-script = SubResource( 6 )
+script = SubResource( 5 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 5 )]
 editor/display_folded = true
@@ -319,10 +319,10 @@ ActivatorName = "Drawer"
 activation_type = "Remote"
 
 [node name="Activator" parent="Drawer" index="4"]
-script = SubResource( 7 )
+script = SubResource( 6 )
 
 [node name="Pickler" parent="Drawer" index="5"]
-script = SubResource( 8 )
+script = SubResource( 7 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 5 )]
 editor/display_folded = true
@@ -347,10 +347,10 @@ ActivatorName = "Sleeping man"
 activation_type = "Remote"
 
 [node name="Activator" parent="Summoner" index="4"]
-script = SubResource( 9 )
+script = SubResource( 8 )
 
 [node name="Pickler" parent="Summoner" index="5"]
-script = SubResource( 10 )
+script = SubResource( 9 )
 
 [node name="Package" parent="." index="6" instance=ExtResource( 5 )]
 position = Vector2( 465.129, 784.964 )
@@ -359,10 +359,10 @@ position = Vector2( 465.129, 784.964 )
 ActivatorName = "Package"
 
 [node name="Activator" parent="Package" index="4"]
-script = SubResource( 11 )
+script = SubResource( 10 )
 
 [node name="Pickler" parent="Package" index="5"]
-script = SubResource( 12 )
+script = SubResource( 11 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
 
 [editable path="Door"]
