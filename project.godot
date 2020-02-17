@@ -38,6 +38,11 @@ _global_script_classes=[ {
 "class": "SkillList",
 "language": "GDScript",
 "path": "res://Autoload/Character/SkillList.gd"
+}, {
+"base": "GDScript",
+"class": "SkillRules",
+"language": "GDScript",
+"path": "res://Rules/Skills.gd"
 } ]
 _global_script_class_icons={
 "Activator": "",
@@ -45,7 +50,8 @@ _global_script_class_icons={
 "BaseRoom": "",
 "InventoryItem": "",
 "ItemScript": "",
-"SkillList": ""
+"SkillList": "",
+"SkillRules": ""
 }
 
 [application]

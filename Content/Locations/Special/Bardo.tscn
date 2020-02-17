@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends BaseRoom
@@ -14,7 +15,7 @@ func get_contains_player()->bool:
 func get_ui_enabled()->bool:
 	return false
 	
-func get_default_parameters()->Dictionary:
+static func get_default_parameters()->Dictionary:
 	return {}
 func get_player_spawn_point()->String:
 	return \"DefaultSpiritSpawn\"
@@ -76,22 +77,30 @@ func scenario():
 			current_branch = dialogue_tree[current_branch[\"next\"]]
 		else:
 			printerr(\"Dialogue tree incoherent\")
-	print(\"broken\")
+	#print(\"broken\")
 	#get_node(\"../ColorRect/AnimationPlayer\").play(\"Fadein\")
 	#yield(get_node(\"../ColorRect/AnimationPlayer\"), \"animation_finished\")
 	#get_tree().change_scene(\"res://Locations/FortressOfChains/SpiritSummoningRoom.tscn\")
-	$\"/root/RoomSwitcher\".switch_room_by_path(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom.tscn\")
+	complete = true
+	show_skill_increaser()
+
+func show_skill_increaser():
+	$\"../SkillIncreaser\".visible = true
+	$\"../Dialogue\".queue_free()
+	var skill_scores = yield($\"../SkillIncreaser\", \"done\")
+	$\"/root/RoomSwitcher\".switch_room_by_path(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.tscn\")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	state = scenario()
 	
 func _input(event):
-	if Input.is_action_pressed(\"ui_proceed\"):
-		if $\"../Dialogue/Margin/VBoxContainer/Says\".currently_typing:
-			$\"../Dialogue/Margin/VBoxContainer/Says\".autocomplete()
-		else:
-			emit_signal(\"user_proceed\")"
+	if not complete:
+		if Input.is_action_pressed(\"ui_proceed\"):
+			if $\"../Dialogue/Margin/VBoxContainer/Says\".currently_typing:
+				$\"../Dialogue/Margin/VBoxContainer/Says\".autocomplete()
+			else:
+				emit_signal(\"user_proceed\")"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node
@@ -339,6 +348,81 @@ func _on_r0_pressed():
 	pass # Replace with function body.
 "
 
+[sub_resource type="GDScript" id=7]
+script/source = "extends Control
+
+signal done
+
+#var skill_prototype = preload(\"res://Content/Locations/Special/BardoHelper(not_a_room).tscn\")
+
+onready var skillrule = preload(\"res://Rules/Skills.gd\")
+
+var skill_points = 23
+var skill_scores = {}
+
+func _ready():
+	$\"Modal/Panel/Top/Footer/Done\".visible = false
+	$\"Modal/Panel/Top/Meater/Description/VBoxContainer\".visible = false
+	var skills = preload(\"res://Rules/Skills.gd\").skill_names()
+	print(skillrule)
+	print(skills)
+	var prototype = preload(\"res://Content/Locations/Special/BardoHelper(not_a_room).tscn\")
+	for skill in skills:
+		var x = prototype.instance()
+		x.render(skill, 0, true, false)
+		$\"Modal/Panel/Top/Meater/ScrollContainer/VBoxContainer\".add_child(x)
+		x.connect(\"select\", self, \"render_skill\")
+		x.connect(\"plus\", self, \"increment_skill\")
+		x.connect(\"minus\", self, \"decrement_skill\")
+		skill_scores[skill] = 0
+	render_skillpoints()
+	
+	
+func render_skillpoints():
+	$\"Modal/Panel/Top/Header/PointCounter\".text = \"Points left: %d\" % skill_points
+	update_skills()
+	
+func update_skills():
+	for child in $\"Modal/Panel/Top/Meater/ScrollContainer/VBoxContainer\".get_children():
+		child.plus_visible (self.skill_points > 0)
+		child.minus_visible(skill_scores[child.skill_name] > 0)
+		child.set_score(skill_scores[child.skill_name])
+		
+func update_done():
+	$\"Modal/Panel/Top/Footer/Done\".visible = self.skill_points == 0
+		
+func render_skill(skill:String):
+	var skill_descr = skillrule.skill_description(skill)
+	var skill_texture = skillrule.skill_icon(skill)
+	$\"Modal/Panel/Top/Meater/Description/VBoxContainer\".visible = true
+	$\"Modal/Panel/Top/Meater/Description/VBoxContainer/Symbol\".texture = skill_texture
+	$\"Modal/Panel/Top/Meater/Description/VBoxContainer/Text\".text = skill_descr
+	
+func increment_skill(skill):
+	if self.skill_points == 0:
+		return
+	
+	self.skill_scores[skill] += 1
+	self.skill_points -= 1
+	update_skills()
+	render_skillpoints()
+	update_done()
+	
+func decrement_skill(skill):
+	if self.skill_scores[skill] == 0:
+		return
+	
+	self.skill_scores[skill] -= 1
+	self.skill_points += 1
+	update_skills()
+	render_skillpoints()
+	update_done()
+
+func _on_Done_pressed():
+	print(\"done\")
+	emit_signal(\"done\", self.skill_scores)
+"
+
 [node name="Room" index="0" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
@@ -347,9 +431,6 @@ script = SubResource( 2 )
 
 [node name="DialogueTree" type="Node" parent="Director" index="0"]
 script = SubResource( 3 )
-
-[node name="Background" parent="." index="1"]
-editor/display_folded = true
 
 [node name="ColorRect" type="ColorRect" parent="Background" index="0"]
 margin_left = -276.0
@@ -377,6 +458,7 @@ position = Vector2( 1624.84, 696.905 )
 position = Vector2( 790.071, 1124.38 )
 
 [node name="Dialogue" type="Control" parent="." index="3"]
+editor/display_folded = true
 margin_right = 1608.0
 margin_bottom = 909.0
 
@@ -452,7 +534,125 @@ margin_right = 1508.0
 margin_bottom = 20.0
 text = "[reply text]"
 flat = true
+
+[node name="SkillIncreaser" type="Control" parent="." index="4"]
+visible = false
+margin_left = -8.0
+margin_top = -2.0
+margin_right = 1604.0
+margin_bottom = 902.0
+script = SubResource( 7 )
+
+[node name="Modal" type="ColorRect" parent="SkillIncreaser" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Panel" type="Panel" parent="SkillIncreaser/Modal" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 141.0
+margin_top = 84.0
+margin_right = -100.0
+margin_bottom = -120.0
+
+[node name="Top" type="VBoxContainer" parent="SkillIncreaser/Modal/Panel" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+
+[node name="Header" type="HBoxContainer" parent="SkillIncreaser/Modal/Panel/Top" index="0"]
+margin_right = 1351.0
+margin_bottom = 39.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="SkillIncreaser/Modal/Panel/Top/Header" index="0"]
+margin_left = 505.0
+margin_top = 12.0
+margin_right = 752.0
+margin_bottom = 26.0
+text = "Assign starting skills to your character."
+
+[node name="PointCounter" type="Label" parent="SkillIncreaser/Modal/Panel/Top/Header" index="1"]
+margin_left = 756.0
+margin_top = 12.0
+margin_right = 845.0
+margin_bottom = 26.0
+text = "Points left: 23"
+
+[node name="Meater" type="Panel" parent="SkillIncreaser/Modal/Panel/Top" index="1"]
+margin_top = 43.0
+margin_right = 1351.0
+margin_bottom = 635.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 14.92
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SkillIncreaser/Modal/Panel/Top/Meater" index="0"]
+anchor_bottom = 1.0
+margin_right = 314.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SkillIncreaser/Modal/Panel/Top/Meater/ScrollContainer" index="0"]
+margin_right = 314.0
+size_flags_horizontal = 3
+
+[node name="Description" type="Panel" parent="SkillIncreaser/Modal/Panel/Top/Meater" index="1"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -828.0
+margin_right = -62.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SkillIncreaser/Modal/Panel/Top/Meater/Description" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Symbol" type="TextureRect" parent="SkillIncreaser/Modal/Panel/Top/Meater/Description/VBoxContainer" index="0"]
+margin_right = 766.0
+margin_bottom = 179.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+size_flags_stretch_ratio = 56.16
+texture = ExtResource( 2 )
+stretch_mode = 6
+
+[node name="Text" type="TextEdit" parent="SkillIncreaser/Modal/Panel/Top/Meater/Description/VBoxContainer" index="1"]
+margin_top = 183.0
+margin_right = 766.0
+margin_bottom = 592.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 128.0
+text = "fdsfsdfdfsfdf
+sdfdsfdfds
+dsfsdfdsf
+
+sdfsdfdfsdfsdfsdf
+
+"
+readonly = true
+wrap_enabled = true
+
+[node name="Footer" type="HBoxContainer" parent="SkillIncreaser/Modal/Panel/Top" index="2"]
+margin_top = 639.0
+margin_right = 1351.0
+margin_bottom = 680.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+
+[node name="Done" type="Button" parent="SkillIncreaser/Modal/Panel/Top/Footer" index="0"]
+margin_right = 1351.0
+margin_bottom = 41.0
+size_flags_horizontal = 3
+text = "Done!"
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r0" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 0 ]]
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r1" to="." method="click_reply" binds= [ 1 ]]
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r2" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 2 ]]
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r3" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 3 ]]
+[connection signal="pressed" from="SkillIncreaser/Modal/Panel/Top/Footer/Done" to="SkillIncreaser" method="_on_Done_pressed"]

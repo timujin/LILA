@@ -218,7 +218,7 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"is_looted\": false}"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
