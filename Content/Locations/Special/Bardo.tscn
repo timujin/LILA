@@ -88,6 +88,7 @@ func show_skill_increaser():
 	$\"../SkillIncreaser\".visible = true
 	$\"../Dialogue\".queue_free()
 	var skill_scores = yield($\"../SkillIncreaser\", \"done\")
+	$\"/root/Character/Model\".set_all_skills(skill_scores)
 	$\"/root/RoomSwitcher\".switch_room_by_path(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.tscn\")
 
 # Called when the node enters the scene tree for the first time.

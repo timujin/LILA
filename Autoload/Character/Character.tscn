@@ -8,20 +8,53 @@ script/source = "extends CanvasLayer
 
 var skill_name_prototype = preload(\"res://Autoload/Character/SkillButton.tscn\")
 
+onready var mode = $\"/root/ModeController\"
 onready var skill_list = $\"Modal/Window/VBoxContainer/SkillScreen/HBoxContainer/ScrollContainer/SkillNames\"
 
 func _ready():
-	for skill in SkillList.get_skill_list():
+	hide()
+	mode.connect(\"reset\", self, \"on_reset\")
+	call_deferred(\"render_all\")
+		
+func render_all():
+	clear()
+	for skill in $Model.skill_scores.keys():
 		var s = skill_name_prototype.instance()
-		s.init(skill, skill, 80)
+		s.init(skill, skill, $Model.skill_scores[skill])
 		s.connect(\"pressed\", self, \"display_skill\", [skill])
 		skill_list.add_child(s)
+	
+func clear():
+	for child in skill_list.get_children():
+		child.queue_free()
 
 func display_skill(skill:String):
-	print(SkillList.get_skill_description(skill))
+	print(preload(\"res://Rules/Skills.gd\").skill_description(skill))
+	
+func on_reset():
+	hide()
+	
+var ui_character_pressed = false
 
+func hide():
+	ui_character_pressed = false
+	$Modal.visible = false
+	#info_panel.clear()
+	
+func _process(delta):	
+	if Input.is_action_pressed(\"ui_character\"):
+		if not ui_character_pressed:
+			ui_character_pressed = true
+			$Modal.visible = !($Modal.visible)
+			render_all()
+	elif ui_character_pressed:
+		ui_character_pressed = false
+        ## done once when the key is released
+	
+func _on_Cancel_pressed():
+	hide()
 
-\"\"\"onready var mode = $\"/root/ModeController\"
+\"\"\"
 
 var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
 onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
@@ -61,43 +94,31 @@ func _on_Item_select(item)->void:
 	info_panel.render(item, 0)
 	current_item = item
 
-func _ready():
-	hide()
-	mode.connect(\"reset\", self, \"on_reset\")
-	
-func on_reset():
-	hide()
-	
-var ui_inventory_pressed = false
-
-func hide():
-	ui_inventory_pressed = false
-	$Modal.visible = false
-	info_panel.clear()
-	
-func _process(delta):	
-	if Input.is_action_pressed(\"ui_inventory\"):
-		if not ui_inventory_pressed:
-			ui_inventory_pressed = true
-			$Modal.visible = !($Modal.visible)
-			render_all()
-	elif ui_inventory_pressed:
-		ui_inventory_pressed = false
-        ## done once when the key is released
-	
-	
-func on_using_item(action:String):
-	if current_item == null:
-		printerr(\"Trying to use an unselected item!\")
-		return
-	current_item.iscript.use(action, get_tree())
-	
-func _on_Cancel_pressed():
-	hide()
 \"\"\""
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
+
+onready var skillrules = preload(\"res://Rules/Skills.gd\")
+onready var devc = $\"/root/DeveloperConsole\"
+
+onready var skill_scores:Dictionary = skillrules.default_skills()
+
+func get_skill(skill:String):
+	if skill_scores.has(skill):
+		return skill_scores.get(skill, 0)
+	else:
+		devc.echoerr(\"Skill not found: %s\" % skill)
+		return 0
+		
+func set_skill(skill:String, value:int):
+	if skill_scores.has(skill):
+		skill_scores[skill] = value
+	else:
+		devc.echoerr(\"Skill not found: %s\" % skill)
+		
+func set_all_skills(skills:Dictionary):
+	self.skill_scores = skills
 
 \"\"\"	
 var items:Dictionary = {}

@@ -91,3 +91,9 @@ static func skill_description(skill:String)->String:
 			
 static func skill_icon(skill:String)->Texture:
 	return preload("res://Assets/Placeholders/adeptmastersorc.png")
+	
+static func default_skills()->Dictionary:
+	var res = {}
+	for key in skill_names():
+		res[key] = 0
+	return res

@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.gd" type="Script" id=2]
@@ -14,6 +14,15 @@ script/source = "extends Node
 
 onready var interaction_window = $\"/root/InteractionWindow\"
 
+func _on_Room_room_loaded():
+	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", true):
+		$InitialCutscene.call_deferred(\"start_cutscene\")
+	else:
+		$\"../DarknessFull\".queue_free()
+		$\"../DarknessPartial\".queue_free()
+
+
+\"\"\"
 func activate_summoner():
 	interaction_window.start()
 	interaction_window.say(\"The Summoner is chilling in his chair\")
@@ -43,8 +52,89 @@ func _on_Room_room_loaded():
 		interaction_window.start()
 		interaction_window.say(\"You awaken in the middle of a pentagram\")
 		interaction_window.add_reply(\"OK\", interaction_window, \"hide\")
-	
+\"\"\"
 "
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends Node
+
+\"\"\"
+This is the first thing the Player sees when he wakes up in the pentagram.
+Starts with a black screen and a small narration.
+\"\"\"
+
+onready var interaction_window = $\"/root/InteractionWindow\"
+onready var mode = $\"/root/ModeController\"
+
+var aborted = false
+
+func skip():
+	aborted = true
+	$\"/root/Room/Player\".visible = true	
+	mode.stop_cutscene()
+	interaction_window.hide()
+	if $\"../../DarknessPartial\": $\"../../DarknessPartial\".queue_free()
+	if $\"../../DarknessFull\": $\"../../DarknessFull\".queue_free()
+	queue_free()
+
+func start_cutscene():
+	$\"/root/DeveloperConsole\".connect(\"skip_cutscene\", self, \"skip\")
+	
+	$\"/root/Room/Player\".visible = false
+	mode.start_cutscene()
+	$\"../../DarknessFull\".visible = true
+	$\"../../DarknessPartial\".visible = true
+	yield(get_tree().create_timer(1.5), \"timeout\")
+	interaction_window.start()
+	interaction_window.say(\"The voices were gone. Not merely silent; I could feel that the God of Life and Death and the Goddess of Everything Else were no longer here. It was still dark. But it was not just the cold, empty darkness of oblivion that used to be. There was more. Notably, I seemed to be lying on a floor. This was a big change from the overwhelming nothing of my previous existence. \")
+	interaction_window.say(\"Floors are good. Floors are real. You can always rely on floors to support you. I'm on a floor, therefore, I am.\")
+	interaction_window.say(\"I felt around on the floor. Nothing. Flat, cold surface.\")
+	interaction_window.say(\"I felt around my body. Nothing?\")
+	interaction_window.say(\"I raised my hands to my face. I couldn't feel it. I wasn't even sure if I had hands, or a face. I was just a bunch of senses lying on the floor, feeling the floor, and nothing else. \")
+	interaction_window.say(\"There wasn't even me here. Just the floor. Endlessly stretching, flat, emotionless, pointless; defined just by how it feels to the touch. The entire universe bared down to one simple sensation. \")
+	interaction_window.say(\"A cold shiver went down my spine. I couldn't breathe. My whole body went tense, shaking. A sense of dread had overtaken me.\")
+	interaction_window.say(\"It meant that I had a spine, that I had lungs, that there was a body that was me.\")
+	interaction_window.say(\"It also made me realize that my eyes were closed.\")
+	interaction_window.say(\"Actually, scratch that. It occurred to me that I *had* eyes. I mean, sure, they don't see anything, but that was a fixable problem.\")
+	interaction_window.add_reply(\"Open my eyes a little\", self, \"stage2\")
+	
+func stage2():
+	interaction_window.hide()
+	$\"../../DarknessFull/AnimationPlayer\".play(\"Fadeout\")
+	yield($\"../../DarknessFull/AnimationPlayer\", \"animation_finished\")
+	$\"../../DarknessFull\".queue_free()
+	yield(get_tree().create_timer(1.0), \"timeout\")
+	interaction_window.start()
+	interaction_window.say(\"Yes, this sure was a floor. It looked like a floor, and it did floory things like being under and not letting me fall through. This little observation made the shivering sense of dread subside a little. This time again, I couldn't feel my limbs, or my spine, or my breath. But I knew they were there. In the future, whenever I feel too anxious about not being real, I can always summon a panic attack to calm me down.\") # Awkward writing?
+	interaction_window.say(\"I stood up, as much as one can stand up when they can't feel their legs.\")
+	interaction_window.add_reply(\"Look around\", self, \"stage3\")
+
+func stage3():
+	interaction_window.hide()
+	$\"/root/Room/Player\".visible = true	
+	$\"../../DarknessPartial/AnimationPlayer\".play(\"Fadeout\")
+	yield($\"../../DarknessPartial/AnimationPlayer\", \"animation_finished\")
+	$\"../../DarknessPartial\".queue_free()
+	mode.stop_cutscene()
+	self.listen_to_click_for_stage_3 = true
+	
+var listen_to_click_for_stage_3 = false
+
+func _input(event):
+	if not listen_to_click_for_stage_3:
+		return
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+	listen_to_click_for_stage_3 = false
+	interaction_window.start()
+	interaction_window.say(\"I tried to move away, and I bumped into something. Up from the pentagram drawn on the floor, there was an invisible wall surrounding me. Essentially, I was trapped.\")
+	interaction_window.add_reply(\"OK\", self, \"stage4\")
+	
+func stage4():
+	interaction_window.hide()
+	queue_free()"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
@@ -57,13 +147,14 @@ func unlock_pentagram():
 		var tmp = left_edge_of_pent.position
 		left_edge_of_pent.position = left_edge_of_room.position
 		left_edge_of_room.position = tmp
-		
+	$\"../Background/Pentagram\".modulate = Color(0.145098, 0.145098, 0.145098)
 		
 func lock_pentagram():
 	if left_edge_of_pent.position.x > left_edge_of_room.position.x:
 		var tmp = left_edge_of_pent.position
 		left_edge_of_pent.position = left_edge_of_room.position
-		left_edge_of_room.position = tmp"
+		left_edge_of_room.position = tmp
+	$\"../Background/Pentagram\".modulate = Color(1, 1, 1)"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Activator
@@ -218,11 +309,58 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"is_looted\": false}"
 
-[node name="Room" instance=ExtResource( 1 )]
+[sub_resource type="Gradient" id=16]
+offsets = PoolRealArray( 0.554717, 0.664151, 0.767925 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.8, 0.8, 0.8, 0, 0, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=17]
+gradient = SubResource( 16 )
+
+[sub_resource type="Animation" id=18]
+resource_name = "Fadeout"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Gradient" id=13]
+offsets = PoolRealArray( 0.341509 )
+colors = PoolColorArray( 0, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=14]
+gradient = SubResource( 13 )
+
+[sub_resource type="Animation" id=15]
+resource_name = "Fadeout"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
 script = SubResource( 1 )
+
+[node name="InitialCutscene" type="Node" parent="Director" index="0"]
+script = SubResource( 12 )
 
 [node name="Background" parent="." index="1"]
 editor/display_folded = true
@@ -263,6 +401,7 @@ position = Vector2( 291.525, 774.563 )
 position = Vector2( 370.956, 777.074 )
 
 [node name="Door" parent="." index="3" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -296,6 +435,7 @@ script = SubResource( 5 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 5 )]
 editor/display_folded = true
+visible = false
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -326,6 +466,7 @@ script = SubResource( 7 )
 
 [node name="Summoner" parent="." index="5" instance=ExtResource( 5 )]
 editor/display_folded = true
+visible = false
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
@@ -353,6 +494,8 @@ script = SubResource( 8 )
 script = SubResource( 9 )
 
 [node name="Package" parent="." index="6" instance=ExtResource( 5 )]
+editor/display_folded = true
+visible = false
 position = Vector2( 465.129, 784.964 )
 
 [node name="ClickArea" parent="Package" index="3"]
@@ -363,6 +506,24 @@ script = SubResource( 10 )
 
 [node name="Pickler" parent="Package" index="5"]
 script = SubResource( 11 )
+
+[node name="DarknessPartial" type="Sprite" parent="." index="7"]
+visible = false
+position = Vector2( 773.613, 447.666 )
+scale = Vector2( 0.935373, 1037.27 )
+texture = SubResource( 17 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessPartial" index="0"]
+anims/Fadeout = SubResource( 18 )
+
+[node name="DarknessFull" type="Sprite" parent="." index="8"]
+visible = false
+position = Vector2( 773.613, 447.666 )
+scale = Vector2( 0.935373, 1037.27 )
+texture = SubResource( 14 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
+anims/Fadeout = SubResource( 15 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
 
 [editable path="Door"]

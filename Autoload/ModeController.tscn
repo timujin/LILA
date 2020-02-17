@@ -19,6 +19,12 @@ func reset():
 	is_modal_window = false
 	drop()
 	
+func start_cutscene():
+	is_cutscene = true
+	
+func stop_cutscene():
+	is_cutscene = false
+	
 
 func get_is_player_controllable():
 	return (!is_cutscene) and (!is_modal_window)
