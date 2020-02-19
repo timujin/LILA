@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=36 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.gd" type="Script" id=2]
@@ -7,7 +7,9 @@
 [ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Content/Locations/00001PentagramRoom/Graphics/Door.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Sprites/Interactables/Furniture/Drawer.png" type="Texture" id=7]
-[ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Placeholders/adeptmastersorc.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Placeholders/aerialshackles.png" type="Texture" id=9]
+[ext_resource path="res://Assets/Sprites/Interactables/Characters/SummonerSleeping.png" type="Texture" id=10]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -21,6 +23,8 @@ func _on_Room_room_loaded():
 		$\"../DarknessFull\".queue_free()
 		$\"../DarknessPartial\".queue_free()
 
+func activate_summoner():
+	$SummonerCutscene.call_deferred(\"start_cutscene\")
 
 \"\"\"
 func activate_summoner():
@@ -55,7 +59,7 @@ func _on_Room_room_loaded():
 \"\"\"
 "
 
-[sub_resource type="GDScript" id=12]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 \"\"\"
@@ -136,7 +140,88 @@ func stage4():
 	interaction_window.hide()
 	queue_free()"
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=25]
+script/source = "extends Node
+
+\"\"\"
+This is what happens when the player has woken up the Summoner.
+Includes a combat tutorial.
+\"\"\"
+
+onready var interaction_window = $\"/root/InteractionWindow\"
+onready var mode = $\"/root/ModeController\"
+
+var aborted = false
+
+func skip():
+	aborted = true
+	$\"/root/Room/Player\".visible = true	
+	mode.stop_cutscene()
+	interaction_window.hide()
+	if $\"../../DarknessPartial\": $\"../../DarknessPartial\".queue_free()
+	if $\"../../DarknessFull\": $\"../../DarknessFull\".queue_free()
+	queue_free()
+
+func start_cutscene():
+	$\"/root/DeveloperConsole\".connect(\"skip_cutscene\", self, \"skip\")
+	
+	$\"/root/Room/Player\".visible = false
+	mode.start_cutscene()
+	$\"../../DarknessFull\".visible = true
+	$\"../../DarknessPartial\".visible = true
+	yield(get_tree().create_timer(1.5), \"timeout\")
+	interaction_window.start()
+	interaction_window.say(\"The voices were gone. Not merely silent; I could feel that the God of Life and Death and the Goddess of Everything Else were no longer here. It was still dark. But it was not just the cold, empty darkness of oblivion that used to be. There was more. Notably, I seemed to be lying on a floor. This was a big change from the overwhelming nothing of my previous existence. \")
+	interaction_window.say(\"Floors are good. Floors are real. You can always rely on floors to support you. I'm on a floor, therefore, I am.\")
+	interaction_window.say(\"I felt around on the floor. Nothing. Flat, cold surface.\")
+	interaction_window.say(\"I felt around my body. Nothing?\")
+	interaction_window.say(\"I raised my hands to my face. I couldn't feel it. I wasn't even sure if I had hands, or a face. I was just a bunch of senses lying on the floor, feeling the floor, and nothing else. \")
+	interaction_window.say(\"There wasn't even me here. Just the floor. Endlessly stretching, flat, emotionless, pointless; defined just by how it feels to the touch. The entire universe bared down to one simple sensation. \")
+	interaction_window.say(\"A cold shiver went down my spine. I couldn't breathe. My whole body went tense, shaking. A sense of dread had overtaken me.\")
+	interaction_window.say(\"It meant that I had a spine, that I had lungs, that there was a body that was me.\")
+	interaction_window.say(\"It also made me realize that my eyes were closed.\")
+	interaction_window.say(\"Actually, scratch that. It occurred to me that I *had* eyes. I mean, sure, they don't see anything, but that was a fixable problem.\")
+	interaction_window.add_reply(\"Open my eyes a little\", self, \"stage2\")
+	
+func stage2():
+	interaction_window.hide()
+	$\"../../DarknessFull/AnimationPlayer\".play(\"Fadeout\")
+	yield($\"../../DarknessFull/AnimationPlayer\", \"animation_finished\")
+	$\"../../DarknessFull\".queue_free()
+	yield(get_tree().create_timer(1.0), \"timeout\")
+	interaction_window.start()
+	interaction_window.say(\"Yes, this sure was a floor. It looked like a floor, and it did floory things like being under and not letting me fall through. This little observation made the shivering sense of dread subside a little. This time again, I couldn't feel my limbs, or my spine, or my breath. But I knew they were there. In the future, whenever I feel too anxious about not being real, I can always summon a panic attack to calm me down.\") # Awkward writing?
+	interaction_window.say(\"I stood up, as much as one can stand up when they can't feel their legs.\")
+	interaction_window.add_reply(\"Look around\", self, \"stage3\")
+
+func stage3():
+	interaction_window.hide()
+	$\"/root/Room/Player\".visible = true	
+	$\"../../DarknessPartial/AnimationPlayer\".play(\"Fadeout\")
+	yield($\"../../DarknessPartial/AnimationPlayer\", \"animation_finished\")
+	$\"../../DarknessPartial\".queue_free()
+	mode.stop_cutscene()
+	self.listen_to_click_for_stage_3 = true
+	
+var listen_to_click_for_stage_3 = false
+
+func _input(event):
+	if not listen_to_click_for_stage_3:
+		return
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+	listen_to_click_for_stage_3 = false
+	interaction_window.start()
+	interaction_window.say(\"I tried to move away, and I bumped into something. Up from the pentagram drawn on the floor, there was an invisible wall surrounding me. Essentially, I was trapped.\")
+	interaction_window.add_reply(\"OK\", self, \"stage4\")
+	
+func stage4():
+	interaction_window.hide()
+	queue_free()"
+
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node2D
 
 onready var left_edge_of_room = $RailroadLeft
@@ -156,69 +241,52 @@ func lock_pentagram():
 		left_edge_of_room.position = tmp
 	$\"../Background/Pentagram\".modulate = Color(1, 1, 1)"
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Activator
 
-var accessible = false
-
 func on_activate():
-	if accessible:
-		if $\"/root/Room\".get_self_parameter(\"door_locked\", true):
+	if not $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
+		if $\"../Pickler\".is_locked:
 			blurb(\"The door is locked\")
 		else:
 			get_node(\"/root/RoomSwitcher\").switch_room_by_name(\"res://Content/Locations/FortressOfChains/Corridor/Corridor.tscn\")
 	else:
-		blurb(\"I can't reach the door.\")
-		
-func make_accessible():
-	accessible = true
-	$\"../ClickArea\".activation_type = \"From interaction point\"
-	
-func make_inaccessible():
-	accessible = false
-	$\"../ClickArea\".activation_type = \"Remote\""
+		blurb(\"I can't reach the door from here.\")"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 func doorCode():
 	return \"SpiritSummoningRoomDoor\"
 	
 func unlock():
-	$\"/root/Room\".set_self_parameter(\"door_locked\", false)"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends BasePickler
-
-
-func deserialize(params:Dictionary)->void:
-	pass
-
-func serialize()->Dictionary:
-	return {}
-
-func default_parameters()->Dictionary:
-	return {}"
+	$\"../Pickler\".is_locked = false"
 
 [sub_resource type="GDScript" id=6]
-script/source = "extends Activator
-var accessible = false
+script/source = "extends BasePickler
 
-func on_activate():
-	if accessible:
-		blurb(\"This sure is a drawer\")
-	else:
-		blurb(\"I can't reach the drawer.\")
-		
-func make_accessible():
-	accessible = true
-	$\"../ClickArea\".activation_type = \"From interaction point\"
-	
-func make_inaccessible():
-	accessible = false
-	$\"../ClickArea\".activation_type = \"Remote\""
+var is_locked:bool = false
+
+
+func deserialize(params:Dictionary)->void:
+	is_locked = params.get(\"is_locked\", false)
+
+func serialize()->Dictionary:
+	return {\"is_locked\": is_locked}
+
+func default_parameters()->Dictionary:
+	return {\"is_looted\": true}"
 
 [sub_resource type="GDScript" id=7]
+script/source = "extends Activator
+
+func on_activate():
+	if not $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
+		blurb(\"This sure is a drawer\")
+	else:
+		blurb(\"I can't reach the drawer.\")"
+
+[sub_resource type="GDScript" id=8]
 script/source = "extends BasePickler
 
 
@@ -231,7 +299,77 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {}"
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=9]
+script/source = "extends Activator
+
+func on_activate():
+	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
+		blurb(\"What is this? I can't reach it from here.\")
+	else:
+		blurb(\"Some kind of a control panel\")"
+
+[sub_resource type="GDScript" id=10]
+script/source = "extends BasePickler
+
+
+func deserialize(params:Dictionary)->void:
+	pass
+
+func serialize()->Dictionary:
+	return {}
+
+func default_parameters()->Dictionary:
+	return {}"
+
+[sub_resource type="GDScript" id=11]
+script/source = "extends Activator
+
+func on_activate():
+	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
+		blurb(\"I can't reach the window from here.\")
+	else:
+		blurb(\"This sure is a window.\")"
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends Activator
+
+func on_activate():
+	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
+		blurb(\"I can't reach the bed from here.\")
+	else:
+		blurb(\"This sure is a bed.\")"
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends Activator
+
+func on_activate():
+	blurb(\"This sure is a chair\")"
+
+[sub_resource type="GDScript" id=14]
+script/source = "extends BasePickler
+
+var is_visible = false
+var is_near_window = false
+
+func deserialize(params:Dictionary)->void:
+	is_visible = params[\"is_visible\"]
+	is_near_window = params[\"is_near_window\"]
+	if not is_visible:
+		$\"..\".visible = false
+
+func serialize()->Dictionary:
+	return {
+		\"is_visible\": is_visible,
+		\"is_near_window\": is_near_window,
+	}
+
+func default_parameters()->Dictionary:
+	return {
+		\"is_visible\": false,
+		\"is_near_window\": false,
+	}"
+
+[sub_resource type="GDScript" id=15]
 script/source = "extends Activator
 
 #func on_activate():
@@ -248,20 +386,23 @@ script/source = "extends Activator
 func on_activate():
 	$\"/root/Room/Director\".activate_summoner()"
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=16]
 script/source = "extends BasePickler
 
+var is_there = true
 
 func deserialize(params:Dictionary)->void:
-	pass
+	is_there = params[\"is_there\"]
+	if not is_there:
+		$\"..\".queue_free()
 
 func serialize()->Dictionary:
-	return {}
+	return {\"is_there\":is_there}
 
 func default_parameters()->Dictionary:
-	return {}"
+	return {\"is_there\":true}"
 
-[sub_resource type="GDScript" id=10]
+[sub_resource type="GDScript" id=17]
 script/source = "extends Activator
 onready var interaction_window = $\"/root/InteractionWindow\"
 
@@ -292,7 +433,7 @@ func read_note():
 	interaction_window.clear_replies()
 	interaction_window.add_reply(\"OK cool\", interaction_window, \"hide\")"
 
-[sub_resource type="GDScript" id=11]
+[sub_resource type="GDScript" id=18]
 script/source = "extends BasePickler
 
 var is_looted:bool = false
@@ -309,15 +450,14 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"is_looted\": false}"
 
-[sub_resource type="Gradient" id=16]
+[sub_resource type="Gradient" id=19]
 offsets = PoolRealArray( 0.554717, 0.664151, 0.767925 )
 colors = PoolColorArray( 0, 0, 0, 1, 0.8, 0.8, 0.8, 0, 0, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=17]
-gradient = SubResource( 16 )
+[sub_resource type="GradientTexture" id=20]
+gradient = SubResource( 19 )
 
-[sub_resource type="Animation" id=18]
-resource_name = "Fadeout"
+[sub_resource type="Animation" id=21]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
@@ -331,15 +471,14 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[sub_resource type="Gradient" id=13]
+[sub_resource type="Gradient" id=22]
 offsets = PoolRealArray( 0.341509 )
 colors = PoolColorArray( 0, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=14]
-gradient = SubResource( 13 )
+[sub_resource type="GradientTexture" id=23]
+gradient = SubResource( 22 )
 
-[sub_resource type="Animation" id=15]
-resource_name = "Fadeout"
+[sub_resource type="Animation" id=24]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
@@ -360,7 +499,10 @@ script = ExtResource( 2 )
 script = SubResource( 1 )
 
 [node name="InitialCutscene" type="Node" parent="Director" index="0"]
-script = SubResource( 12 )
+script = SubResource( 2 )
+
+[node name="SummonerCutscene" type="Node" parent="Director" index="1"]
+script = SubResource( 25 )
 
 [node name="Background" parent="." index="1"]
 editor/display_folded = true
@@ -377,7 +519,7 @@ texture = ExtResource( 4 )
 
 [node name="Geometry" parent="." index="2"]
 editor/display_folded = true
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="RailroadLeft" parent="Geometry" index="0"]
 position = Vector2( 938.964, 777.14 )
@@ -410,7 +552,7 @@ scale = Vector2( 1.22454, 1.06758 )
 texture = ExtResource( 6 )
 
 [node name="BlurbPoint" parent="Door" index="1"]
-position = Vector2( -2.49487, -253.18 )
+position = Vector2( 24.7127, -274.66 )
 z_index = 78
 
 [node name="InteractionPoint" parent="Door" index="2"]
@@ -422,20 +564,18 @@ margin_top = -215.0
 margin_right = 53.0
 margin_bottom = 44.0
 ActivatorName = "Door"
-activation_type = "Remote"
 
 [node name="Activator" parent="Door" index="4"]
-script = SubResource( 3 )
-
-[node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
 script = SubResource( 4 )
 
-[node name="Pickler" parent="Door" index="5"]
+[node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
 script = SubResource( 5 )
+
+[node name="Pickler" parent="Door" index="5"]
+script = SubResource( 6 )
 
 [node name="Drawer" parent="." index="4" instance=ExtResource( 5 )]
 editor/display_folded = true
-visible = false
 position = Vector2( 554.412, 675.453 )
 
 [node name="Sprite" parent="Drawer" index="0"]
@@ -456,23 +596,136 @@ margin_top = -138.0
 margin_right = 63.0
 margin_bottom = -12.0
 ActivatorName = "Drawer"
-activation_type = "Remote"
 
 [node name="Activator" parent="Drawer" index="4"]
-script = SubResource( 6 )
-
-[node name="Pickler" parent="Drawer" index="5"]
 script = SubResource( 7 )
 
-[node name="Summoner" parent="." index="5" instance=ExtResource( 5 )]
+[node name="Pickler" parent="Drawer" index="5"]
+script = SubResource( 8 )
+
+[node name="Panel" parent="." index="5" instance=ExtResource( 5 )]
 editor/display_folded = true
-visible = false
+position = Vector2( 848.031, 714.893 )
+
+[node name="Sprite" parent="Panel" index="0"]
+position = Vector2( -4.76386, -88.5566 )
+scale = Vector2( 1.22454, 1.06758 )
+texture = ExtResource( 8 )
+
+[node name="BlurbPoint" parent="Panel" index="1"]
+position = Vector2( -23.9745, -260.34 )
+z_index = 78
+
+[node name="InteractionPoint" parent="Panel" index="2"]
+position = Vector2( -13.7602, -14.3343 )
+
+[node name="ClickArea" parent="Panel" index="3"]
+margin_left = -78.0
+margin_top = -215.0
+margin_right = 53.0
+margin_bottom = 44.0
+ActivatorName = "Panel"
+
+[node name="Activator" parent="Panel" index="4"]
+script = SubResource( 9 )
+
+[node name="Pickler" parent="Panel" index="5"]
+script = SubResource( 10 )
+
+[node name="Window" parent="." index="6" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 836.575, 481.481 )
+
+[node name="Sprite" parent="Window" index="0"]
+position = Vector2( -137.938, -88.5566 )
+scale = Vector2( 5.66367, 1.06758 )
+texture = ExtResource( 8 )
+
+[node name="BlurbPoint" parent="Window" index="1"]
+position = Vector2( -124.213, -240.292 )
+z_index = 78
+
+[node name="InteractionPoint" parent="Window" index="2"]
+position = Vector2( -125.454, 167.527 )
+
+[node name="ClickArea" parent="Window" index="3"]
+margin_left = -306.0
+margin_top = -125.0
+margin_right = 34.0
+margin_bottom = -51.0
+ActivatorName = "Window"
+
+[node name="Activator" parent="Window" index="4"]
+script = SubResource( 11 )
+
+[node name="Pickler" parent="Window" index="5"]
+script = SubResource( 10 )
+
+[node name="Bed" parent="." index="7" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 836.575, 481.481 )
+
+[node name="Sprite" parent="Bed" index="0"]
+position = Vector2( -119.655, 135.267 )
+scale = Vector2( 2.6535, 1.10452 )
+texture = ExtResource( 8 )
+
+[node name="BlurbPoint" parent="Bed" index="1"]
+position = Vector2( -119.781, -7.60483 )
+z_index = 78
+
+[node name="InteractionPoint" parent="Bed" index="2"]
+position = Vector2( -122.13, 189.687 )
+
+[node name="ClickArea" parent="Bed" index="3"]
+margin_left = -186.0
+margin_top = 102.0
+margin_right = -40.0
+margin_bottom = 167.0
+ActivatorName = "Bed"
+
+[node name="Activator" parent="Bed" index="4"]
+script = SubResource( 12 )
+
+[node name="Pickler" parent="Bed" index="5"]
+script = SubResource( 10 )
+
+[node name="Chair" parent="." index="8" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 612.794, 761.24 )
+
+[node name="Sprite" parent="Chair" index="0"]
+position = Vector2( 60.7838, -34.3737 )
+scale = Vector2( 1.21872, 1.25692 )
+texture = ExtResource( 9 )
+
+[node name="BlurbPoint" parent="Chair" index="1"]
+position = Vector2( 71.0476, -233.611 )
+
+[node name="InteractionPoint" parent="Chair" index="2"]
+position = Vector2( 62.5452, 65.6498 )
+
+[node name="ClickArea" parent="Chair" index="3"]
+margin_left = 18.0
+margin_top = -79.0
+margin_right = 106.0
+margin_bottom = 15.0
+ActivatorName = "Chair"
+
+[node name="Activator" parent="Chair" index="4"]
+script = SubResource( 13 )
+
+[node name="Pickler" parent="Chair" index="5"]
+script = SubResource( 14 )
+
+[node name="Summoner" parent="." index="9" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
 position = Vector2( 60.7838, -34.3737 )
 scale = Vector2( 1.21872, 1.25692 )
-texture = ExtResource( 8 )
+texture = ExtResource( 10 )
 
 [node name="BlurbPoint" parent="Summoner" index="1"]
 position = Vector2( 45.4228, -153.722 )
@@ -488,12 +741,12 @@ ActivatorName = "Sleeping man"
 activation_type = "Remote"
 
 [node name="Activator" parent="Summoner" index="4"]
-script = SubResource( 8 )
+script = SubResource( 15 )
 
 [node name="Pickler" parent="Summoner" index="5"]
-script = SubResource( 9 )
+script = SubResource( 16 )
 
-[node name="Package" parent="." index="6" instance=ExtResource( 5 )]
+[node name="Package" parent="." index="10" instance=ExtResource( 5 )]
 editor/display_folded = true
 visible = false
 position = Vector2( 465.129, 784.964 )
@@ -502,33 +755,43 @@ position = Vector2( 465.129, 784.964 )
 ActivatorName = "Package"
 
 [node name="Activator" parent="Package" index="4"]
-script = SubResource( 10 )
+script = SubResource( 17 )
 
 [node name="Pickler" parent="Package" index="5"]
-script = SubResource( 11 )
+script = SubResource( 18 )
 
-[node name="DarknessPartial" type="Sprite" parent="." index="7"]
+[node name="DarknessPartial" type="Sprite" parent="." index="11"]
+editor/display_folded = true
 visible = false
 position = Vector2( 773.613, 447.666 )
 scale = Vector2( 0.935373, 1037.27 )
-texture = SubResource( 17 )
+texture = SubResource( 20 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessPartial" index="0"]
-anims/Fadeout = SubResource( 18 )
+anims/Fadeout = SubResource( 21 )
 
-[node name="DarknessFull" type="Sprite" parent="." index="8"]
+[node name="DarknessFull" type="Sprite" parent="." index="12"]
+editor/display_folded = true
 visible = false
 position = Vector2( 773.613, 447.666 )
 scale = Vector2( 0.935373, 1037.27 )
-texture = SubResource( 14 )
+texture = SubResource( 23 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
-anims/Fadeout = SubResource( 15 )
+anims/Fadeout = SubResource( 24 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
 
 [editable path="Door"]
 
 [editable path="Drawer"]
+
+[editable path="Panel"]
+
+[editable path="Window"]
+
+[editable path="Bed"]
+
+[editable path="Chair"]
 
 [editable path="Summoner"]
 
