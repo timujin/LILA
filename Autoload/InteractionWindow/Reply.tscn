@@ -3,9 +3,12 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Button
 
-func init(text:String, listener:Node, fname:String):
+func init(text:String, listener:Node, fname:String, fparameters=null):
 	self.text = text
-	connect(\"pressed\", listener, fname)
+	if fparameters == null:
+		connect(\"pressed\", listener, fname)
+	else:
+		connect(\"pressed\", listener, fname, [fparameters])
 	
 func is_a_reply():
 	# As a runtime typecheck

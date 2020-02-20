@@ -25,13 +25,14 @@ func clear():
 	clear_replies()
 	clear_dialogue()
 	
-func say(text:String, defface:=false, face:Texture=null):
+func say(text:String, face:Texture=null):
 	var x = say.instance()
 	say_container.add_child(x)
-	if defface:
-		x.init(text)
-	else:
-		x.init(text, face)
+	x.init(text, face)
+	
+
+func sayf(face:Texture, text:String):
+	return say(text,face)
 		
 func present(name:String, descr:String, icon:Texture=null):
 	var x = present.instance()
@@ -43,10 +44,10 @@ func present_item(item):
 	say_container.add_child(x)
 	x.init_item(item)
 		
-func add_reply(text:String, listener:Node, fname:String):
+func add_reply(text:String, listener:Node, fname:String, fparameters=null):
 	var x = reply.instance()
 	reply_container.add_child(x)
-	x.init(text, listener, fname)
+	x.init(text, listener, fname, fparameters)
 	
 func hide():
 	$Modal.visible = false
