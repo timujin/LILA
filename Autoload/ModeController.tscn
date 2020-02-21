@@ -5,6 +5,7 @@ script/source = "extends Node
 
 var is_cutscene = false
 var is_modal_window = false
+var is_combat = false
 var is_player_controllable = true setget ,get_is_player_controllable
 
 var holding_icon = null
@@ -25,9 +26,15 @@ func start_cutscene():
 func stop_cutscene():
 	is_cutscene = false
 	
+func start_combat():
+	is_combat = true
+
+func stop_combat():
+	is_combat = false
+	
 
 func get_is_player_controllable():
-	return (!is_cutscene) and (!is_modal_window)
+	return (!is_cutscene) and (!is_modal_window) and (!is_combat)
 	
 func get_is_player_holding_item():
 	return (holding_item != null)

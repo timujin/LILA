@@ -1,0 +1,211 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Combat/BaseCombat.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+onready var d = $\"/root/InteractionBlurb\"
+onready var c = $\"..\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	call_deferred(\"start_cutscene\")
+	
+func blurb(text:String, shady=false):
+	if not shady:
+		d.display(text, $BlurbDialoguePoint, -1)
+	else:
+		d.display(text, $ShadyDialoguePoint, -1)
+
+func start_cutscene():
+	c.switch_to_cutscene()
+	$\"../UI/TacticalLayer/PlayerHPBar\".visible = false
+	$\"../UI/TacticalLayer/EnemyHPBar\".visible = false
+	$\"../UI/TacticalLayer/StartQTE\".visible = false
+	blurb(\"I'm going to move my hands. You should try and repeat after me. Ready?\")
+	yield(d, \"dismissed\")
+	#c.add_card(null, \"Repeat after me!\\nClick on the circle precisely when it's about to expire.\")
+	#$\"../UI/TacticalLayer/StartQTE\".visible = true
+	#c.current_round = $\"RepeatMove\"
+	var total_successes = 0
+	while true:
+		yield(get_tree().create_timer(0.1), \"timeout\")
+		c.set_round( $\"RepeatMove\")
+		c.switch_to_tactical()
+		var response = yield(c, \"round_finished\")
+		total_successes += response
+		if response == 4:
+			blurb(\"Great!\");yield(d, \"dismissed\")
+			blurb(\"You're well in sync with your body.\");yield(d, \"dismissed\")
+			blurb(\"Nice moves, Spirit!\", true);yield(d, \"dismissed\")
+			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+			break
+		elif total_successes >= 8:
+			blurb(\"Passable.\");yield(d, \"dismissed\")
+			blurb(\"Are you paralyzed or what?\", true);yield(d, \"dismissed\")
+			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+		elif response == 0:
+			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
+			blurb(\"Take a deep breath.\");yield(d, \"dismissed\")
+			blurb(\"Let's try again.\");yield(d, \"dismissed\")
+			blurb(\"Repeat after me.\");yield(d, \"dismissed\")
+		else:
+			blurb(\"You're doing well.\");yield(d, \"dismissed\")
+			blurb(\"No he doesn't.\", true);yield(d, \"dismissed\")
+			blurb(\"Shush!\");yield(d, \"dismissed\")
+			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
+			blurb(\"Let's try again.\");yield(d, \"dismissed\")
+	
+	blurb(\"My assistant is going to throw rubber balls at you.\");yield(d, \"dismissed\")
+	blurb(\"You should try and catch them.\");yield(d, \"dismissed\")
+	blurb(\"Don't worry, they're soft, they won't hurt if they hit you.\");yield(d, \"dismissed\")
+	blurb(\"Probably.\");yield(d, \"dismissed\")	
+
+	while true:
+		yield(get_tree().create_timer(0.1), \"timeout\")
+		c.set_round( $\"ThrowBalls\")
+		c.switch_to_tactical()
+		var response = yield(c, \"round_finished\")
+		total_successes += response
+		if response == 4:
+			blurb(\"Great!\");yield(d, \"dismissed\")
+			blurb(\"You're well in sync with your body.\");yield(d, \"dismissed\")
+			blurb(\"Nice moves, Spirit!\", true);yield(d, \"dismissed\")
+			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+			break
+		elif total_successes >= 8:
+			blurb(\"Passable.\");yield(d, \"dismissed\")
+			blurb(\"Are you paralyzed or what?\", true);yield(d, \"dismissed\")
+			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+		elif response == 0:
+			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
+			blurb(\"Take a deep breath.\");yield(d, \"dismissed\")
+			blurb(\"Let's try again.\");yield(d, \"dismissed\")
+			blurb(\"Repeat after me.\");yield(d, \"dismissed\")
+		else:
+			blurb(\"You're doing well.\");yield(d, \"dismissed\")
+			blurb(\"No he doesn't.\", true);yield(d, \"dismissed\")
+			blurb(\"Shush!\");yield(d, \"dismissed\")
+			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
+			blurb(\"Let's try again.\");yield(d, \"dismissed\")
+			
+			
+			
+	"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+signal finished
+onready var simple_bullet = preload(\"res://Combat/Bullets/SimpleCountdownBullet.tscn\")
+onready var c = $\"../..\"
+
+func get_cards():
+	return[{\"text\":\"Repeat after me\\nClick on the circle precisely when it's about to expire.\"}]
+	
+func showtime():
+	successes = 0
+	c.spawn_bullet(simple_bullet, 2.0, $\"1\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(simple_bullet, 2.0, $\"2\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(simple_bullet, 2.0, $\"3\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(simple_bullet, 2.0, $\"4\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(2.5), \"timeout\")
+	emit_signal(\"finished\", successes)
+	successes = 0
+	
+var successes = 0
+	
+func succ():
+	successes += 1"
+
+[sub_resource type="Curve2D" id=3]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -126.957, 95.0101, 0, 0, 0, 0, 108.315, 114.436, 0, 0, 0, 0, 270.2, 127.387, 0, 0, 0, 0, 332.796, 181.349, 0, 0, 0, 0, 375.965, 237.469, 0, 0, 0, 0, 397.55, 289.272, 0, 0, 0, 0, 399.708, 354.026, 0, 0, 0, 0, 408.342, 418.78, 0, 0, 0, 0, 408.342, 461.949, 0, 0, 0, 0, 399.708, 537.495, 0, 0, 0, 0, 404.025, 613.042, 0, 0, 0, 0, 401.867, 701.539, 0, 0, 0, 0, 401.867, 766.293, 0, 0, 0, 0, 401.867, 859.107, 0, 0, 0, 0, 393.233, 938.97 )
+}
+
+[sub_resource type="Curve2D" id=4]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -101.056, 60.4746, 0, 0, 0, 0, 47.8784, 49.6823, 0, 0, 0, 0, 233.506, 53.9992, 0, 0, 0, 0, 360.856, 53.9992, 0, 0, 0, 0, 477.413, 62.6331, 0, 0, 0, 0, 619.872, 90.6931, 0, 0, 0, 0, 667.358, 107.961, 0, 0, 0, 0, 738.587, 215.884, 0, 0, 0, 0, 747.221, 328.124, 0, 0, 0, 0, 760.172, 461.949, 0, 0, 0, 0, 753.697, 636.785, 0, 0, 0, 0, 753.697, 802.987, 0, 0, 0, 0, 740.746, 967.03 )
+}
+
+[sub_resource type="Curve2D" id=5]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -107.531, 73.4254, 0, 0, 0, 0, 47.8784, 66.95, 0, 0, 0, 0, 259.408, 75.5839, 0, 0, 0, 0, 399.708, 71.2669, 0, 0, 0, 0, 697.576, 66.95, 0, 0, 0, 0, 874.571, 75.5839, 0, 0, 0, 0, 956.592, 120.912, 0, 0, 0, 0, 1049.41, 194.299, 0, 0, 0, 0, 1062.36, 276.321, 0, 0, 0, 0, 1086.1, 395.037, 0, 0, 0, 0, 1103.37, 533.179, 0, 0, 0, 0, 1124.95, 638.943, 0, 0, 0, 0, 1114.16, 744.708, 0, 0, 0, 0, 1114.16, 826.73, 0, 0, 0, 0, 1116.32, 917.385, 0, 0, 0, 0, 1120.64, 964.872 )
+}
+
+[sub_resource type="Curve2D" id=6]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, -114.007, 51.8407, 0, 0, 0, 0, 157.96, 21.6222, 0, 0, 0, 0, 337.113, 15.1468, 0, 0, 0, 0, 574.544, 10.8299, 0, 0, 0, 0, 766.647, 23.7807, 0, 0, 0, 0, 988.969, 77.7423, 0, 0, 0, 0, 1165.96, 131.704, 0, 0, 0, 0, 1269.57, 265.529, 0, 0, 0, 0, 1308.42, 468.425, 0, 0, 0, 0, 1336.48, 625.993, 0, 0, 0, 0, 1340.8, 764.134, 0, 0, 0, 0, 1340.8, 921.702, 0, 0, 0, 0, 1342.96, 971.347 )
+}
+
+[node name="Combat" index="0" instance=ExtResource( 1 )]
+
+[node name="Director" type="Node" parent="." index="0"]
+script = SubResource( 1 )
+
+[node name="BlurbDialoguePoint" type="Position2D" parent="Director" index="0"]
+position = Vector2( 835.326, 181.311 )
+
+[node name="ShadyDialoguePoint" type="Position2D" parent="Director" index="1"]
+position = Vector2( 467.887, 166.279 )
+
+[node name="RepeatMove" type="Node" parent="Director" index="2"]
+editor/display_folded = true
+script = SubResource( 2 )
+
+[node name="1" type="Position2D" parent="Director/RepeatMove" index="0"]
+position = Vector2( 474.331, 162.007 )
+
+[node name="2" type="Position2D" parent="Director/RepeatMove" index="1"]
+position = Vector2( 474.331, 614.626 )
+
+[node name="3" type="Position2D" parent="Director/RepeatMove" index="2"]
+position = Vector2( 1164.12, 162.007 )
+
+[node name="4" type="Position2D" parent="Director/RepeatMove" index="3"]
+position = Vector2( 1164.12, 614.626 )
+
+[node name="ThrowBalls" type="Node" parent="Director" index="3"]
+
+[node name="1" type="Path2D" parent="Director/ThrowBalls" index="0"]
+curve = SubResource( 3 )
+
+[node name="2" type="Path2D" parent="Director/ThrowBalls" index="1"]
+curve = SubResource( 4 )
+
+[node name="3" type="Path2D" parent="Director/ThrowBalls" index="2"]
+curve = SubResource( 5 )
+
+[node name="4" type="Path2D" parent="Director/ThrowBalls" index="3"]
+curve = SubResource( 6 )
+
+[node name="Shady" type="Sprite" parent="Enemies" index="0"]
+position = Vector2( 139.191, 386.694 )
+scale = Vector2( 3.62613, 7.61929 )
+texture = ExtResource( 2 )
+
+[node name="Summoner" type="Sprite" parent="Enemies" index="1"]
+position = Vector2( 826.663, 381.298 )
+scale = Vector2( 4.81329, 5.42485 )
+texture = ExtResource( 2 )
+
+[node name="TacticalLayer" parent="UI" index="0"]
+visible = false
+mouse_filter = 2
+
+[node name="Hand" parent="UI/TacticalLayer" index="0"]
+mouse_filter = 2
+
+[node name="VBoxContainer" parent="UI/TacticalLayer/Hand" index="0"]
+mouse_filter = 2
+
+[node name="PlayerHPBar" parent="UI/TacticalLayer" index="2"]
+mouse_filter = 2
+
+[node name="EnemyHPBar" parent="UI/TacticalLayer" index="3"]
+mouse_filter = 2

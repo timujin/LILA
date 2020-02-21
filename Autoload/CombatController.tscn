@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+onready var mode = $\"/root/ModeController\"
+
+var cb = null
+
+func start_combat(encounter:PackedScene, params:Dictionary={}):
+	if mode.is_combat or $\"/root/Combat\" != null:
+		printerr(\"Can't start a combat before the last combat finishes!\")
+		return
+	mode.start_combat()
+	cb = encounter.instance()
+	$\"/root\".add_child(cb)
+	$\"/root/Room\".visible = false
+	$\"/root/Room\".set_process(false)
+	cb.initialize(params)
+	
+	
+func stop_combat():
+	mode.stop_combat()
+	if $\"/root/Combat\" != null: $\"/root/Combat\".queue_free()
+	cb = null
+	$\"/root/Room\".visible = true
+	$\"/root/Room\".set_process(true)
+	"
+
+[node name="CombatController" type="Node"]
+script = SubResource( 1 )

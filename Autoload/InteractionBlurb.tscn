@@ -5,7 +5,7 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-# TODO make blurbs disappear when clicking away
+signal dismissed
 
 onready var p = $Control
 onready var t = $Control/PopupPanel/RichTextLabel
@@ -13,24 +13,30 @@ onready var t = $Control/PopupPanel/RichTextLabel
 func _ready():
 	p.visible = false
 
-func display(text:String, at:Node2D):
+func display(text:String, at:Node2D, wait_time=3.0):
 	p.visible = true
 	t.bbcode_text = text
 	$Timer.stop()
-	$Timer.start()
+	if wait_time > 0:
+		$Timer.wait_time = wait_time
+		$Timer.start()
 	call_deferred(\"reparent\",at)
 
 func reparent(at:Node2D):
 	var pos = at.get_global_transform_with_canvas().get_origin()
 	p.rect_position = pos
 
-func _on_Timer_timeout():
+func dismiss():
 	p.visible = false
+	emit_signal(\"dismissed\")
+
+func _on_Timer_timeout():
+	dismiss()
 
 func _input(event):
     if event is InputEventMouseButton:
         if event.pressed:
-            p.visible = false"
+            dismiss()"
 
 [sub_resource type="DynamicFont" id=2]
 size = 25
@@ -43,10 +49,10 @@ script = SubResource( 1 )
 [node name="Control" type="Control" parent="."]
 
 [node name="PopupPanel" type="Panel" parent="Control"]
-margin_left = -270.0
-margin_top = 60.0
-margin_right = 296.0
-margin_bottom = 166.0
+margin_left = -280.0
+margin_top = -110.0
+margin_right = 286.0
+margin_bottom = -4.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Control/PopupPanel"]
 anchor_right = 1.0

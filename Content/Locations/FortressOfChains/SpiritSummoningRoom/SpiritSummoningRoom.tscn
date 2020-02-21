@@ -162,8 +162,9 @@ func skip():
 	aborted = true
 	mode.stop_cutscene()
 	iw.hide()
-	assert(false)
-	queue_free()
+	#assert(false)
+	#queue_free()
+	$\"/root/CombatController\".start_combat(load(\"res://Combat/TestingGrounds.tscn\"))
 	
 signal contn
 
@@ -172,6 +173,10 @@ func contn(response=[]):
 	emit_signal(\"contn\", response)
 
 func start_cutscene():
+	$\"/root/CombatController\".start_combat(load(\"res://Combat/TestingGrounds.tscn\"))
+	
+	return
+	
 	$\"/root/DeveloperConsole\".connect(\"skip_cutscene\", self, \"skip\")
 	
 	$\"/root/Room/Player\".visible = true
