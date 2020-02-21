@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Combat/BaseCombat.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=2]
@@ -46,6 +46,7 @@ func start_cutscene():
 			blurb(\"Passable.\");yield(d, \"dismissed\")
 			blurb(\"Are you paralyzed or what?\", true);yield(d, \"dismissed\")
 			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+			break
 		elif response == 0:
 			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
 			blurb(\"Take a deep breath.\");yield(d, \"dismissed\")
@@ -62,7 +63,8 @@ func start_cutscene():
 	blurb(\"You should try and catch them.\");yield(d, \"dismissed\")
 	blurb(\"Don't worry, they're soft, they won't hurt if they hit you.\");yield(d, \"dismissed\")
 	blurb(\"Probably.\");yield(d, \"dismissed\")	
-
+	
+	total_successes = 0
 	while true:
 		yield(get_tree().create_timer(0.1), \"timeout\")
 		c.set_round( $\"ThrowBalls\")
@@ -71,26 +73,26 @@ func start_cutscene():
 		total_successes += response
 		if response == 4:
 			blurb(\"Great!\");yield(d, \"dismissed\")
-			blurb(\"You're well in sync with your body.\");yield(d, \"dismissed\")
+			blurb(\"Your motoric skills are in good condition.\");yield(d, \"dismissed\")
 			blurb(\"Nice moves, Spirit!\", true);yield(d, \"dismissed\")
 			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
 			break
 		elif total_successes >= 8:
-			blurb(\"Passable.\");yield(d, \"dismissed\")
-			blurb(\"Are you paralyzed or what?\", true);yield(d, \"dismissed\")
+			blurb(\"Good enough.\");yield(d, \"dismissed\")
 			blurb(\"Let's move to the next exercise.\");yield(d, \"dismissed\")
+			break
 		elif response == 0:
 			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
-			blurb(\"Take a deep breath.\");yield(d, \"dismissed\")
+			blurb(\"Do you like being hit by balls?\", true);yield(d, \"dismissed\")
+			blurb(\"Cause I can do this all day.\", true);yield(d, \"dismissed\")
 			blurb(\"Let's try again.\");yield(d, \"dismissed\")
-			blurb(\"Repeat after me.\");yield(d, \"dismissed\")
 		else:
-			blurb(\"You're doing well.\");yield(d, \"dismissed\")
-			blurb(\"No he doesn't.\", true);yield(d, \"dismissed\")
-			blurb(\"Shush!\");yield(d, \"dismissed\")
-			blurb(\"No pressure, no rush.\");yield(d, \"dismissed\")
+			blurb(\"Score!\", true);yield(d, \"dismissed\")
+			blurb(\"I hope you're not hurt\");yield(d, \"dismissed\")
 			blurb(\"Let's try again.\");yield(d, \"dismissed\")
-			
+		
+	blurb(\"[The combat training is not over by this point; I'll come back to it later; Now skip!]\");yield(d, \"dismissed\")
+	
 			
 			
 	"
@@ -115,6 +117,35 @@ func showtime():
 	yield(get_tree().create_timer(0.5), \"timeout\")
 	c.spawn_bullet(simple_bullet, 2.0, $\"4\").connect(\"bullet_activated\", self, \"succ\")
 	yield(get_tree().create_timer(2.5), \"timeout\")
+	emit_signal(\"finished\", successes)
+	successes = 0
+	
+var successes = 0
+	
+func succ():
+	successes += 1"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Node
+
+signal finished
+
+onready var bullet = preload(\"res://Combat/Bullets/TrajectoryBullet.tscn\")
+onready var c = $\"../..\"
+
+func get_cards():
+	return[{\"text\":\"Catch the balls!\\nClick on the balls before they hit you!\"}]
+	
+func showtime():
+	successes = 0
+	c.spawn_bullet(bullet, 3.0, $\"1\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(bullet, 3.0, $\"2\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(bullet, 3.0, $\"3\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(0.5), \"timeout\")
+	c.spawn_bullet(bullet, 3.0, $\"4\").connect(\"bullet_activated\", self, \"succ\")
+	yield(get_tree().create_timer(3.5), \"timeout\")
 	emit_signal(\"finished\", successes)
 	successes = 0
 	
@@ -171,6 +202,7 @@ position = Vector2( 1164.12, 162.007 )
 position = Vector2( 1164.12, 614.626 )
 
 [node name="ThrowBalls" type="Node" parent="Director" index="3"]
+script = SubResource( 7 )
 
 [node name="1" type="Path2D" parent="Director/ThrowBalls" index="0"]
 curve = SubResource( 3 )

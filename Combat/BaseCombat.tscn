@@ -51,7 +51,7 @@ func set_round(rnd):
 func on_Round_finished(params={}):
 	emit_signal(\"round_finished\", params)
 	switch_to_cutscene()
-	
+		
 
 ############
 # CARD MANIPU
@@ -72,11 +72,12 @@ func clear_cards():
 
 func spawn_bullet(prefab, duration, position):
 	var bullet = prefab.instance()
-	$Bulletin.add_child(bullet)
 	if typeof(position) == typeof(Vector2(0,0)):
+		$Bulletin.add_child(bullet)
 		bullet.position = position
 	else:
-		bullet.position = position.position
+		position.add_child(bullet)
+		bullet.position = Vector2(0,0)
 		
 	#bullet.connect(\"bullet_activated\", self, \"on_bullet_activated\")
 	#bullet.connect(\"bullet_preactivated\", self, \"on_bullet_preactivated\")
