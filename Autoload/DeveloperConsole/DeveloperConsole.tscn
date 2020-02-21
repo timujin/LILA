@@ -75,6 +75,7 @@ func interpret(input:String):
 		\"warp\": warp(parsed)
 		\"skip\": skip()
 		\"win\" : win()
+		\"call\": call(parsed)
 		_     : echoerr(\"Command not found: \"+command)
 		
 func warp(args):
@@ -104,7 +105,10 @@ func skip():
 	$'..'.emit_signal(\"skip_cutscene\")
 	
 func win():
-	$\"/root/CombatController\".stop_combat({\"artificial\":true})"
+	$\"/root/CombatController\".stop_combat({\"artificial\":true})
+	
+func call(parsed):
+	get_tree().get_root().get_node(parsed[0]).call_deferred(parsed[1])"
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2

@@ -30,6 +30,8 @@ func render()->void:
 		
 func clear_room():
 	$Geometry.unlock_pentagram()
+	$"Summoner/Pickler".is_there = false
+	$"Summoner/Pickler".repickle()
 	reload_items()
 	#emit_signal("reload_items")
 	#$Summoner.queue_free()

@@ -30,7 +30,10 @@ func activate_summoner():
 	yield($SummonerCutscene, \"finished\")
 	print(\"FINISHED\")
 	$\"../Summoner/Pickler\".is_there = false
-	$\"../Summoner/Pickler\".pickle()
+	$\"../Summoner/Pickler\".repickle()
+	$\"../Chair/Pickler\".is_visible = true
+	$\"../Chair/Pickler\".repickle()
+	print(\"REPICKLED\")
 	clear_room()
 	
 func clear_room():
@@ -416,7 +419,15 @@ func serialize()->Dictionary:
 	return {\"is_locked\": is_locked}
 
 func default_parameters()->Dictionary:
-	return {\"is_locked\": true}"
+	return {\"is_locked\": false}
+	
+func unlock():
+	is_locked = false
+	repickle()
+	
+func lock():
+	is_locked = true
+	repickle()"
 
 [sub_resource type="GDScript" id=8]
 script/source = "extends Activator
@@ -476,7 +487,11 @@ func on_activate():
 	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", false):
 		blurb(\"I can't reach the window from here.\")
 	else:
-		blurb(\"This sure is a window.\")"
+		blurb($\"../Pickler\".interaction_type)
+		if $\"../Pickler\".interaction_type == \"brutality\":
+			$\"../Pickler\".interact(\"acuity\")
+		else:
+			$\"../Pickler\".interact(\"brutality\")"
 
 [sub_resource type="GDScript" id=13]
 script/source = "extends Activator
@@ -502,14 +517,25 @@ var is_near_window = false
 func deserialize(params:Dictionary)->void:
 	is_visible = params[\"is_visible\"]
 	is_near_window = params[\"is_near_window\"]
+	print({\"v\":is_visible, \"w\":is_near_window})
 	if not is_visible:
 		$\"..\".visible = false
+	else:
+		$\"..\".visible = true
+	if is_near_window:
+		$\"../Sprite\".position = $\"../NearWindow\".position
+		$\"../ClickArea\".visible = false
+	else:
+		$\"../Sprite\".position = $\"../NotNearWindow\".position
+		$\"../ClickArea\".visible = true
 
 func serialize()->Dictionary:
-	return {
+	var res = {
 		\"is_visible\": is_visible,
 		\"is_near_window\": is_near_window,
 	}
+	print(res)
+	return res
 
 func default_parameters()->Dictionary:
 	return {
@@ -548,7 +574,11 @@ func serialize()->Dictionary:
 	return {\"is_there\":is_there}
 
 func default_parameters()->Dictionary:
-	return {\"is_there\":true}"
+	return {\"is_there\":true}
+	
+func remove():
+	is_there = false
+	repickle()"
 
 [sub_resource type="GDScript" id=18]
 script/source = "extends Activator
@@ -782,6 +812,7 @@ script = SubResource( 10 )
 script = SubResource( 11 )
 
 [node name="Window" parent="." index="6" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 836.575, 481.481 )
 
 [node name="Sprite" parent="Window" index="0"]
@@ -839,11 +870,10 @@ script = SubResource( 13 )
 script = SubResource( 11 )
 
 [node name="Chair" parent="." index="8" instance=ExtResource( 5 )]
-editor/display_folded = true
-position = Vector2( 612.794, 761.24 )
+position = Vector2( 590.231, 787.413 )
 
 [node name="Sprite" parent="Chair" index="0"]
-position = Vector2( 60.7838, -34.3737 )
+position = Vector2( 63.4913, -33.4712 )
 scale = Vector2( 1.21872, 1.25692 )
 texture = ExtResource( 9 )
 
@@ -851,19 +881,25 @@ texture = ExtResource( 9 )
 position = Vector2( 71.0476, -233.611 )
 
 [node name="InteractionPoint" parent="Chair" index="2"]
-position = Vector2( 62.5452, 65.6498 )
+position = Vector2( 57.1302, 35.8672 )
 
-[node name="ClickArea" parent="Chair" index="3"]
-margin_left = 18.0
-margin_top = -79.0
-margin_right = 106.0
-margin_bottom = 15.0
+[node name="NearWindow" type="Position2D" parent="Chair" index="3"]
+position = Vector2( 170.573, -111.91 )
+
+[node name="NotNearWindow" type="Position2D" parent="Chair" index="4"]
+position = Vector2( 63.1752, -34.295 )
+
+[node name="ClickArea" parent="Chair" index="5"]
+margin_left = 19.805
+margin_top = -79.9025
+margin_right = 107.805
+margin_bottom = 14.0975
 ActivatorName = "Chair"
 
-[node name="Activator" parent="Chair" index="4"]
+[node name="Activator" parent="Chair" index="6"]
 script = SubResource( 14 )
 
-[node name="Pickler" parent="Chair" index="5"]
+[node name="Pickler" parent="Chair" index="7"]
 script = SubResource( 15 )
 
 [node name="Summoner" parent="." index="9" instance=ExtResource( 5 )]
@@ -927,8 +963,8 @@ texture = SubResource( 24 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
 anims/Fadeout = SubResource( 25 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
-[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 [connection signal="room_cleared" from="Director" to="Geometry" method="_on_Director_room_cleared"]
+[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 
 [editable path="Door"]
 
