@@ -51,7 +51,9 @@ func set_round(rnd):
 func on_Round_finished(params={}):
 	emit_signal(\"round_finished\", params)
 	switch_to_cutscene()
-		
+	
+func initialize(params):
+	pass
 
 ############
 # CARD MANIPU

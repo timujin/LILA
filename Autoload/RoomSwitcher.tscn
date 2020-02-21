@@ -83,7 +83,7 @@ func switch_room_by_name(to_room:String, destination=\"\"):
 		switch_room(r, destination)
 	
 #func load_room(path:String):
-#	var fullpath = \"res://Locations/\" + path + \".tscn\"
+#	var fullpath = \"res://Content/Locations/\" + path + \".tscn\"
 #	return load(fullpath)
 	
 func switch_room_by_path(path:String, destination=\"\"):

@@ -11,6 +11,10 @@ func pickle():
 func unpickle():
 	var parameters = global.unpickle(get_path(), default_parameters())
 	deserialize(parameters)
+	
+func repickle():
+	pickle()
+	unpickle()
 
 func prepare():
 	unpickle()

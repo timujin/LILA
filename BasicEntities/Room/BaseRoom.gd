@@ -3,6 +3,7 @@ class_name BaseRoom
 
 onready var room_switcher = $"/root/RoomSwitcher"
 signal room_loaded
+#signal reload_items
 
 func _ready():
 	call_deferred("move_to_back")
@@ -38,6 +39,13 @@ func pickle():
 	var picklers = get_tree().get_nodes_in_group("picklers")
 	for pickler in picklers:
 		pickler.pickle()
+	
+	
+func reload_items():
+	print("Reloading...")
+	var picklers = get_tree().get_nodes_in_group("picklers")
+	for pickler in picklers:
+		pickler.unpickle()
 	
 	
 ### THESE MUST BE OVERLOADED IN A SUBCLASS

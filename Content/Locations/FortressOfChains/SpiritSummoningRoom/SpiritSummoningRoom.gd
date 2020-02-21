@@ -11,7 +11,7 @@ func get_ui_enabled()->bool:
 	
 static func get_default_parameters()->Dictionary:
 	return {
-		"pentagram_on" : true,
+		"pentagram_on" : false,
 	}
 	
 func get_player_spawn_point()->String:
@@ -30,7 +30,13 @@ func render()->void:
 		
 func clear_room():
 	$Geometry.unlock_pentagram()
-	$Summoner.queue_free()
-	$"Door/Activator".make_accessible()
-	$"Drawer/Activator".make_accessible()
+	reload_items()
+	#emit_signal("reload_items")
+	#$Summoner.queue_free()
+	#$"Door/Activator".make_accessible()
+	#$"Drawer/Activator".make_accessible()
 		
+
+func _on_Director_room_cleared():
+	set_self_parameter("pentagram_on", false)
+	clear_room()

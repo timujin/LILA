@@ -16,6 +16,8 @@ script/source = "extends Node
 
 onready var interaction_window = $\"/root/InteractionWindow\"
 
+signal room_cleared
+
 func _on_Room_room_loaded():
 	if $\"/root/Room\".get_self_parameter(\"pentagram_on\", true):
 		$InitialCutscene.call_deferred(\"start_cutscene\")
@@ -25,6 +27,15 @@ func _on_Room_room_loaded():
 
 func activate_summoner():
 	$SummonerCutscene.call_deferred(\"start_cutscene\")
+	yield($SummonerCutscene, \"finished\")
+	print(\"FINISHED\")
+	$\"../Summoner/Pickler\".is_there = false
+	$\"../Summoner/Pickler\".pickle()
+	clear_room()
+	
+func clear_room():
+	emit_signal(\"room_cleared\")
+	
 
 \"\"\"
 func activate_summoner():
@@ -148,6 +159,8 @@ This is what happens when the player has woken up the Summoner.
 Includes a combat tutorial.
 \"\"\"
 
+signal finished
+
 onready var iw = $\"/root/InteractionWindow\"
 onready var mode = $\"/root/ModeController\"
 
@@ -164,16 +177,21 @@ func skip():
 	iw.hide()
 	#assert(false)
 	#queue_free()
-	$\"/root/CombatController\".start_combat(load(\"res://Combat/TestingGrounds.tscn\"))
+	$\"/root/CombatController\".start_combat(load(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom/CombatVibeCheck.tscn\"))
+	print(yield($\"/root/CombatController\", \"combat_over\"))
+	emit_signal(\"finished\")
 	
 signal contn
 
 func contn(response=[]):
-	print(\"!!!!!\" + str(response))
 	emit_signal(\"contn\", response)
 
 func start_cutscene():
-	$\"/root/CombatController\".start_combat(load(\"res://Combat/TestingGrounds.tscn\"))
+	$\"/root/CombatController\".start_combat(load(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom/CombatVibeCheck.tscn\"))
+	
+	print(yield($\"/root/CombatController\", \"combat_over\"))
+	
+	emit_signal(\"finished\")
 	
 	return
 	
@@ -358,7 +376,11 @@ func lock_pentagram():
 		var tmp = left_edge_of_pent.position
 		left_edge_of_pent.position = left_edge_of_room.position
 		left_edge_of_room.position = tmp
-	$\"../Background/Pentagram\".modulate = Color(1, 1, 1)"
+	$\"../Background/Pentagram\".modulate = Color(1, 1, 1)
+
+func _on_Director_room_cleared():
+	unlock_pentagram()
+"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends Activator
@@ -388,13 +410,13 @@ var is_locked:bool = false
 
 
 func deserialize(params:Dictionary)->void:
-	is_locked = params.get(\"is_locked\", false)
+	is_locked = params.get(\"is_locked\", true)
 
 func serialize()->Dictionary:
 	return {\"is_locked\": is_locked}
 
 func default_parameters()->Dictionary:
-	return {\"is_looted\": true}"
+	return {\"is_locked\": true}"
 
 [sub_resource type="GDScript" id=8]
 script/source = "extends Activator
@@ -430,15 +452,22 @@ func on_activate():
 [sub_resource type="GDScript" id=11]
 script/source = "extends BasePickler
 
+var interaction_type = \"\" # \"did not\" \"brutality\" \"dogma\" \"vitality\"
 
 func deserialize(params:Dictionary)->void:
-	pass
+	interaction_type = params[\"interaction_type\"]
 
 func serialize()->Dictionary:
-	return {}
+	return {\"interaction_type\" : interaction_type}
 
 func default_parameters()->Dictionary:
-	return {}"
+	return {
+		\"interaction_type\": \"did not\"
+	}
+	
+func interact(type):
+	interaction_type = type
+	repickle()"
 
 [sub_resource type="GDScript" id=12]
 script/source = "extends Activator
@@ -513,7 +542,7 @@ var is_there = true
 func deserialize(params:Dictionary)->void:
 	is_there = params[\"is_there\"]
 	if not is_there:
-		$\"..\".queue_free()
+		$\"..\".visible = false
 
 func serialize()->Dictionary:
 	return {\"is_there\":is_there}
@@ -615,6 +644,7 @@ tracks/0/keys = {
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
+editor/display_folded = true
 script = SubResource( 1 )
 
 [node name="InitialCutscene" type="Node" parent="Director" index="0"]
@@ -739,10 +769,10 @@ z_index = 78
 position = Vector2( -13.7602, -14.3343 )
 
 [node name="ClickArea" parent="Panel" index="3"]
-margin_left = -78.0
-margin_top = -215.0
-margin_right = 53.0
-margin_bottom = 44.0
+margin_left = -43.0
+margin_top = -118.0
+margin_right = 30.0
+margin_bottom = -59.0
 ActivatorName = "Panel"
 
 [node name="Activator" parent="Panel" index="4"]
@@ -752,7 +782,6 @@ script = SubResource( 10 )
 script = SubResource( 11 )
 
 [node name="Window" parent="." index="6" instance=ExtResource( 5 )]
-editor/display_folded = true
 position = Vector2( 836.575, 481.481 )
 
 [node name="Sprite" parent="Window" index="0"]
@@ -838,7 +867,6 @@ script = SubResource( 14 )
 script = SubResource( 15 )
 
 [node name="Summoner" parent="." index="9" instance=ExtResource( 5 )]
-editor/display_folded = true
 position = Vector2( 616.788, 805.18 )
 
 [node name="Sprite" parent="Summoner" index="0"]
@@ -899,6 +927,8 @@ texture = SubResource( 24 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
 anims/Fadeout = SubResource( 25 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
+[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
+[connection signal="room_cleared" from="Director" to="Geometry" method="_on_Director_room_cleared"]
 
 [editable path="Door"]
 

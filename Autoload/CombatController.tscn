@@ -3,14 +3,20 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+signal combat_started
+signal combat_over
+
 onready var mode = $\"/root/ModeController\"
 
 var cb = null
+
+var combat_results = {}
 
 func start_combat(encounter:PackedScene, params:Dictionary={}):
 	if mode.is_combat or $\"/root/Combat\" != null:
 		printerr(\"Can't start a combat before the last combat finishes!\")
 		return
+	emit_signal(\"combat_started\")
 	mode.start_combat()
 	cb = encounter.instance()
 	$\"/root\".add_child(cb)
@@ -19,12 +25,17 @@ func start_combat(encounter:PackedScene, params:Dictionary={}):
 	cb.initialize(params)
 	
 	
-func stop_combat():
+func stop_combat(results={}):
 	mode.stop_combat()
 	if $\"/root/Combat\" != null: $\"/root/Combat\".queue_free()
 	cb = null
 	$\"/root/Room\".visible = true
+	
+	yield(get_tree().create_timer(1.0), \"timeout\")
+	
 	$\"/root/Room\".set_process(true)
+	combat_results = results
+	emit_signal(\"combat_over\", results)
 	"
 
 [node name="CombatController" type="Node"]
