@@ -99,9 +99,13 @@ func _on_Item_select(item)->void:
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
-onready var skillrules = preload(\"res://Rules/Skills.gd\")
 onready var devc = $\"/root/DeveloperConsole\"
 
+################################
+# SKILLS
+################################
+
+onready var skillrules = preload(\"res://Rules/Skills.gd\")
 onready var skill_scores:Dictionary = skillrules.default_skills()
 
 func get_skill(skill:String):
@@ -119,39 +123,7 @@ func set_skill(skill:String, value:int):
 		
 func set_all_skills(skills:Dictionary):
 	self.skill_scores = skills
-
-\"\"\"	
-var items:Dictionary = {}
-
-func add_item(id:String, number:int = 1):
-	if items.has(id):
-		items[id] += number
-	else:
-		items[id] = number
-	
-func remove_item(id:String, number:int = -1):
-	if not items.has(id):
-		printerr(\"Warning: trying to remove a nonexistent item: %s\" % id)
-		return
-	items[id] -= number
-	if items[id] <= 0 or number == -1:
-		items.erase(id)
-		
-func has_item(id:String, number:int = 1)->bool:
-	if not items.has(id):
-		return false
-	return items[id] >= number
-		
-func _ready():
-	#return
-	self.items = {
-		\"CoolHat\": 5,
-		\"FortuneCookie\": 1,
-		\"StarterKnife\": 0,
-		\"BlahBlah\": 88
-		}
-		
-\"\"\""
+"
 
 [node name="Character" type="CanvasLayer"]
 layer = 40
@@ -182,7 +154,6 @@ margin_right = 1438.0
 margin_bottom = 772.0
 
 [node name="Tabs" type="HBoxContainer" parent="Modal/Window/VBoxContainer"]
-editor/display_folded = true
 margin_right = 1431.0
 margin_bottom = 20.0
 
@@ -199,9 +170,9 @@ text = "Perks"
 
 [node name="Abilities" type="Button" parent="Modal/Window/VBoxContainer/Tabs"]
 margin_left = 100.0
-margin_right = 165.0
+margin_right = 199.0
 margin_bottom = 20.0
-text = "Abilities"
+text = "Circumstance"
 
 [node name="SkillScreen" type="PanelContainer" parent="Modal/Window/VBoxContainer"]
 margin_top = 24.0
@@ -299,7 +270,7 @@ icon = ExtResource( 2 )
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/Tabs/Skills" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/PerkScreen" method="show"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Perks" to="Modal/Window/VBoxContainer/AbilityScreen" method="hide"]
-[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/SkillScreen" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/PerkScreen" method="hide"]
 [connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/AbilityScreen" method="show"]
+[connection signal="pressed" from="Modal/Window/VBoxContainer/Tabs/Abilities" to="Modal/Window/VBoxContainer/SkillScreen" method="hide"]
 [connection signal="pressed" from="Modal/Button" to="." method="_on_Cancel_pressed"]

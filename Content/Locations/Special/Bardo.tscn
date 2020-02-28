@@ -424,7 +424,7 @@ func _on_Done_pressed():
 	emit_signal(\"done\", self.skill_scores)
 "
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 script = SubResource( 1 )
 
 [node name="Director" type="Node" parent="." index="0"]
@@ -459,7 +459,6 @@ position = Vector2( 1624.84, 696.905 )
 position = Vector2( 790.071, 1124.38 )
 
 [node name="Dialogue" type="Control" parent="." index="3"]
-editor/display_folded = true
 margin_right = 1608.0
 margin_bottom = 909.0
 
@@ -537,6 +536,7 @@ text = "[reply text]"
 flat = true
 
 [node name="SkillIncreaser" type="Control" parent="." index="4"]
+editor/display_folded = true
 visible = false
 margin_left = -8.0
 margin_top = -2.0
@@ -653,7 +653,7 @@ margin_bottom = 41.0
 size_flags_horizontal = 3
 text = "Done!"
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r0" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 0 ]]
-[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r1" to="." method="click_reply" binds= [ 1 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r1" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 1 ]]
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r2" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 2 ]]
 [connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r3" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 3 ]]
 [connection signal="pressed" from="SkillIncreaser/Modal/Panel/Top/Footer/Done" to="SkillIncreaser" method="_on_Done_pressed"]
