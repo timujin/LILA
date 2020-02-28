@@ -59,20 +59,20 @@ margin_left = -24.0
 text = "100"
 valign = 1
 
-[node name="+" type="Button" parent="."]
-margin_left = 273.0
-margin_right = 293.0
-margin_bottom = 20.0
-size_flags_horizontal = 3
-text = "+"
-
 [node name="-" type="Button" parent="."]
-margin_left = 297.0
-margin_right = 314.0
+margin_left = 273.0
+margin_right = 290.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 text = "-"
+
+[node name="+" type="Button" parent="."]
+margin_left = 294.0
+margin_right = 314.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "+"
 [connection signal="mouse_entered" from="Skill" to="." method="_on_Skill_mouse_entered"]
 [connection signal="pressed" from="Skill" to="." method="_on_Skill_pressed"]
-[connection signal="pressed" from="+" to="." method="_on_plus_pressed"]
 [connection signal="pressed" from="-" to="." method="_on_minus_pressed"]
+[connection signal="pressed" from="+" to="." method="_on_plus_pressed"]
