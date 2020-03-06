@@ -11,7 +11,7 @@ func get_ui_enabled()->bool:
 	
 static func get_default_parameters()->Dictionary:
 	return {
-		"pentagram_on" : false,
+		"pentagram_on" : true,
 	}
 	
 func get_player_spawn_point()->String:

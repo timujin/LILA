@@ -32,15 +32,19 @@ static func skill_names():
 static func skill_description(skill:String)->String:
 	match skill:
 		"Acuity":
-			return  "Precision and power. Clarity of purpose. "+\
-					"Acuity is your ability to keep the eye on the ball. "+\
-					"Your mind is a blade, and a sharper blade cuts deeper. "+\
-					"Life is an exact science, so be an exact person."
+			return \
+			"""
+			Precision and power. Clarity of purpose. Acuity is your ability to keep the eye on the ball, to do exactly what needs to be done, no more, no less. Life is a dance. With every step, your foot must come down at precisely the right spot at precisely the right time. With high Acuity, your every move, every glance, every twitch of the finger is exact and calculated. With low Acuity, you will fumble, stumble, stutter, break glass, lose face. Some people find it cute, until somebody loses an eye.
+
+			Applications: fine motor skills, manual operation, ranged weapons
+			"""
 		"Alchemy":
-			return "Nothing is permanent. Everything decays. Changes. "+\
-				   "Stops being one thing and starts being something else. "+\
-				   "Even the universe itself. Even you. This is essential to understand and accept. "+\
-				   "And then — master. Alchemy is your ability to notice, endure, and produce change."
+			return \
+			"""
+			Precision and power. Clarity of purpose. Acuity is your ability to keep the eye on the ball, to do exactly what needs to be done, no more, no less. Life is a dance. With every step, your foot must come down at precisely the right spot at precisely the right time. With high Acuity, your every move, every glance, every twitch of the finger is exact and calculated. With low Acuity, you will fumble, stumble, stutter, break glass, lose face. Some people find it cute, until somebody loses an eye.
+
+			Applications: fine motor skills, manual operation, ranged weapons
+			"""
 		"Attainment":
 			return "[DESCRIPTION OF ATTAINMENT NIY]"
 		"Audacity":
