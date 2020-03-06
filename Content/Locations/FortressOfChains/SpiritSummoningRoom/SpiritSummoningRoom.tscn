@@ -709,17 +709,17 @@ position = Vector2( 1246.02, 766.957 )
 [node name="CameraLimitLeft" parent="Geometry" index="2"]
 position = Vector2( 0.703323, 633.368 )
 
-[node name="CameraLimitRight" parent="Geometry" index="3"]
-position = Vector2( 1600.32, 650.713 )
-
-[node name="DefaultSpiritSpawn" parent="Geometry" index="4"]
-position = Vector2( 1104.23, 773.347 )
-
 [node name="LeftEdgeOfPentagram" type="Position2D" parent="Geometry" index="5"]
 position = Vector2( 291.525, 774.563 )
 
 [node name="OutOfDoorSpiritSpawn" type="Position2D" parent="Geometry" index="6"]
 position = Vector2( 370.956, 777.074 )
+
+[node name="CameraLimitRight" parent="Geometry" index="7"]
+position = Vector2( 1600.32, 650.713 )
+
+[node name="DefaultSpiritSpawn" parent="Geometry" index="8"]
+position = Vector2( 1104.23, 773.347 )
 
 [node name="Door" parent="." index="3" instance=ExtResource( 5 )]
 editor/display_folded = true
@@ -841,7 +841,6 @@ script = SubResource( 12 )
 script = SubResource( 11 )
 
 [node name="Bed" parent="." index="7" instance=ExtResource( 5 )]
-editor/display_folded = true
 position = Vector2( 836.575, 481.481 )
 
 [node name="Sprite" parent="Bed" index="0"]
@@ -963,8 +962,8 @@ texture = SubResource( 24 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
 anims/Fadeout = SubResource( 25 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
-[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 [connection signal="room_cleared" from="Director" to="Geometry" method="_on_Director_room_cleared"]
+[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 
 [editable path="Door"]
 

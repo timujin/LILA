@@ -35,9 +35,9 @@ func trigger_activator():
 		return
 
 	var player = $\"/root/Room/Player\"
-	if player == null:
-		# player not active
-		return
+	#if player == null:
+	#	# player not active
+	#	return
 
 	match activation_type:
 		\"From interaction point\":
