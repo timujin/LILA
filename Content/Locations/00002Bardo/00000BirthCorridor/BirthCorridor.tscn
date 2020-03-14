@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.gd" type="Script" id=2]
@@ -40,6 +40,9 @@ gradient = SubResource( 1 )
 script/source = "extends Activator
 
 func on_activate():
+	$\"/root/Room/WhiteLight/AnimationPlayer\".play(\"fadein\")
+	yield($\"/root/Room/WhiteLight/AnimationPlayer\", \"animation_finished\")
+	
 	get_node(\"/root/RoomSwitcher\").\\
 	switch_room_by_path(\"res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.tscn\")"
 
@@ -71,14 +74,45 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[sub_resource type="Gradient" id=7]
+offsets = PoolRealArray( 0, 0.00188679 )
+
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
+
+[sub_resource type="Animation" id=9]
+resource_name = "fadein"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
+[node name="Room" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
 script = SubResource( 3 )
-
-[node name="Background" parent="." index="1"]
-editor/display_folded = true
 
 [node name="Sprite" type="Sprite" parent="Background" index="0"]
 position = Vector2( 818.689, 445.332 )
@@ -133,6 +167,15 @@ script = SubResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="GlowingDoor" index="6"]
 anims/fadein = SubResource( 6 )
+
+[node name="WhiteLight" type="Sprite" parent="." index="5"]
+visible = false
+position = Vector2( 839.98, 442.207 )
+scale = Vector2( 0.853717, 947.598 )
+texture = SubResource( 8 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WhiteLight" index="0"]
+anims/fadein = SubResource( 9 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
 
 [editable path="GlowingDoor"]
