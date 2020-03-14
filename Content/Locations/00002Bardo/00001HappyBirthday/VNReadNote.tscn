@@ -11,11 +11,15 @@ onready var speaker = $\"SubtitlesLayer/SpeakerBox\"
 
 func run():
 	poses.reset()
-	yield(think(\"I picked up a white envelope. It was unmarked.\"), \"completed\")
-	yield(think(\"I opened it. Inside was a single note, written on a pink sheet. The note smelled vaguely of oranges.\"), \"completed\")
+	if $\"/root/Global\".get_value(\"00002 Picked up GOEE's note\", false):
+		pass #yield(think(\"I opened a familiar envelope.\"), \"completed\")
+	else:
+		yield(think(\"I picked up a white envelope. It was unmarked.\"), \"completed\")
+		yield(think(\"I opened it. Inside was a single note, written on a pink sheet. The note smelled vaguely of oranges.\"), \"completed\")
 	$Note.visible = true
 	$SubtitlesLayer.visible = false
 	yield($Note/Button, \"pressed\")
+	$\"/root/Global\".set_value(\"00002 Picked up GOEE's note\", true)
 	$Note.visible = false
 	
 #func proceed():

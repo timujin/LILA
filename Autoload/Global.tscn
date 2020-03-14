@@ -11,7 +11,8 @@ script/source = "extends Node
 
 var default_values:Dictionary = {
 	\"newborn\" : true,
-	\"ui_unlocked\": false
+	\"ui_unlocked\": false,
+	\"00002 Picked up GOEE's note\": false
 }
 
 ##########################

@@ -123,7 +123,7 @@ func on_activate():
 	yield(VN.run(), \"completed\")
 	VN.queue_free()
 	$\"/root/ModeController\".is_world_scrollable = true
-	"
+	$\"/root/Inventory/Model\".add_item(\"GOEEsNote\")"
 
 [sub_resource type="GDScript" id=9]
 script/source = "extends BasePickler
@@ -192,6 +192,9 @@ func default_parameters()->Dictionary:
 
 [node name="Room" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+
+[node name="Background" parent="." index="0"]
+editor/display_folded = true
 
 [node name="Sprite" type="Sprite" parent="Background" index="0"]
 position = Vector2( 784.982, 444.515 )
