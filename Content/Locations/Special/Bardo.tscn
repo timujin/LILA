@@ -446,7 +446,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
 [node name="Director" type="Node" parent="." index="0"]
@@ -475,10 +475,10 @@ position = Vector2( 1622.27, 710.193 )
 [node name="CameraLimitLeft" parent="Geometry" index="2"]
 position = Vector2( 11.4916, 648.799 )
 
-[node name="CameraLimitRight" parent="Geometry" index="3"]
+[node name="CameraLimitRight" parent="Geometry" index="5"]
 position = Vector2( 1624.84, 696.905 )
 
-[node name="DefaultSpiritSpawn" parent="Geometry" index="4"]
+[node name="DefaultSpiritSpawn" parent="Geometry" index="6"]
 position = Vector2( 790.071, 1124.38 )
 
 [node name="Dialogue" type="Control" parent="." index="3"]

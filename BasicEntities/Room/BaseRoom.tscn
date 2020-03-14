@@ -2,7 +2,7 @@
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.gd" type="Script" id=1]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Camera2D
 
 const min_speed = 0
@@ -105,4 +105,4 @@ drag_margin_h_enabled = false
 drag_margin_v_enabled = false
 smoothing_enabled = true
 editor_draw_limits = true
-script = SubResource( 2 )
+script = SubResource( 1 )

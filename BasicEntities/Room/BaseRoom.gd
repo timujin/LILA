@@ -53,8 +53,8 @@ func reload_items():
 func get_room_name()->String:
 	return "BASE ROOM"
 	
-func get_contains_player()->bool:
-	return false
+#func get_contains_player()->bool:
+#	return false
 	
 func get_hud_enabled()->bool:
 	return true

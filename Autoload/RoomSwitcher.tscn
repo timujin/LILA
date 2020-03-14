@@ -3,6 +3,8 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+signal room_loaded
+
 #####################
 ## ROOM PARAMETERS ##
 #####################
@@ -20,10 +22,12 @@ func initialize_room_values(path:String)->void:
 		pass
 		
 func load_room_params(path:String)->Dictionary:
-	print(path)
-	#print (load(path).get_state())
-	
-	return load(path).new().get_default_parameters()
+	# Path must be to the room's .gd file, NOT to the scene
+	var room = load(path)
+	if room == null:
+		printerr(\"No room script found: \" + path)
+		return {}
+	return room.new().get_default_parameters()
 	
 func set_room_value(path:String, key:String, value):
 	initialize_room_values(path)
@@ -40,17 +44,19 @@ func get_room_value(path:String, key:String, default):
 ## ROOM LOADING #####
 #####################
 
-onready var player = preload(\"res://BasicEntities/Player/TheSpirit.tscn\")
+#onready var player = preload(\"res://BasicEntities/Player/TheSpirit.tscn\")
 onready var devconsole = $\"/root/DeveloperConsole\"
 onready var global = $\"/root/Global\"
 onready var hud = $\"/root/HUD\"
 onready var mode = $\"/root/ModeController\"
 
-var destination_spawnpoint:String = \"\"
+#var destination_spawnpoint:String = \"\"
 var room:Node2D = null
 
 func on_room_loaded():
+	# Accepts signal from the Room node
 	devconsole.echo(\"Loaded room: \" + str(room))
+	\"\"\"
 	if room.get_contains_player():
 		var destination
 		if destination_spawnpoint == \"\":
@@ -61,44 +67,41 @@ func on_room_loaded():
 			printerr(\"Spawn point not found: \" + destination_spawnpoint)
 		else:
 			spawn_player(destination)
-	if room.get_hud_enabled() and global.get_value(\"ui_unlocked\", true):
-		hud.enable()
-	else:
-		hud.disable()
+	\"\"\"
+	emit_signal(\"room_loaded\")
 	
-func switch_room(to_room, destination=\"\"):
+func switch_room(to_room):
 	$\"/root/Room\".pickle()
-	destination_spawnpoint = destination
+	#destination_spawnpoint = destination
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
 	mode.reset()
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
-	
-func switch_room_by_name(to_room:String, destination=\"\"):
+
+\"\"\"
+func switch_room_by_name(to_room:String):
 	var r = load(to_room)
 	if r == null:
 		devconsole.echoerr(\"Room not found! %s\" % to_room)
 	else:
-		switch_room(r, destination)
-	
-#func load_room(path:String):
-#	var fullpath = \"res://Content/Locations/\" + path + \".tscn\"
-#	return load(fullpath)
-	
-func switch_room_by_path(path:String, destination=\"\"):
+		switch_room(r)
+\"\"\"
+
+func switch_room_by_path(path:String):
 	var room = load(path)
 	if room == null:
 		$\"/root/DeveloperConsole\".echo(\"!!! Room not found!: \" + path)
 	else:
-		switch_room(room, destination)
-	
+		switch_room(room)
+
+\"\"\"
 	
 func spawn_player(at:Node2D):
 	var p = player.instance()
 	room.add_child(p)
 	p.position = at.position
-	"
+\"\"\""
 
 [node name="RoomSwitcher" type="Node2D"]
 script = SubResource( 1 )

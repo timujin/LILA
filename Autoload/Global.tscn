@@ -3,6 +3,17 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+
+###########################
+######
+###### STARTING VALUES     
+###########################
+
+var default_values:Dictionary = {
+	\"newborn\" : true,
+	\"ui_unlocked\": false
+}
+
 ##########################
 # Room pickleables
 ##########################
@@ -10,6 +21,7 @@ script/source = "extends Node
 var pickled_rooms:Dictionary = {}
 
 func pickle(room_path:NodePath, data:Dictionary):
+	# Room path must be to the room's .gd script, not .tscn
 	assert(data != null)
 	pickled_rooms[room_path] = data
 	
@@ -38,15 +50,7 @@ func get_value(key:String, default):
 		else:
 			return default
 		
-###########################
-######
-###### DEFAULT VALUES     
-###########################
-
-var default_values:Dictionary = {
-	\"newborn\" : true,
-	\"ui_unlocked\": false
-}"
+"
 
 [node name="Global" type="Node"]
 script = SubResource( 1 )

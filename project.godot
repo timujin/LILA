@@ -72,7 +72,6 @@ BookReader="*res://Autoload/BookReader/BookReader.tscn"
 Global="*res://Autoload/Global.tscn"
 HUD="*res://Autoload/HUD.tscn"
 Character="*res://Autoload/Character/Character.tscn"
-CombatController="*res://Autoload/CombatController.tscn"
 
 [display]
 

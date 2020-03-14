@@ -13,7 +13,7 @@ onready var floatie = get_node(\"/root/Floatie\")
 onready var mode_controller = get_node(\"/root/ModeController\")
 
 export var ActivatorName : String = \"Unnamed\"
-export(String, \"From interaction point\", \"Remote\", \"Background\") var activation_type = \"From interaction point\"
+#export(String,\"Remote\") var activation_type = \"From interaction point\"
 
 #func _input_event(viewport, event, shape_idx):
 #	if mode_controller.is_cutscene:
@@ -38,7 +38,9 @@ func trigger_activator():
 	#if player == null:
 	#	# player not active
 	#	return
+	activator.activate()
 
+	\"\"\"
 	match activation_type:
 		\"From interaction point\":
 			if interaction_point == null:
@@ -51,10 +53,9 @@ func trigger_activator():
 			player.freeze()
 			activator.activate()
 		\"Background\":
-			activator.activate()
 		_:
 			printerr (\"Incorrect activation type for %s: %s\" % [ActivatorName, activation_type])
-
+	\"\"\"
 
 func _on_ClickArea_gui_input(event):
 	if mode_controller.is_cutscene:

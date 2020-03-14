@@ -3,6 +3,11 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+\"\"\"
+Deprecated
+\"\"\"
+
+
 signal combat_started
 signal combat_over
 
