@@ -10,10 +10,10 @@ const max_speed = 1000
 const horiz_margin = 0.2
 const verti_margin = 0.2
 
-var scrolling_enabled = true
+#var scrolling_enabled = true
 
 func _process(delta):
-	if scrolling_enabled:
+	if $\"/root/ModeController\".is_world_scrollable:
 		screen_scrolling(delta)
 	
 	

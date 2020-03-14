@@ -3,6 +3,9 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+#####
+# OBSOLETE
+
 var is_cutscene = false
 var is_modal_window = false
 var is_combat = false
@@ -12,7 +15,13 @@ var holding_icon = null
 var holding_item = null
 var holding_callback = null
 
+#####
+
+var is_world_scrollable = true
+
 signal ui_reset
+
+
 
 func reset():
 	emit_signal(\"reset\")
