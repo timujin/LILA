@@ -28,9 +28,9 @@ func render()->void:
 [sub_resource type="GDScript" id=2]
 script/source = "extends Activator
 
+
 func on_activate():
-	#blurb(\"This sure is a bed.\")
-	$\"/root/ModeController\".start_vn(load(\"res://Content/Locations/FFFFFTestinghall/Interactives/Test.tscn\"))"
+	get_node(\"/root/RoomSwitcher\").switch_room_by_name(\"res://Content/Locations/FortressOfChains/Corridor/Corridor.tscn\")"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends BasePickler
@@ -69,6 +69,7 @@ position = Vector2( 2757.01, 574.883 )
 position = Vector2( -154.631, -150.007 )
 
 [node name="Bed" parent="." index="3" instance=ExtResource( 3 )]
+editor/display_folded = true
 position = Vector2( 570.863, 654.961 )
 
 [node name="ClickArea" parent="Bed" index="3"]
@@ -81,4 +82,19 @@ script = SubResource( 2 )
 [node name="Pickler" parent="Bed" index="5"]
 script = SubResource( 3 )
 
+[node name="Door" parent="." index="4" instance=ExtResource( 3 )]
+position = Vector2( 847.482, 709.506 )
+
+[node name="ClickArea" parent="Door" index="3"]
+ActivatorName = "Bed"
+activation_type = "Background"
+
+[node name="Activator" parent="Door" index="4"]
+script = SubResource( 2 )
+
+[node name="Pickler" parent="Door" index="5"]
+script = SubResource( 3 )
+
 [editable path="Bed"]
+
+[editable path="Door"]

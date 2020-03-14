@@ -722,7 +722,6 @@ position = Vector2( 1600.32, 650.713 )
 position = Vector2( 1104.23, 773.347 )
 
 [node name="Door" parent="." index="3" instance=ExtResource( 5 )]
-editor/display_folded = true
 position = Vector2( 295.288, 730.645 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -841,6 +840,7 @@ script = SubResource( 12 )
 script = SubResource( 11 )
 
 [node name="Bed" parent="." index="7" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 836.575, 481.481 )
 
 [node name="Sprite" parent="Bed" index="0"]
@@ -869,6 +869,7 @@ script = SubResource( 13 )
 script = SubResource( 11 )
 
 [node name="Chair" parent="." index="8" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 590.231, 787.413 )
 
 [node name="Sprite" parent="Chair" index="0"]

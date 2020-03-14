@@ -32,6 +32,10 @@ func start_combat():
 func stop_combat():
 	is_combat = false
 	
+func start_vn(res):
+	var cb = res.instance()
+	$\"/root\".add_child(cb)
+	
 
 func get_is_player_controllable():
 	return (!is_cutscene) and (!is_modal_window) and (!is_combat)
