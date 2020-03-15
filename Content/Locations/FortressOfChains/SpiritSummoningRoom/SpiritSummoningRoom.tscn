@@ -962,8 +962,8 @@ texture = SubResource( 24 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DarknessFull" index="0"]
 anims/Fadeout = SubResource( 25 )
 [connection signal="room_loaded" from="." to="Director" method="_on_Room_room_loaded"]
-[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 [connection signal="room_cleared" from="Director" to="Geometry" method="_on_Director_room_cleared"]
+[connection signal="room_cleared" from="Director" to="." method="_on_Director_room_cleared"]
 
 [editable path="Door"]
 

@@ -170,11 +170,18 @@ static func slot_type(slot:String)->String:
 
 
 
-func add_item(id:String, number:int = 1):
+func add_item_silent(id:String, number:int = 1):
 	if items.has(id):
 		items[id] += number
 	else:
 		items[id] = number
+		
+func add_item(id:String, number:int = 1):
+	add_item_silent(id, number)
+	var itemget = preload(\"res://Autoload/Inventory/ItemGet.tscn\").instance()
+	$\"/root\".add_child(itemget)
+	itemget.render(id, number)
+	return itemget
 	
 func remove_item(id:String, number:int = -1):
 	if not items.has(id):

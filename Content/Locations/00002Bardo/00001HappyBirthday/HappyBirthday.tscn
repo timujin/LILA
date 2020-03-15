@@ -193,9 +193,6 @@ func default_parameters()->Dictionary:
 [node name="Room" index="0" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="Background" parent="." index="0"]
-editor/display_folded = true
-
 [node name="Sprite" type="Sprite" parent="Background" index="0"]
 position = Vector2( 784.982, 444.515 )
 scale = Vector2( 0.460552, 0.557974 )
@@ -235,29 +232,30 @@ texture = SubResource( 2 )
 autoplay = "fadeout"
 anims/fadeout = SubResource( 3 )
 
-[node name="Table" parent="." index="4" instance=ExtResource( 5 )]
+[node name="Cake" parent="." index="4" instance=ExtResource( 5 )]
 editor/display_folded = true
-position = Vector2( 806.643, 721.469 )
+position = Vector2( 767.98, 731.493 )
 
-[node name="Sprite" parent="Table" index="0"]
+[node name="Sprite" parent="Cake" index="0"]
 position = Vector2( 49.7661, -20.7141 )
 scale = Vector2( 0.521478, 0.537824 )
 texture = ExtResource( 6 )
 
-[node name="ClickArea" parent="Table" index="3"]
-margin_left = 2.0
+[node name="ClickArea" parent="Cake" index="3"]
+margin_left = 0.567993
 margin_top = -59.0
-margin_right = 133.0
+margin_right = 131.568
 margin_bottom = 45.0
 ActivatorName = "Cake"
 
-[node name="Activator" parent="Table" index="4"]
+[node name="Activator" parent="Cake" index="4"]
 script = SubResource( 4 )
 
-[node name="Pickler" parent="Table" index="5"]
+[node name="Pickler" parent="Cake" index="5"]
 script = SubResource( 5 )
 
 [node name="Giftbox" parent="." index="5" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 652.735, 719.883 )
 
 [node name="Sprite" parent="Giftbox" index="0"]
@@ -279,7 +277,7 @@ script = SubResource( 6 )
 script = SubResource( 7 )
 
 [node name="Envelope" parent="." index="6" instance=ExtResource( 5 )]
-position = Vector2( 635.092, 714.737 )
+position = Vector2( 587.036, 677.27 )
 
 [node name="Sprite" parent="Envelope" index="0"]
 position = Vector2( 135.085, 51.3085 )
@@ -287,10 +285,10 @@ scale = Vector2( 0.521478, 0.537824 )
 texture = ExtResource( 8 )
 
 [node name="ClickArea" parent="Envelope" index="3"]
-margin_left = 92.0
-margin_top = 40.0
-margin_right = 166.0
-margin_bottom = 80.0
+margin_left = 81.0
+margin_top = -10.0
+margin_right = 173.0
+margin_bottom = 82.0
 ActivatorName = "Envelope"
 
 [node name="Activator" parent="Envelope" index="4"]
@@ -300,6 +298,7 @@ script = SubResource( 8 )
 script = SubResource( 9 )
 
 [node name="Door" parent="." index="7" instance=ExtResource( 5 )]
+editor/display_folded = true
 position = Vector2( 1311.02, 643.336 )
 
 [node name="Sprite" parent="Door" index="0"]
@@ -612,7 +611,7 @@ script = ExtResource( 11 )
 [node name="Pickler" parent="Balloons/Y1" index="5"]
 script = SubResource( 13 )
 
-[editable path="Table"]
+[editable path="Cake"]
 
 [editable path="Giftbox"]
 
