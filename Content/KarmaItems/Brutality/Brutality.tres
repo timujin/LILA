@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Placeholders/command.png" type="Texture" id=1]
+[ext_resource path="res://BasicEntities/Item/KarmaItem.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+title = "Brutality"
+description = "Do you like hurting other people?"
+icon = ExtResource( 1 )
+category = "Capacities"

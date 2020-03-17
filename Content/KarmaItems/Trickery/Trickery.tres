@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Placeholders/berserk.png" type="Texture" id=1]
+[ext_resource path="res://BasicEntities/Item/KarmaItem.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+title = "Trickery"
+description = "When the world isn't looking"
+icon = ExtResource( 1 )
+category = "Capacities"

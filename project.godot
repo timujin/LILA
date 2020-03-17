@@ -34,6 +34,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://BasicEntities/Item/ItemScript.gd"
 }, {
+"base": "Resource",
+"class": "KarmaItem",
+"language": "GDScript",
+"path": "res://BasicEntities/Item/KarmaItem.gd"
+}, {
 "base": "GDScript",
 "class": "Round",
 "language": "GDScript",
@@ -50,6 +55,7 @@ _global_script_class_icons={
 "BaseRoom": "",
 "InventoryItem": "",
 "ItemScript": "",
+"KarmaItem": "",
 "Round": "",
 "SkillRules": ""
 }
@@ -57,14 +63,13 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.tscn"
+run/main_scene="res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
 InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
-Inventory="*res://Autoload/Inventory/Inventory.tscn"
 InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
@@ -72,6 +77,8 @@ BookReader="*res://Autoload/BookReader/BookReader.tscn"
 Global="*res://Autoload/Global.tscn"
 HUD="*res://Autoload/HUD.tscn"
 Character="*res://Autoload/Character/Character.tscn"
+CharacterData="*res://Autoload/CharacterData.tscn"
+WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
 
 [display]
 

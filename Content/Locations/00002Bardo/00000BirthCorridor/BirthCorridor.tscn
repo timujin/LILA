@@ -44,7 +44,7 @@ func on_activate():
 	yield($\"/root/Room/WhiteLight/AnimationPlayer\", \"animation_finished\")
 	
 	get_node(\"/root/RoomSwitcher\").\\
-	switch_room_by_path(\"res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.tscn\")"
+	switch_room_by_path(\"res://Content/Locations/00002Bardo/00001HappyBirthday/HappyBirthday.tscn\")"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends BasePickler

@@ -4,7 +4,7 @@
 [ext_resource path="res://Assets/Placeholders/steelhordearmor.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends CanvasLayer
+script/source = "extends Control
 
 onready var mode = $\"/root/ModeController\"
 
@@ -15,6 +15,8 @@ onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/
 onready var place_for_slots = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
 onready var info_panel = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
 onready var char_doll = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
+
+onready var model = $\"/root/CharacterData\"
 
 var current_item = null
 
@@ -33,18 +35,18 @@ func clear():
 		
 func render_all():
 	clear()
-	var items = $Model.items.keys()
+	var items = model.items.keys()
 	print(items)
 	for item in items:
-		if $Model.is_equipped(item):
+		if model.is_equipped(item):
 			continue
 		var it = InventoryItem.load_by_id(item)
-		create_item(it, $Model.items[item])
+		create_item(it, model.items[item])
 	render_equipment()
 		
 func render_equipment():
-	for slot in $Model.equipment_slots:
-		var equipped = $Model.equipped.get(slot)
+	for slot in model.equipment_slots:
+		var equipped = model.equipped.get(slot)
 		var rend = slot_prototype.instance()
 		rend.connect(\"selected\", self, \"_on_Equipment_select\")
 		rend.connect(\"equip\", self, \"_on_Equip\")
@@ -75,7 +77,7 @@ func _on_Equipment_select(item)->void:
 	current_item = it
 
 func _ready():
-	hide()
+	#hide()
 	mode.connect(\"reset\", self, \"on_reset\")
 	
 func on_reset():
@@ -85,10 +87,11 @@ var ui_inventory_pressed = false
 
 func hide():
 	ui_inventory_pressed = false
-	$Modal.visible = false
+	visible = false
 	info_panel.clear()
 	
-func _process(delta):	
+func _process(delta):
+	return
 	if Input.is_action_pressed(\"ui_inventory\"):
 		if not ui_inventory_pressed:
 			ui_inventory_pressed = true
@@ -110,19 +113,18 @@ func _on_Cancel_pressed():
 	hide()
 
 func _on_Unequip(slot:String):
-	$Model.unequip(slot)
+	model.unequip(slot)
 	render_all()
 	
 func _on_Equip(slot:String):
 	if current_item != null:
-		if $Model.is_equippable(current_item, slot):
-			$Model.equip(current_item.id, slot)
+		if model.is_equippable(current_item, slot):
+			model.equip(current_item.id, slot)
 	render_all()
 
 
-
-
-
+func _on_Inventory_visibility_changed():
+	render_all()
 "
 
 [sub_resource type="GDScript" id=2]
@@ -289,14 +291,16 @@ func _ready():
 
 
 func _on_Button_pressed():
-	$\"/root/Inventory\".on_using_item(self.text)
+	$\"/root/WSHUD/Inventory\".on_using_item(self.text)
 "
 
-[node name="Inventory" type="CanvasLayer"]
-layer = 40
+[node name="Inventory" type="Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
 script = SubResource( 1 )
 
-[node name="Model" type="Node" parent="."]
+[node name="Modeltodelete" type="Node" parent="."]
 script = SubResource( 2 )
 
 [node name="Modal" type="Panel" parent="."]
@@ -488,6 +492,7 @@ margin_top = 45.4262
 margin_right = -56.4758
 margin_bottom = 100.426
 icon = ExtResource( 2 )
+[connection signal="visibility_changed" from="." to="." method="_on_Inventory_visibility_changed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" method="_on_Button_pressed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" method="_on_Button_pressed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" method="_on_Button_pressed"]

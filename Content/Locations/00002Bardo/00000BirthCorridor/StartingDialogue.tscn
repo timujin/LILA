@@ -32,7 +32,7 @@ func run():
 	yield(self, \"proceed\")
 	yield(think(\"A door?\"), \"completed\")
 	yield(think(\"That's a new development.\"), \"completed\")
-	yield(think(\"Might as well open it.\"), \"completed\")
+	yield(think(\"Might as go through.\"), \"completed\")
 	emit_signal(\"finished\")
 	
 func proceed():

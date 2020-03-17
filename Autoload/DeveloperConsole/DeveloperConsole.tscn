@@ -76,6 +76,10 @@ func interpret(input:String):
 		\"skip\": skip()
 		\"win\" : win()
 		\"call\": call(parsed)
+		\"add_karma_xp\": add_karma_xp(parsed)
+		\"add_karma_levels\": add_karma_levels(parsed)
+		\"remove_karma_levels\": remove_karma_levels(parsed)
+		\"print_karma\": print_karma()
 		_     : echoerr(\"Command not found: \"+command)
 		
 func warp(args):
@@ -108,7 +112,28 @@ func win():
 	$\"/root/CombatController\".stop_combat({\"artificial\":true})
 	
 func call(parsed):
-	get_tree().get_root().get_node(parsed[0]).call_deferred(parsed[1])"
+	get_tree().get_root().get_node(parsed[0]).call_deferred(parsed[1])
+
+func add_karma_xp(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'add_karma_xp' expects 2 arguments!\")
+	else:
+		$\"/root/CharacterData\".add_xp(parsed[0], int(parsed[1]))
+		
+func add_karma_levels(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'add_karma_levels' expects 2 arguments!\")
+	else:
+		$\"/root/CharacterData\".add_levels(parsed[0], int(parsed[1]))
+		
+func remove_karma_levels(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'remove_karma_levels' expects 2 arguments!\")
+	else:
+		$\"/root/CharacterData\".remove_levels(parsed[0], int(parsed[1]))
+
+func print_karma():
+	echo(str($\"/root/CharacterData\".karma))"
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2

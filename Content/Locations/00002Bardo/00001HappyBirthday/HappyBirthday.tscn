@@ -123,7 +123,7 @@ func on_activate():
 	yield(VN.run(), \"completed\")
 	VN.queue_free()
 	$\"/root/ModeController\".is_world_scrollable = true
-	$\"/root/Inventory/Model\".add_item(\"GOEEsNote\")"
+	$\"/root/CharacterData\".add_item(\"GOEEsNote\")"
 
 [sub_resource type="GDScript" id=9]
 script/source = "extends BasePickler
