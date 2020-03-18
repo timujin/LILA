@@ -38,16 +38,6 @@ _global_script_classes=[ {
 "class": "KarmaItem",
 "language": "GDScript",
 "path": "res://BasicEntities/Item/KarmaItem.gd"
-}, {
-"base": "GDScript",
-"class": "Round",
-"language": "GDScript",
-"path": "res://Combat/Round.gd"
-}, {
-"base": "GDScript",
-"class": "SkillRules",
-"language": "GDScript",
-"path": "res://Rules/Skills.gd"
 } ]
 _global_script_class_icons={
 "Activator": "",
@@ -55,9 +45,7 @@ _global_script_class_icons={
 "BaseRoom": "",
 "InventoryItem": "",
 "ItemScript": "",
-"KarmaItem": "",
-"Round": "",
-"SkillRules": ""
+"KarmaItem": ""
 }
 
 [application]
@@ -65,20 +53,6 @@ _global_script_class_icons={
 config/name="LILA"
 run/main_scene="res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
-
-[autoload]
-
-InteractionBlurb="*res://Autoload/InteractionBlurb.tscn"
-RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
-InteractionWindow="*res://Autoload/InteractionWindow/InteractionWindow.tscn"
-ModeController="*res://Autoload/ModeController.tscn"
-DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
-BookReader="*res://Autoload/BookReader/BookReader.tscn"
-Global="*res://Autoload/Global.tscn"
-HUD="*res://Autoload/HUD.tscn"
-Character="*res://Autoload/Character/Character.tscn"
-CharacterData="*res://Autoload/CharacterData.tscn"
-WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
 
 [display]
 

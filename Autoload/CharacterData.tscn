@@ -5,7 +5,7 @@ script/source = "extends Node
 
 \"\"\"
 Stores inventory, quests, etc. All the data associated with the PC.
-This is intended to be picked *in entirety*.
+This is intended to be pickled *in entirety*.
 \"\"\"
 
 signal item_got (id, amount)

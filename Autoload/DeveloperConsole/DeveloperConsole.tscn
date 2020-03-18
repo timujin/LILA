@@ -154,9 +154,9 @@ margin_bottom = -129.0
 alignment = 2
 
 [node name="GreetingLabel" type="Label" parent="Modal/VBoxContainer"]
-margin_top = 710.0
+margin_top = 1278.0
 margin_right = 1478.0
-margin_bottom = 724.0
+margin_bottom = 1292.0
 text = "Enter commands here."
 
 [node name="LineEdit" type="LineEdit" parent="Modal"]
