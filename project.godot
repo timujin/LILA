@@ -51,7 +51,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Locations/00002Bardo/00000BirthCorridor/BirthCorridor.tscn"
+run/main_scene="res://Content/Locations/00000Bardo/00000BirthCorridor/BirthCorridor.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [display]

@@ -1,42 +1,45 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends Node2D
+script/source = "extends Node
 
 signal room_loaded
+
+func r(id:String):
+	return load($RoomList.r(id))
 
 #####################
 ## ROOM PARAMETERS ##
 #####################
-# PATH TO ROOM -> PARAMETER -> VALUE
+# Room ID (from RoomList) -> PARAMETER -> VALUE
 # Ideally this is a part of what gets saved to the savefile
 var roomsParameters:Dictionary = {}
 
-func initialize_room_values(path:String)->void:
+func initialize_room_values(id:String)->void:
 	# Loads default room values into the Switcher
 	# But _does_not_ overwrite values already loaded
 	# This function should be completely idempotent
-	if not roomsParameters.has(path):
-		roomsParameters[path] = load_room_params(path)
+	if not roomsParameters.has(id):
+		roomsParameters[id] = load_room_params(id)
 	else:
 		pass
 		
-func load_room_params(path:String)->Dictionary:
+func load_room_params(id:String)->Dictionary:
 	# Path must be to the room's .gd file, NOT to the scene
-	var room = load(path)
+	var room = r(id)
 	if room == null:
-		printerr(\"No room script found: \" + path)
+		printerr(\"No room script found: \" + id)
 		return {}
 	return room.new().get_default_parameters()
 	
-func set_room_value(path:String, key:String, value):
-	initialize_room_values(path)
-	roomsParameters[path][key] = value
+func set_room_value(id:String, key:String, value):
+	initialize_room_values(id)
+	roomsParameters[id][key] = value
 
-func get_room_value(path:String, key:String, default):
-	initialize_room_values(path)
-	if roomsParameters.has(path) and roomsParameters[path].has(key):
-		return roomsParameters[path][key]
+func get_room_value(id:String, key:String, default):
+	initialize_room_values(id)
+	if roomsParameters.has(id) and roomsParameters[id].has(key):
+		return roomsParameters[id][key]
 	else:
 		return default
 
@@ -44,64 +47,57 @@ func get_room_value(path:String, key:String, default):
 ## ROOM LOADING #####
 #####################
 
-#onready var player = preload(\"res://BasicEntities/Player/TheSpirit.tscn\")
 onready var devconsole = $\"/root/DeveloperConsole\"
 onready var global = $\"/root/Global\"
 onready var hud = $\"/root/HUD\"
 onready var mode = $\"/root/ModeController\"
 
-#var destination_spawnpoint:String = \"\"
 var room:Node2D = null
 
 func on_room_loaded():
 	# Accepts signal from the Room node
 	devconsole.echo(\"Loaded room: \" + str(room))
-	\"\"\"
-	if room.get_contains_player():
-		var destination
-		if destination_spawnpoint == \"\":
-			destination = get_node(\"/root/Room/Geometry/\"+\"DefaultSpiritSpawn\")
-		else:
-			destination = get_node(\"/root/Room/Geometry/\"+destination_spawnpoint)
-		if destination == null:
-			printerr(\"Spawn point not found: \" + destination_spawnpoint)
-		else:
-			spawn_player(destination)
-	\"\"\"
 	emit_signal(\"room_loaded\")
 	
-func switch_room(to_room):
+func switch_room_obj(to_room):
 	$\"/root/Room\".pickle()
-	#destination_spawnpoint = destination
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
 	mode.reset()
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
 
-\"\"\"
-func switch_room_by_name(to_room:String):
-	var r = load(to_room)
-	if r == null:
-		devconsole.echoerr(\"Room not found! %s\" % to_room)
+func switch_to(id:String):
+	var roomscript = r(id)
+	if roomscript == null:
+		$\"/root/DeveloperConsole\".echo(\"!!! Room not found!: \" + id)
 	else:
-		switch_room(r)
-\"\"\"
+		switch_room_obj(roomscript.get_scene())
+"
 
-func switch_room_by_path(path:String):
-	var room = load(path)
-	if room == null:
-		$\"/root/DeveloperConsole\".echo(\"!!! Room not found!: \" + path)
-	else:
-		switch_room(room)
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
 
 \"\"\"
+This node contains a dictionary of all rooms included into the game.
+This is to make room loading an manipulation easier, not having to
+load full paths to rooms every time we want to use one.
+\"\"\"
+func r(key:String):
+	if rooms.has(key):
+		return rooms[key]
+	else:
+		return null
+
+var rooms = {
+	# Tutorial phase
+	\"00000BardoCorridor\": \"res://Content/Locations/00000Bardo/00000BirthCorridor/BirthCorridor.gd\",
+	\"00000HappyBirthday\": \"res://Content/Locations/00000Bardo/00001HappyBirthday/HappyBirthday.gd\"
 	
-func spawn_player(at:Node2D):
-	var p = player.instance()
-	room.add_child(p)
-	p.position = at.position
-\"\"\""
+	}"
 
-[node name="RoomSwitcher" type="Node2D"]
+[node name="RoomSwitcher" type="Node"]
 script = SubResource( 1 )
+
+[node name="RoomList" type="Node" parent="."]
+script = SubResource( 2 )

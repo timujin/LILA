@@ -1,0 +1,668 @@
+[gd_scene load_steps=38 format=2]
+
+[ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/HappyBirthday.gd" type="Script" id=2]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/HappyBirthdayRoom.png" type="Texture" id=3]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Table.png" type="Texture" id=4]
+[ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Cake.png" type="Texture" id=6]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Giftbox.png" type="Texture" id=7]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Envelope.png" type="Texture" id=8]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Door.png" type="Texture" id=9]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/H3.png" type="Texture" id=10]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Balloon.gd" type="Script" id=11]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/A3.png" type="Texture" id=12]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/P1.png" type="Texture" id=13]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/P2.png" type="Texture" id=14]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y2.png" type="Texture" id=15]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/B.png" type="Texture" id=16]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/I.png" type="Texture" id=17]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/R.png" type="Texture" id=18]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/T.png" type="Texture" id=19]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/H2.png" type="Texture" id=20]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/D.png" type="Texture" id=21]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/A2.png" type="Texture" id=22]
+[ext_resource path="res://Content/Locations/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y.png" type="Texture" id=23]
+
+
+
+[sub_resource type="Gradient" id=1]
+offsets = PoolRealArray( 0, 0.0207547 )
+
+[sub_resource type="GradientTexture" id=2]
+gradient = SubResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "fadeout"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1.6 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "queue_free"
+} ]
+}
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Activator
+
+func on_activate():
+	$\"/root/CharacterData\".add_item(\"SpiritSummoningRoomKey\")"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends BasePickler
+
+var eaten = false
+
+func deserialize(params:Dictionary)->void:
+	eaten = params[\"eaten\"]
+
+func serialize()->Dictionary:
+	return {\"eaten\":eaten}
+
+func default_parameters()->Dictionary:
+	return {\"eaten\":eaten}"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Activator
+
+var VN
+
+func on_activate():
+	get_parent().visible = false
+	$\"../Pickler\".opened = true
+	
+	# this can be its own function, like \"runVN\"
+	$\"/root/ModeController\".is_world_scrollable = false
+	VN = preload(\"res://Content/Locations/00002Bardo/00001HappyBirthday/VNOpenGift.tscn\").instance()
+	$\"/root/Room\".add_child(VN)
+	yield(VN.run(), \"completed\")
+	VN.queue_free()
+	var itemget = $\"/root/CharacterData\".add_item(\"StarterKnife\", 1, true)
+	yield(itemget, \"dismissed\")
+	$\"/root/ModeController\".is_world_scrollable = true
+	"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends BasePickler
+
+var opened = false
+
+func deserialize(params:Dictionary)->void:
+	opened = params[\"opened\"]
+
+func serialize()->Dictionary:
+	return {\"opened\":opened}
+
+func default_parameters()->Dictionary:
+	return {\"opened\":opened}"
+
+[sub_resource type="GDScript" id=8]
+script/source = "extends Activator
+
+var VN
+
+func on_activate():
+	get_parent().visible = false
+	$\"../Pickler\".opened = true
+	$\"/root/ModeController\".is_world_scrollable = false
+	VN = preload(\"res://Content/Locations/00002Bardo/00001HappyBirthday/VNReadNote.tscn\").instance()
+	#VN.connect(\"show_door\", self, \"show_door\")
+	#VN.connect(\"finished\" , self, \"dialogue_finished\")
+	$\"/root/Room\".add_child(VN)
+	yield(VN.run(), \"completed\")
+	VN.queue_free()
+	var itemget = $\"/root/CharacterData\".add_item(\"GOEEsNote\", 1, true)
+	yield(itemget, \"dismissed\")
+	var karmaget = $\"/root/CharacterData\".add_xp(\"StateOfSugar\", 5, true)
+	yield(karmaget, \"dismissed\")
+	$\"/root/ModeController\".is_world_scrollable = true
+	"
+
+[sub_resource type="GDScript" id=9]
+script/source = "extends BasePickler
+
+var opened = false
+
+func deserialize(params:Dictionary)->void:
+	opened = params[\"opened\"]
+	if opened:
+		get_parent().visible = false
+
+func serialize()->Dictionary:
+	return {\"opened\":opened}
+
+func default_parameters()->Dictionary:
+	return {\"opened\":false}"
+
+[sub_resource type="GDScript" id=10]
+script/source = "extends Activator
+
+func on_activate():
+	print(\"DOOR\")"
+
+[sub_resource type="GDScript" id=11]
+script/source = "extends Node
+
+func doorCode():
+	return \"HappyBirthdayRoomCode\""
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends BasePickler
+
+var opened = false
+
+func deserialize(params:Dictionary)->void:
+	opened = params[\"opened\"]
+
+func serialize()->Dictionary:
+	return {\"opened\":opened}
+
+func default_parameters()->Dictionary:
+	return {\"opened\":opened}"
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends Node2D
+
+var magnitude = 10
+var period = 0.75
+var direction = 1
+
+var accum = 0.0
+func _process(delta):
+	accum+= delta
+	if accum > period:
+		position.y += magnitude * direction
+		direction *= -1
+		accum -= period"
+
+[sub_resource type="GDScript" id=14]
+script/source = "extends BasePickler
+
+var popped = false
+
+func deserialize(params:Dictionary)->void:
+	popped = params[\"popped\"]
+
+func serialize()->Dictionary:
+	return {\"popped\":popped}
+
+func default_parameters()->Dictionary:
+	return {\"popped\":false}"
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Background" index="0"]
+position = Vector2( 784.982, 444.515 )
+scale = Vector2( 0.460552, 0.557974 )
+texture = ExtResource( 3 )
+
+[node name="Sprite2" type="Sprite" parent="Background" index="1"]
+position = Vector2( 797.645, 765.234 )
+scale = Vector2( 0.55372, 0.55372 )
+texture = ExtResource( 4 )
+
+[node name="Geometry" parent="." index="1"]
+editor/display_folded = true
+
+[node name="CameraLimitLeft" parent="Geometry" index="2"]
+position = Vector2( -372.472, 467.961 )
+
+[node name="CameraLimitTop" parent="Geometry" index="3"]
+position = Vector2( 796.141, 3.91028 )
+
+[node name="CameraLimitBottom" parent="Geometry" index="4"]
+position = Vector2( 819.213, 894.568 )
+
+[node name="CameraLimitRight" parent="Geometry" index="5"]
+position = Vector2( 1934.02, 453.54 )
+
+[node name="FirstPersonCamera" parent="." index="2"]
+position = Vector2( 799.973, 446.263 )
+
+[node name="Sprite" type="Sprite" parent="." index="3"]
+editor/display_folded = true
+visible = false
+position = Vector2( 698.76, 477.545 )
+scale = Vector2( 1.66181, 1574.09 )
+texture = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite" index="0"]
+autoplay = "fadeout"
+anims/fadeout = SubResource( 3 )
+
+[node name="Cake" parent="." index="4" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 767.98, 731.493 )
+
+[node name="Sprite" parent="Cake" index="0"]
+position = Vector2( 49.7661, -20.7141 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 6 )
+
+[node name="ClickArea" parent="Cake" index="3"]
+margin_left = 0.567993
+margin_top = -59.0
+margin_right = 131.568
+margin_bottom = 45.0
+ActivatorName = "Cake"
+
+[node name="Activator" parent="Cake" index="4"]
+script = SubResource( 4 )
+
+[node name="Pickler" parent="Cake" index="5"]
+script = SubResource( 5 )
+
+[node name="Giftbox" parent="." index="5" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 652.735, 719.883 )
+
+[node name="Sprite" parent="Giftbox" index="0"]
+position = Vector2( 49.7661, -20.7141 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 7 )
+
+[node name="ClickArea" parent="Giftbox" index="3"]
+margin_left = 23.0
+margin_top = -50.0
+margin_right = 106.0
+margin_bottom = 31.0
+ActivatorName = "Giftbox"
+
+[node name="Activator" parent="Giftbox" index="4"]
+script = SubResource( 6 )
+
+[node name="Pickler" parent="Giftbox" index="5"]
+script = SubResource( 7 )
+
+[node name="Envelope" parent="." index="6" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 587.036, 677.27 )
+
+[node name="Sprite" parent="Envelope" index="0"]
+position = Vector2( 135.085, 51.3085 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 8 )
+
+[node name="ClickArea" parent="Envelope" index="3"]
+margin_left = 81.0
+margin_top = -10.0
+margin_right = 173.0
+margin_bottom = 82.0
+ActivatorName = "Envelope"
+
+[node name="Activator" parent="Envelope" index="4"]
+script = SubResource( 8 )
+
+[node name="Pickler" parent="Envelope" index="5"]
+script = SubResource( 9 )
+
+[node name="Door" parent="." index="7" instance=ExtResource( 5 )]
+position = Vector2( 1311.02, 643.336 )
+
+[node name="Sprite" parent="Door" index="0"]
+position = Vector2( 179.512, -161.307 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 9 )
+
+[node name="ClickArea" parent="Door" index="3"]
+margin_left = 49.0
+margin_top = -389.0
+margin_right = 318.0
+margin_bottom = 94.0
+ActivatorName = "Door"
+
+[node name="Activator" parent="Door" index="4"]
+script = SubResource( 10 )
+
+[node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
+script = SubResource( 11 )
+
+[node name="Pickler" parent="Door" index="5"]
+script = SubResource( 12 )
+
+[node name="Balloons" type="Node2D" parent="." index="8"]
+editor/display_folded = true
+script = SubResource( 13 )
+
+[node name="H" parent="Balloons" index="0" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/H" index="0"]
+position = Vector2( 140.813, -80.4337 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 10 )
+
+[node name="InteractionPoint" parent="Balloons/H" index="2"]
+position = Vector2( 67.6683, -166.601 )
+
+[node name="ClickArea" parent="Balloons/H" index="3"]
+margin_left = 76.0
+margin_top = -221.0
+margin_right = 206.0
+margin_bottom = -49.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/H" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/H" index="5"]
+script = SubResource( 14 )
+
+[node name="A" parent="Balloons" index="1" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 542.014, 481.324 )
+
+[node name="Sprite" parent="Balloons/A" index="0"]
+position = Vector2( 129.357, -99.0495 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 12 )
+
+[node name="ClickArea" parent="Balloons/A" index="3"]
+margin_left = 76.0
+margin_top = -221.0
+margin_right = 206.0
+margin_bottom = -49.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/A" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/A" index="5"]
+script = SubResource( 14 )
+
+[node name="P" parent="Balloons" index="2" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/P" index="0"]
+position = Vector2( 362.77, -142.009 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 13 )
+
+[node name="ClickArea" parent="Balloons/P" index="3"]
+margin_left = 303.612
+margin_top = -264.062
+margin_right = 433.612
+margin_bottom = -92.0617
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/P" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/P" index="5"]
+script = SubResource( 14 )
+
+[node name="P1" parent="Balloons" index="3" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/P1" index="0"]
+position = Vector2( 484.488, -113.369 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 14 )
+
+[node name="ClickArea" parent="Balloons/P1" index="3"]
+margin_left = 437.0
+margin_top = -225.0
+margin_right = 537.0
+margin_bottom = -93.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/P1" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/P1" index="5"]
+script = SubResource( 14 )
+
+[node name="Y" parent="Balloons" index="4" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/Y" index="0"]
+position = Vector2( 581.863, -96.1855 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 15 )
+
+[node name="ClickArea" parent="Balloons/Y" index="3"]
+margin_left = 550.0
+margin_top = -209.0
+margin_right = 657.0
+margin_bottom = -70.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/Y" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/Y" index="5"]
+script = SubResource( 14 )
+
+[node name="B" parent="Balloons" index="5" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( -84.4236, 689.374 )
+
+[node name="Sprite" parent="Balloons/B" index="0"]
+position = Vector2( 597.729, -73.972 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 16 )
+
+[node name="ClickArea" parent="Balloons/B" index="3"]
+margin_left = 544.0
+margin_top = -200.0
+margin_right = 657.0
+margin_bottom = -84.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/B" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/B" index="5"]
+script = SubResource( 14 )
+
+[node name="I" parent="Balloons" index="6" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/I" index="0"]
+position = Vector2( 177.259, 103.736 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 17 )
+
+[node name="ClickArea" parent="Balloons/I" index="3"]
+margin_left = 134.0
+margin_top = -52.0
+margin_right = 234.0
+margin_bottom = 70.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/I" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/I" index="5"]
+script = SubResource( 14 )
+
+[node name="R" parent="Balloons" index="7" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/R" index="0"]
+position = Vector2( 267.7, 62.4825 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 18 )
+
+[node name="ClickArea" parent="Balloons/R" index="3"]
+margin_left = 231.0
+margin_top = -76.0
+margin_right = 327.0
+margin_bottom = 55.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/R" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/R" index="5"]
+script = SubResource( 14 )
+
+[node name="T" parent="Balloons" index="8" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/T" index="0"]
+position = Vector2( 378.768, 22.8156 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 19 )
+
+[node name="ClickArea" parent="Balloons/T" index="3"]
+margin_left = 324.0
+margin_top = -85.0
+margin_right = 426.0
+margin_bottom = 42.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/T" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/T" index="5"]
+script = SubResource( 14 )
+
+[node name="H1" parent="Balloons" index="9" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/H1" index="0"]
+position = Vector2( 519.982, 27.5756 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 20 )
+
+[node name="ClickArea" parent="Balloons/H1" index="3"]
+margin_left = 452.0
+margin_top = -87.0
+margin_right = 540.0
+margin_bottom = 44.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/H1" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/H1" index="5"]
+script = SubResource( 14 )
+
+[node name="D" parent="Balloons" index="10" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/D" index="0"]
+position = Vector2( 605.663, 43.4425 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 21 )
+
+[node name="ClickArea" parent="Balloons/D" index="3"]
+margin_left = 552.0
+margin_top = -80.0
+margin_right = 646.0
+margin_bottom = 48.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/D" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/D" index="5"]
+script = SubResource( 14 )
+
+[node name="A1" parent="Balloons" index="11" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/A1" index="0"]
+position = Vector2( 683.41, 65.656 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 22 )
+
+[node name="ClickArea" parent="Balloons/A1" index="3"]
+margin_left = 636.0
+margin_right = 729.0
+margin_bottom = 84.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/A1" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/A1" index="5"]
+script = SubResource( 14 )
+
+[node name="Y1" parent="Balloons" index="12" instance=ExtResource( 5 )]
+editor/display_folded = true
+position = Vector2( 421.728, 494.212 )
+
+[node name="Sprite" parent="Balloons/Y1" index="0"]
+position = Vector2( 742.117, 103.736 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 23 )
+
+[node name="ClickArea" parent="Balloons/Y1" index="3"]
+margin_left = 718.0
+margin_top = -2.0
+margin_right = 839.0
+margin_bottom = 117.0
+ActivatorName = "H"
+
+[node name="Activator" parent="Balloons/Y1" index="4"]
+script = ExtResource( 11 )
+
+[node name="Pickler" parent="Balloons/Y1" index="5"]
+script = SubResource( 14 )
+
+[editable path="Cake"]
+
+[editable path="Giftbox"]
+
+[editable path="Envelope"]
+
+[editable path="Door"]
+
+[editable path="Balloons/H"]
+
+[editable path="Balloons/A"]
+
+[editable path="Balloons/P"]
+
+[editable path="Balloons/P1"]
+
+[editable path="Balloons/Y"]
+
+[editable path="Balloons/B"]
+
+[editable path="Balloons/I"]
+
+[editable path="Balloons/R"]
+
+[editable path="Balloons/T"]
+
+[editable path="Balloons/H1"]
+
+[editable path="Balloons/D"]
+
+[editable path="Balloons/A1"]
+
+[editable path="Balloons/Y1"]
