@@ -3,10 +3,13 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+class_name RoomSwitcher
+
 signal room_loaded
 
 func r(id:String):
-	return load($RoomList.r(id))
+	return $RoomList.r(id)
+	
 
 #####################
 ## ROOM PARAMETERS ##

@@ -22,6 +22,7 @@ var default_values:Dictionary = {
 var pickled_rooms:Dictionary = {}
 
 func pickle(room_path:NodePath, data:Dictionary):
+	#ModeController.set_mode(ModeController.EXPLORE)
 	# Room path must be to the room's .gd script, not .tscn
 	assert(data != null)
 	pickled_rooms[room_path] = data
