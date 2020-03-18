@@ -8,6 +8,9 @@ Stores inventory, quests, etc. All the data associated with the PC.
 This is intended to be picked *in entirety*.
 \"\"\"
 
+signal item_got (id, amount)
+signal karma_got (id, xp)
+
 ####################
 # KARMA
 ####################
@@ -18,17 +21,32 @@ var karma = {
 		\"Trickery\": 11,
 	}
 	
-func add_xp(id:String, amount:int):
+# Functions return how much the karma value changed... I guess?
+# TODO this needs to be worked out into a proper animation
+# The entire system of representing a karma with XP only is pretty inconvenient
+func add_xp(id:String, amount:int, verbose=true):
 	if karma.has(id):
 		karma[id] += amount
 	else:
 		karma[id] = amount
+	if verbose:
+		emit_signal(\"karma_got\", id, amount)
+		var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
+		$\"/root\".add_child(popup)
+		popup.render(id, amount)
+		return popup
 		
-func add_levels(id:String, amount:int):
+func add_levels(id:String, amount:int, verbose=true):
 	if amount < 0:
 		printerr(\"Trying to add negative levels\")
 		return
 	if amount == 0:
+		if verbose:
+			emit_signal(\"karma_got\", id, amount)
+			var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
+			$\"/root\".add_child(popup)
+			popup.render(id, amount)
+			return popup
 		return
 	if amount > 0:
 		add_xp(id, 0) # to initialize
@@ -39,6 +57,26 @@ func add_levels(id:String, amount:int):
 			add_levels(id, amount-1)
 		else:
 			add_xp(id, to_next - remain)
+			
+func bring_up_to_level(id:String, amount:int, verbose=true):
+	add_xp(id, 0) # to initialize
+	var current_level = KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
+	if current_level >= amount:
+		return
+	karma.erase(id)
+	add_levels(id, amount)
+	if verbose:
+		emit_signal(\"karma_got\", id, amount)
+		var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
+		$\"/root\".add_child(popup)
+		popup.render(id, amount)
+		return popup
+	
+func get_levels(id:String):
+	if karma.has(id):
+		return KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
+	else:
+		return 0
 		
 func is_enough_levels(id:String, amount:int):
 	add_xp(id, 0) # to initialize
@@ -100,18 +138,17 @@ static func slot_type(slot:String)->String:
 		return slot_type(slot.substr(0,slot.length()-1))
 	return slot
 
-func add_item(id:String, number:int = 1):
+func add_item(id:String, number:int = 1, verbose=true):
 	if items.has(id):
 		items[id] += number
 	else:
 		items[id] = number
-		
-#func add_item(id:String, number:int = 1):
-#	add_item_silent(id, number)
-#	var itemget = preload(\"res://Autoload/Inventory/ItemGet.tscn\").instance()
-#	$\"/root\".add_child(itemget)
-#	itemget.render(id, number)
-#	return itemget
+	if verbose:
+		emit_signal(\"item_got\", id, number)
+		var popup = preload(\"res://Autoload/WorldspaceHUD/ItemGet.tscn\").instance()
+		$\"/root\".add_child(popup)
+		popup.render(id, number)
+		return popup
 	
 func remove_item(id:String, number:int = -1):
 	if not items.has(id):
@@ -137,14 +174,13 @@ func _ready():
 	self.items = {
 		\"CoolHat\": 5,
 		\"FortuneCookie\": 1,
-		\"StarterKnife\": 0,
 		\"BlahBlah\": 88
 		}
 	self.equipped = {
 		\"Head\": \"CoolHat\",
-		\"Main\": \"StarterKnife\",
 		\"Lapel\": \"ErrorItem\"
-		}"
+		}
+	#connect(\"item_got\", "
 
 [node name="CharacterData" type="Node"]
 script = SubResource( 1 )
