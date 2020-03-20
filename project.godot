@@ -12,12 +12,12 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Activator",
 "language": "GDScript",
-"path": "res://BasicEntities/Interactable/BaseActivator.gd"
+"path": "res://BasicEntities/Object/BaseActivator.gd"
 }, {
 "base": "Node",
 "class": "BasePickler",
 "language": "GDScript",
-"path": "res://BasicEntities/Interactable/BasePickler.gd"
+"path": "res://BasicEntities/Object/BasePickler.gd"
 }, {
 "base": "Node2D",
 "class": "BaseRoom",
@@ -51,13 +51,17 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Locations/00000Bardo/00000BirthCorridor/BirthCorridor.tscn"
+run/main_scene="res://Content/Rooms/00000Bardo/00000BirthCorridor/BirthCorridor.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
+InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
+Global="*res://Autoload/Global.tscn"
+DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
+CharacterData="*res://Autoload/CharacterData.tscn"
 
 [display]
 

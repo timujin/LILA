@@ -50,32 +50,28 @@ func get_room_value(id:String, key:String, default):
 ## ROOM LOADING #####
 #####################
 
-onready var devconsole = $\"/root/DeveloperConsole\"
-onready var global = $\"/root/Global\"
-onready var hud = $\"/root/HUD\"
-onready var mode = $\"/root/ModeController\"
 
 var room:Node2D = null
 
 func on_room_loaded():
 	# Accepts signal from the Room node
-	devconsole.echo(\"Loaded room: \" + str(room))
+	DeveloperConsole.echo(\"Loaded room: \" + str(room))
 	emit_signal(\"room_loaded\")
 	
 func switch_room_obj(to_room):
 	$\"/root/Room\".pickle()
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
-	mode.reset()
+	ModeController.reset()
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
 
 func switch_to(id:String):
-	var roomscript = r(id)
-	if roomscript == null:
-		$\"/root/DeveloperConsole\".echo(\"!!! Room not found!: \" + id)
+	var roomscene = load(r(id))
+	if roomscene == null:
+		DeveloperConsole.echo(\"!!! Room not found!: \" + id)
 	else:
-		switch_room_obj(roomscript.get_scene())
+		switch_room_obj(roomscene)
 "
 
 [sub_resource type="GDScript" id=2]
@@ -94,8 +90,8 @@ func r(key:String):
 
 var rooms = {
 	# Tutorial phase
-	\"00000BardoCorridor\": \"res://Content/Locations/00000Bardo/00000BirthCorridor/BirthCorridor.gd\",
-	\"00000HappyBirthday\": \"res://Content/Locations/00000Bardo/00001HappyBirthday/HappyBirthday.gd\"
+	\"00000BirthCorridor\": \"res://Content/Rooms/00000Bardo/00000BirthCorridor/BirthCorridor.tscn\",
+	\"00000HappyBirthday\": \"res://Content/Rooms/00000Bardo/00001HappyBirthday/HappyBirthday.tscn\"
 	
 	}"
 

@@ -1,14 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
+class_name InteractionBlurb
+
 signal dismissed
 
 onready var p = $Control
-onready var t = $Control/PopupPanel/RichTextLabel
+onready var t = $Control/PopupPanel/Label
 
 func _ready():
 	p.visible = false
@@ -38,35 +40,35 @@ func _input(event):
         if event.pressed:
             dismiss()"
 
-[sub_resource type="DynamicFont" id=2]
-size = 25
-use_filter = true
-font_data = ExtResource( 1 )
-
 [node name="InteractionBlurb" type="Node2D"]
 script = SubResource( 1 )
 
 [node name="Control" type="Control" parent="."]
+theme = ExtResource( 1 )
 
 [node name="PopupPanel" type="Panel" parent="Control"]
-margin_left = -280.0
-margin_top = -110.0
-margin_right = 286.0
-margin_bottom = -4.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -189.0
+margin_top = -105.0
+margin_right = 181.0
+margin_bottom = -2.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/PopupPanel"]
+[node name="Label" type="Label" parent="Control/PopupPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 4.0
-margin_right = -4.0
-margin_bottom = -4.0
-mouse_filter = 1
-custom_fonts/normal_font = SubResource( 2 )
-bbcode_enabled = true
-bbcode_text = "[center]This is a short interaction floatie that is expected to only appear for a few seconds. [/center]"
-text = "This is a short interaction floatie that is expected to only appear for a few seconds. "
-scroll_active = false
+margin_left = 13.0
+margin_top = 13.0
+margin_right = -13.0
+margin_bottom = -11.0
+text = "Notification popup text"
+align = 1
+valign = 1
+autowrap = true
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0

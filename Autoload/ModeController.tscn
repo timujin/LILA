@@ -48,7 +48,7 @@ var holding_callback = null
 func get_is_player_holding_item():
 	return (holding_item != null)
 	
-func hold(icon:Texture, item, callback_str):
+func hold(item, callback_str):
 	holding_item = item
 	holding_callback = callback_str
 	Input.set_custom_mouse_cursor(item.icon)

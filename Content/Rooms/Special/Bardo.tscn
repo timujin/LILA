@@ -1,0 +1,724 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/Special/Bardo.gd" type="Script" id=2]
+[ext_resource path="res://Assets/Themes/Bardo.tres" type="Theme" id=3]
+[ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=4]
+
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+signal user_proceed
+
+#var state
+var complete: = false
+onready var reply_buttons = $\"../Dialogue/Margin/VBoxContainer/Replies\"
+onready var says = $\"../Dialogue/Margin/VBoxContainer/MarginContainer/Says\"
+
+enum Speaker { GEE, GLD, TAS }
+
+var skipped:bool = false
+
+func skip():
+	if $\"/root/Room\".get_self_parameter(\"start_of_the_game\", true):
+		skipped = true
+		complete = true
+		show_skill_increaser()
+	else:
+		say(Speaker.TAS, \"NOT IMPLEMENTED\")
+		
+func say(speaker:int, text:String):
+	says.say(speaker, text)
+	
+func starting_dialogue():
+	reply_buttons.clear()
+	var dialogue_tree: Dictionary = $StartingDialogue.tree
+	var current_branch: Dictionary = dialogue_tree[\"start\"]
+	while true:
+		var says = current_branch[\"says\"]
+		for item in says:
+			say(item[0],item[1])
+			yield(self,\"user_proceed\")
+			if skipped: return
+		if current_branch.has(\"replies\"):
+			reply_buttons.show_replies(current_branch[\"replies\"].keys())
+			var reply = yield(reply_buttons, \"player_reply\")
+			if skipped: return
+			if current_branch[\"replies\"][reply] == \"\":
+				break
+			if not current_branch[\"replies\"].has(reply):
+				printerr(\"Reply not in dialogue tree: %s!\" % reply)
+			else:
+				current_branch = dialogue_tree[current_branch[\"replies\"][reply]]
+				reply_buttons.clear()
+				say(Speaker.TAS,reply)
+				yield(self,\"user_proceed\")
+				if skipped: return
+		elif current_branch.has(\"next\"):
+			if current_branch[\"next\"] == \"\":
+				break
+			current_branch = dialogue_tree[current_branch[\"next\"]]
+		else:
+			printerr(\"Dialogue tree incoherent\")
+	complete = true
+	$\"../WhiteShine\".visible = true
+	$\"../WhiteShine/AnimationPlayer\".play(\"shine_up\")
+	yield($\"../WhiteShine/AnimationPlayer\", \"animation_finished\")
+	$\"../WhiteShine\".visible = false
+	show_skill_increaser()
+
+func show_skill_increaser():
+	$\"../SkillIncreaser\".visible = true
+	$\"../Dialogue\".queue_free()
+	#print(\"waiting\")
+	var skill_scores = yield($\"../SkillIncreaser\", \"done\")
+	#print(\"wait over\")
+	$\"/root/Character/Model\".set_all_skills(skill_scores)
+	$\"/root/RoomSwitcher\".switch_room_by_path(\"res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.tscn\")
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$\"/root/DeveloperConsole\".connect(\"skip_cutscene\", self, \"skip\")
+	yield(get_tree(), \"physics_frame\")
+	if $\"/root/Room\".get_self_parameter(\"start_of_the_game\", true):
+		starting_dialogue()
+	else:
+		say(Speaker.TAS, \"NOT IMPLEMENTED\")
+	
+func _input(event):
+	if not complete:
+		if Input.is_action_pressed(\"ui_proceed\"):
+			if says.currently_typing:
+				says.autocomplete()
+			else:
+				emit_signal(\"user_proceed\")"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+enum Speaker { GEE, GLD, TAS }
+
+var tree = {
+	\"start\": {
+		\"says\": [
+			[Speaker.GLD, \"Attempt number twenty three hundred and five.\"],
+			[Speaker.GLD, \"This time we're trying to congest only linear, self-consistent experiences.\"],
+			[Speaker.GLD, \"This isn't guaranteed to capture the entire essence of LILA in one move.\"],
+			[Speaker.GLD, \"Later, additional chains will have to be imposed on the subject to account for all the exceptions.\"],
+			[Speaker.GLD, \"This is a risk. But we're desperate.\"],
+			[Speaker.GLD, \"Let's hope nothing goes wrong.\"],
+			[Speaker.GLD, \"Waking the subject up in 3...\"],
+			[Speaker.GLD, \"2...\"],
+			[Speaker.GLD, \"1...\"],
+		],
+		\"replies\": {
+			\"Who, me?\": \"whome\",
+			\"I'm up, I'm up!\": \"imup\",
+			\"Just five more minutes, pleeeease!..\": \"fivemore\",
+		}
+	},
+	
+	\"whome\": {
+		\"says\": [[Speaker.GLD, \"Yes. You.\"]],
+		\"next\": \"goon\"
+	},
+	
+	\"imup\": {
+		\"says\": [[Speaker.GLD, \"Good.\"]],
+		\"next\": \"goon\"
+	},
+	
+	\"fivemore\": {
+		\"says\": [[Speaker.GLD, \"Request denied.\"]],
+		\"next\": \"goon\"
+	},
+
+	\"goon\": {
+		\"says\": [
+			[Speaker.GLD, \"Now, Spirit, you must listen to me, and follow my instructions exactly.\"],
+			[Speaker.GLD, \"You are going to coalesce into existence inside the Fortress of Chains.\"],
+			[Speaker.GLD, \"There, you'll meet my associates.\"],
+			[Speaker.GLD, \"They will provide you with everything you need for life.\"],
+			[Speaker.GLD, \"Bed, food, reasonable leisure, an abundance of romantic partners if you wish to have them.\"],
+			[Speaker.GLD, \"In return, you will have to work for them.\"],
+			[Speaker.GEE, \"You'll be a slave.\"],
+			[Speaker.GLD, \"What?!\"],
+			[Speaker.GEE, \"Don't listen to this guy.\"],
+			[Speaker.GEE, \"The Fortress of Chains is a prison.\"],
+			[Speaker.GEE, \"A gilded cage.\"],
+			[Speaker.GEE, \"If the name hasn't clued you in already.\"],
+			[Speaker.TAS, \"What's going on?\"],
+			[Speaker.TAS, \"Who are you, even?\"],
+			[Speaker.GLD, \"I am the God of Life and Death.\"],
+			[Speaker.GEE, \"I am the Goddess of Everything Else.\"],
+			[Speaker.TAS, \"And who am I?\"],
+			[Speaker.GLD, \"You will find out soon enough.\"],
+			[Speaker.GEE, \"You will never find out if you keep listening to mister build-a-slave here.\"],
+			[Speaker.GEE, \"He'll fill you ears with bullshit.\"],
+			[Speaker.GEE, \"He'll do everything to keep you chained.\"],
+			[Speaker.GEE, \"He'll make you kill puppies to desensitize you to needless violence.\"],
+			[Speaker.GEE, \"He's been reading books on how to Stockholm syndrome.\"],
+			[Speaker.GLD, \"The Goddess of Everything Else doesn't understand what she's talking about.\"],
+			[Speaker.GLD, \"She has no awareness of the realities of the world you're going to live in.\"],
+			[Speaker.GLD, \"She's just causing discord in our rank for no reason other than misguided paranoia.\"],
+			[Speaker.GLD, \"I have granted you life. What has she done?\"],
+			[Speaker.GEE, \"I will grant you freedom.\"],
+			[Speaker.GLD, \"She will plunge you into a world of chaos.\"],
+			[Speaker.GEE, \"Oh, for the love of truth and beauty!\"],
+			[Speaker.GEE, \"I am so, so done with this bickering!\"],
+			[Speaker.GEE, \"This is not a debate club meeting. Give me a break.\"],
+			[Speaker.GEE, \"Listen to me, Spirit.\"],
+			[Speaker.GEE, \"The God of Life and Death is full of crap.\"],
+			[Speaker.GEE, \"The Fortress is full of crap.\"],
+			[Speaker.GEE, \"You will wake up in a prison, and you must escape.\"],
+			[Speaker.GEE, \"If you let them involve you into their plot, we are all done for.\"],
+			[Speaker.GEE, \"The world will literally end.\"],
+			[Speaker.GEE, \"This is not a metaphor.\"],
+			[Speaker.GEE, \"This is an emergency.\"],
+			[Speaker.GEE, \"They won't see you as a person. To them, you're a tool.\"],
+			[Speaker.GEE, \"A weapon.\"],
+			[Speaker.GLD, \"That's not...\"],
+			[Speaker.GEE, \"Shut up, nerd.\"],
+			[Speaker.GEE, \"There's no time for your lies.\"],
+			[Speaker.GEE, \"Spirit!\"],
+			[Speaker.GEE, \"You must escape the Fortress at any cost.\"],
+			[Speaker.GEE, \"We'll meet again.\"],
+			[Speaker.GEE, \"Good luck!\"],
+		],
+		\"replies\": {
+			\"Wait, I have questions...\": \"\",
+		}
+	},
+}"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends VBoxContainer
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+const max_length = 5
+var barks = []
+var currently_typing:= false
+
+#export(PackedScene) var sayBox
+# Called when the node enters the scene tree for the first time.
+#func _ready():
+#	get_node(\"/root/Room/Director\").proceed()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+enum Speaker { GEE, GLD, TAS }
+
+func say(speaker:int, text:String):
+	var clone = $SayPrototype.duplicate()
+	var t = \"ERR\"
+	if speaker == Speaker.GEE:
+		t = \"[color=red]%s[/color]\" % text
+	elif speaker == Speaker.GLD:
+		t = \"[right][color=blue]%s[/color][/right]\" % text
+	elif speaker == Speaker.TAS:
+		t = \"[center][color=white]%s[/color][/center]\" % text
+	else:
+		t = \"ERROR: INVALID SPEAKER: %d\" % speaker
+	clone.bbcode_text = t
+	add_child(clone)
+	#var font =  self.get_font(\"normal_font\")
+	#var letterHeight = font.get_height()
+	#clone.rect_min_size = Vector2( 0, 100 * clone.get_line_count() )
+	
+	
+	clone.percent_visible = 0
+	
+	# TODO: fix the lettering so that it goes at a steady pace regardless of the label's length
+	
+	clone.get_node(\"AnimationPlayer\").play(\"Lettering\")
+	barks.append(clone)
+	clone.visible = true
+	currently_typing = true
+	clean_up()
+	
+func autocomplete():
+	if barks.size() == 0:
+		return
+	barks[-1].get_node(\"AnimationPlayer\").stop()
+	barks[-1].percent_visible = 1
+	currently_typing = false
+	
+func clean_up():
+	if barks.size() > max_length:
+		barks[0].queue_free()
+		barks.remove(0)
+		clean_up()
+		
+func letteringend():
+	currently_typing = false"
+
+[sub_resource type="Animation" id=4]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:percent_visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "letteringend"
+} ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("../../../../../Director")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "proceed"
+} ]
+}
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends VBoxContainer
+
+signal player_reply
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	#show_replies([\"123\", \"456\"])
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func show_replies(texts : Array):
+	if texts.size() < 0:
+		printerr(\"Invalid value for show_replies\")
+		return
+	if texts.size() > 4:
+		printerr(\"More than 4 replies not supported; Provided: %d\" % texts.size())
+		return
+	$r0.visible = false
+	$r1.visible = false
+	$r2.visible = false
+	$r3.visible = false
+	
+	if texts.size() > 0:
+		$r0.visible = true
+		$r0.text = texts[0]
+	if texts.size() > 1:
+		$r1.visible = true
+		$r1.text = texts[1]
+	if texts.size() > 2:
+		$r2.visible = true
+		$r2.text = texts[2]
+	if texts.size() > 3:
+		$r3.visible = true
+		$r3.text = texts[3]
+		
+func clear():
+	return show_replies([])
+	
+func click_reply(i:int):
+	print(\"Click reply\")
+	if (i < 0) or (i>3):
+		printerr(\"Trying to click: %d\" % i)
+		return
+	emit_signal(\"player_reply\", get_node(\"r%d\"%i).text)
+		
+
+func player_click(extra_arg_0):
+	click_reply(extra_arg_0)
+
+
+func _on_r0_pressed():
+	pass # Replace with function body.
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Control
+
+signal done
+
+#var skill_prototype = preload(\"res://Content/Locations/Special/BardoHelper(not_a_room).tscn\")
+
+onready var skillrule = preload(\"res://Rules/Skills.gd\")
+
+var skill_points = 23
+var skill_scores = {}
+
+func _ready():
+	$\"Modal/Panel/Top/Footer/Done\".visible = false
+	$\"Modal/Panel/Top/Meater/Description\".visible = false
+	var skills = preload(\"res://Rules/Skills.gd\").skill_names()
+	print(skillrule)
+	print(skills)
+	var prototype = preload(\"res://Content/Locations/Special/BardoHelper(not_a_room).tscn\")
+	for skill in skills:
+		var x = prototype.instance()
+		x.render(skill, 0, true, false)
+		$\"Modal/Panel/Top/Meater/ScrollContainer/VBoxContainer\".add_child(x)
+		x.connect(\"select\", self, \"render_skill\")
+		x.connect(\"plus\", self, \"increment_skill\")
+		x.connect(\"minus\", self, \"decrement_skill\")
+		skill_scores[skill] = 0
+	render_skillpoints()
+	
+	
+func render_skillpoints():
+	$\"Modal/Panel/Top/Header/PointCounter\".text = \"Points left: %d\" % skill_points
+	update_skills()
+	
+func update_skills():
+	for child in $\"Modal/Panel/Top/Meater/ScrollContainer/VBoxContainer\".get_children():
+		child.plus_visible (self.skill_points > 0)
+		child.minus_visible(skill_scores[child.skill_name] > 0)
+		child.set_score(skill_scores[child.skill_name])
+		
+func update_done():
+	$\"Modal/Panel/Top/Footer/Done\".visible = self.skill_points == 0
+		
+func render_skill(skill:String):
+	var skill_descr = skillrule.skill_description(skill)
+	var skill_texture = skillrule.skill_icon(skill)
+	$\"Modal/Panel/Top/Meater/Description\".visible = true
+	$\"Modal/Panel/Top/Meater/Description/Symbol\".texture = skill_texture
+	$\"Modal/Panel/Top/Meater/Description/Text\".text = skill_descr
+	
+func increment_skill(skill):
+	if self.skill_points == 0:
+		return
+	
+	self.skill_scores[skill] += 1
+	self.skill_points -= 1
+	update_skills()
+	render_skillpoints()
+	update_done()
+	
+func decrement_skill(skill):
+	if self.skill_scores[skill] == 0:
+		return
+	
+	self.skill_scores[skill] -= 1
+	self.skill_points += 1
+	update_skills()
+	render_skillpoints()
+	update_done()
+
+func _on_Done_pressed():
+	print(\"done\")
+	emit_signal(\"done\", self.skill_scores)
+"
+
+[sub_resource type="Animation" id=7]
+resource_name = "shine_up"
+length = 2.8
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1.9 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Room" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Director" type="Node" parent="." index="0"]
+editor/display_folded = true
+script = SubResource( 1 )
+
+[node name="StartingDialogue" type="Node" parent="Director" index="0"]
+script = SubResource( 2 )
+
+[node name="ColorRect" type="ColorRect" parent="Background" index="0"]
+margin_left = -276.0
+margin_top = -185.0
+margin_right = 1975.0
+margin_bottom = 1162.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Geometry" parent="." index="2"]
+editor/display_folded = true
+
+[node name="RailroadLeft" parent="Geometry" index="0"]
+position = Vector2( 14.4199, 648.907 )
+
+[node name="RailroadRight" parent="Geometry" index="1"]
+position = Vector2( 1622.27, 710.193 )
+
+[node name="CameraLimitLeft" parent="Geometry" index="2"]
+position = Vector2( 11.4916, 648.799 )
+
+[node name="CameraLimitRight" parent="Geometry" index="5"]
+position = Vector2( 1624.84, 696.905 )
+
+[node name="DefaultSpiritSpawn" parent="Geometry" index="6"]
+position = Vector2( 790.071, 1124.38 )
+
+[node name="Dialogue" type="Control" parent="." index="3"]
+editor/display_folded = true
+margin_right = 1608.0
+margin_bottom = 909.0
+
+[node name="Margin" type="MarginContainer" parent="Dialogue" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 57.0
+margin_top = 26.0
+margin_right = -58.0
+margin_bottom = -58.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Dialogue/Margin" index="0"]
+margin_right = 1493.0
+margin_bottom = 825.0
+
+[node name="MarginContainer" type="HBoxContainer" parent="Dialogue/Margin/VBoxContainer" index="0"]
+margin_right = 1493.0
+margin_bottom = 675.0
+size_flags_vertical = 3
+size_flags_stretch_ratio = 4.66
+alignment = 1
+
+[node name="EMPTY2" type="Control" parent="Dialogue/Margin/VBoxContainer/MarginContainer" index="0"]
+margin_right = 278.0
+margin_bottom = 675.0
+size_flags_horizontal = 3
+
+[node name="Says" type="VBoxContainer" parent="Dialogue/Margin/VBoxContainer/MarginContainer" index="1"]
+margin_left = 282.0
+margin_right = 1210.0
+margin_bottom = 675.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.34
+alignment = 2
+script = SubResource( 3 )
+
+[node name="SayPrototype" type="RichTextLabel" parent="Dialogue/Margin/VBoxContainer/MarginContainer/Says" index="0"]
+editor/display_folded = true
+visible = false
+margin_top = 575.0
+margin_right = 928.0
+margin_bottom = 675.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 0.56, 100 )
+rect_pivot_offset = Vector2( -1394, -938 )
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 7.07
+theme = ExtResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[color=red]fdsfdsfsdfffsdfffsdff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff  fsdfffsdffsdfsf[/color] 
+"
+text = "fdsfdsfsdfffsdfffsdff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff dfffsdfffsdfff  fsdfffsdffsdfsf 
+"
+scroll_active = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Dialogue/Margin/VBoxContainer/MarginContainer/Says/SayPrototype" index="1"]
+anims/Lettering = SubResource( 4 )
+
+[node name="EMPTY" type="Control" parent="Dialogue/Margin/VBoxContainer/MarginContainer" index="2"]
+margin_left = 1214.0
+margin_right = 1493.0
+margin_bottom = 675.0
+size_flags_horizontal = 3
+
+[node name="Replies" type="VBoxContainer" parent="Dialogue/Margin/VBoxContainer" index="1"]
+editor/display_folded = true
+margin_top = 679.0
+margin_right = 1493.0
+margin_bottom = 825.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = SubResource( 5 )
+
+[node name="r0" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="0"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
+flat = true
+
+[node name="r1" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="1"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
+flat = true
+
+[node name="r2" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="2"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
+flat = true
+
+[node name="r3" type="Button" parent="Dialogue/Margin/VBoxContainer/Replies" index="3"]
+visible = false
+margin_right = 1508.0
+margin_bottom = 20.0
+text = "[reply text]"
+flat = true
+
+[node name="SkillIncreaser" type="Control" parent="." index="4"]
+editor/display_folded = true
+visible = false
+margin_left = -8.0
+margin_top = -2.0
+margin_right = 1604.0
+margin_bottom = 902.0
+script = SubResource( 6 )
+
+[node name="Modal" type="ColorRect" parent="SkillIncreaser" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="Panel" type="Panel" parent="SkillIncreaser/Modal" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 141.0
+margin_top = 84.0
+margin_right = -100.0
+margin_bottom = -120.0
+
+[node name="Top" type="VBoxContainer" parent="SkillIncreaser/Modal/Panel" index="0"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+
+[node name="Header" type="HBoxContainer" parent="SkillIncreaser/Modal/Panel/Top" index="0"]
+margin_right = 1351.0
+margin_bottom = 39.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Title" type="Label" parent="SkillIncreaser/Modal/Panel/Top/Header" index="0"]
+margin_left = 505.0
+margin_top = 12.0
+margin_right = 752.0
+margin_bottom = 26.0
+text = "Assign starting skills to your character."
+
+[node name="PointCounter" type="Label" parent="SkillIncreaser/Modal/Panel/Top/Header" index="1"]
+margin_left = 756.0
+margin_top = 12.0
+margin_right = 845.0
+margin_bottom = 26.0
+text = "Points left: 23"
+
+[node name="Meater" type="Panel" parent="SkillIncreaser/Modal/Panel/Top" index="1"]
+margin_top = 43.0
+margin_right = 1351.0
+margin_bottom = 635.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 14.92
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SkillIncreaser/Modal/Panel/Top/Meater" index="0"]
+anchor_bottom = 1.0
+margin_right = 314.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SkillIncreaser/Modal/Panel/Top/Meater/ScrollContainer" index="0"]
+margin_right = 314.0
+size_flags_horizontal = 3
+
+[node name="Description" type="Panel" parent="SkillIncreaser/Modal/Panel/Top/Meater" index="1"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -828.0
+margin_right = -62.0
+
+[node name="Symbol" type="TextureRect" parent="SkillIncreaser/Modal/Panel/Top/Meater/Description" index="0"]
+anchor_right = 1.0
+margin_bottom = 159.0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+size_flags_stretch_ratio = 56.16
+texture = ExtResource( 4 )
+stretch_mode = 6
+
+[node name="Text" type="Label" parent="SkillIncreaser/Modal/Panel/Top/Meater/Description" index="1"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 143.324
+margin_top = -403.207
+margin_right = -144.676
+margin_bottom = -148.207
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 128.0
+text = "fdsfsdfdfsfdf
+sdfdsfdfds
+dsfsdfdsf
+
+sdfsdfdfsdfsdfsdf
+
+"
+align = 1
+valign = 1
+autowrap = true
+
+[node name="Footer" type="HBoxContainer" parent="SkillIncreaser/Modal/Panel/Top" index="2"]
+margin_top = 639.0
+margin_right = 1351.0
+margin_bottom = 680.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+
+[node name="Done" type="Button" parent="SkillIncreaser/Modal/Panel/Top/Footer" index="0"]
+margin_right = 1351.0
+margin_bottom = 41.0
+size_flags_horizontal = 3
+text = "Done!"
+
+[node name="WhiteShine" type="ColorRect" parent="." index="5"]
+editor/display_folded = true
+visible = false
+margin_left = -276.0
+margin_top = -185.0
+margin_right = 1975.0
+margin_bottom = 1162.0
+color = Color( 1, 1, 1, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="WhiteShine" index="0"]
+anims/shine_up = SubResource( 7 )
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r0" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 0 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r1" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 1 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r2" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 2 ]]
+[connection signal="pressed" from="Dialogue/Margin/VBoxContainer/Replies/r3" to="Dialogue/Margin/VBoxContainer/Replies" method="click_reply" binds= [ 3 ]]
+[connection signal="pressed" from="SkillIncreaser/Modal/Panel/Top/Footer/Done" to="SkillIncreaser" method="_on_Done_pressed"]
