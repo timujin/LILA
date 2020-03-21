@@ -13,11 +13,9 @@ name = "Cool hat"
 description = "Handy to overclock the brain"
 long_description = "Item not implemented"
 hint = ""
-actions = "1
-2
-3
-4
-5"
+actions = {
+
+}
 type = "Equipment"
 equipment_slot = "Head"
 category = "Headwear"

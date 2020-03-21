@@ -13,10 +13,14 @@ onready var tagline = $\"HBoxContainer/VBoxContainer/Tagline\"
 onready var counter = $\"HBoxContainer/MarginContainer2/Amount\"
 
 var item = null
+var itemid = null
 var amount := 1
 
+func render(itemid, amount:int = -1):
+	self.itemid = itemid
+	return render_obj(InventoryItem.load_by_id(itemid))
 
-func render(item, amount:int = -1)->void:
+func render_obj(item, amount:int = -1)->void:
 	self.item = item
 	self.amount = amount
 	
@@ -28,6 +32,9 @@ func render(item, amount:int = -1)->void:
 	else:
 		counter.visible = true
 		counter.text = str(amount)
+		
+func connect_me(target, callback):
+	connect(\"pressed\", target, callback, [itemid])
 
 func _on_ItemPrototype_pressed():
 	#print(\"onpress\")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/HappyBirthdayRoom.png" type="Texture" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/D.png" type="Texture" id=20]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/A2.png" type="Texture" id=21]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y.png" type="Texture" id=22]
+[ext_resource path="res://BasicEntities/Interactable/ClickableArea.gd" type="Script" id=23]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.0207547 )
@@ -121,18 +122,18 @@ var VN
 func on_activate():
 	get_parent().visible = false
 	$\"../Pickler\".opened = true
-	$\"/root/ModeController\".is_world_scrollable = false
+	ModeController.is_world_scrollable = false
 	VN = preload(\"res://Content/Rooms/00000Bardo/00001HappyBirthday/VNReadNote.tscn\").instance()
 	#VN.connect(\"show_door\", self, \"show_door\")
 	#VN.connect(\"finished\" , self, \"dialogue_finished\")
 	$\"/root/Room\".add_child(VN)
 	yield(VN.run(), \"completed\")
 	VN.queue_free()
-	var itemget = $\"/root/CharacterData\".add_item(\"GOEEsNote\", 1, true)
+	var itemget = CharacterData.add_item(\"GOEEsNote\", 1, true)
 	yield(itemget, \"dismissed\")
-	var karmaget = $\"/root/CharacterData\".add_xp(\"StateOfSugar\", 5, true)
+	var karmaget = CharacterData.add_xp(\"StateOfSugar\", 5, true)
 	yield(karmaget, \"dismissed\")
-	$\"/root/ModeController\".is_world_scrollable = true
+	ModeController.is_world_scrollable = true
 	"
 
 [sub_resource type="GDScript" id=9]
@@ -206,7 +207,19 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"popped\":false}"
 
-[node name="Room" instance=ExtResource( 1 )]
+[sub_resource type="GDScript" id=15]
+script/source = "extends Node
+
+func activate():
+	print(\"activated\")"
+
+[sub_resource type="GDScript" id=16]
+script/source = "extends Node
+
+func doorCode():
+	return \"HappyBirthdayRoomDoor\""
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
 roomName = "Birthday room"
 roomID = "00000HappyBirthday"
 
@@ -314,29 +327,29 @@ script = SubResource( 8 )
 [node name="Pickler" parent="Envelope" index="4"]
 script = SubResource( 9 )
 
-[node name="Door" parent="." index="7" instance=ExtResource( 4 )]
+[node name="Doortodelete" parent="." index="7" instance=ExtResource( 4 )]
 editor/display_folded = true
-position = Vector2( 1311.02, 643.336 )
+position = Vector2( 3290, 890.894 )
 
-[node name="Sprite" parent="Door" index="0"]
+[node name="Sprite" parent="Doortodelete" index="0"]
 position = Vector2( 179.512, -161.307 )
 scale = Vector2( 0.521478, 0.537824 )
 texture = ExtResource( 8 )
 
-[node name="ClickArea" parent="Door" index="2"]
+[node name="ClickArea" parent="Doortodelete" index="2"]
 margin_left = 49.0
 margin_top = -389.0
 margin_right = 318.0
 margin_bottom = 94.0
 ActivatorName = "Door"
 
-[node name="Activator" parent="Door" index="3"]
+[node name="Activator" parent="Doortodelete" index="3"]
 script = SubResource( 10 )
 
-[node name="Unlockable" type="Node" parent="Door/Activator" index="0"]
+[node name="Unlockable" type="Node" parent="Doortodelete/Activator" index="0"]
 script = SubResource( 11 )
 
-[node name="Pickler" parent="Door" index="4"]
+[node name="Pickler" parent="Doortodelete" index="4"]
 script = SubResource( 12 )
 
 [node name="Balloons" type="Node2D" parent="." index="8"]
@@ -344,7 +357,6 @@ editor/display_folded = true
 script = SubResource( 13 )
 
 [node name="H" parent="Balloons" index="0" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 421.728, 494.212 )
 
 [node name="Sprite" parent="Balloons/H" index="0"]
@@ -628,13 +640,33 @@ script = ExtResource( 10 )
 [node name="Pickler" parent="Balloons/Y1" index="4"]
 script = SubResource( 14 )
 
+[node name="Door" type="Node2D" parent="." index="9"]
+
+[node name="Sprite" type="Sprite" parent="Door" index="0"]
+position = Vector2( 1500, 502.794 )
+scale = Vector2( 0.5, 0.482456 )
+texture = ExtResource( 8 )
+
+[node name="ClickArea" type="Control" parent="Door" index="1"]
+margin_left = 1370.0
+margin_top = 300.0
+margin_right = 1640.0
+margin_bottom = 751.0
+script = ExtResource( 23 )
+
+[node name="Activatable" type="Node" parent="Door/ClickArea" index="0"]
+script = SubResource( 15 )
+
+[node name="Unlockable" type="Node" parent="Door/ClickArea" index="1"]
+script = SubResource( 16 )
+
 [editable path="Cake"]
 
 [editable path="Giftbox"]
 
 [editable path="Envelope"]
 
-[editable path="Door"]
+[editable path="Doortodelete"]
 
 [editable path="Balloons/H"]
 

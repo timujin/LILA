@@ -17,12 +17,17 @@ func _ready():
 
 func display(text:String, at:Node2D, wait_time=3.0):
 	p.visible = true
-	t.bbcode_text = text
+	t.text = text
 	$Timer.stop()
 	if wait_time > 0:
 		$Timer.wait_time = wait_time
 		$Timer.start()
 	call_deferred(\"reparent\",at)
+	
+func display_at_mouse(text:String):
+	var pos = get_global_mouse_position()
+	var at = Node2D.new()
+	display(text, at)
 
 func reparent(at:Node2D):
 	var pos = at.get_global_transform_with_canvas().get_origin()

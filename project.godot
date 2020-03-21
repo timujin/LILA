@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Activator",
 "language": "GDScript",
-"path": "res://BasicEntities/Object/BaseActivator.gd"
+"path": "res://BasicEntities/Object/BaseInteractable.gd"
 }, {
 "base": "Node",
 "class": "BasePickler",
@@ -23,6 +23,11 @@ _global_script_classes=[ {
 "class": "BaseRoom",
 "language": "GDScript",
 "path": "res://BasicEntities/Room/BaseRoom.gd"
+}, {
+"base": "Control",
+"class": "ClickArea",
+"language": "GDScript",
+"path": "res://BasicEntities/Interactable/ClickableArea.gd"
 }, {
 "base": "Resource",
 "class": "InventoryItem",
@@ -43,6 +48,7 @@ _global_script_class_icons={
 "Activator": "",
 "BasePickler": "",
 "BaseRoom": "",
+"ClickArea": "",
 "InventoryItem": "",
 "ItemScript": "",
 "KarmaItem": ""
@@ -62,6 +68,7 @@ InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
 Global="*res://Autoload/Global.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
 CharacterData="*res://Autoload/CharacterData.tscn"
+WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
 
 [display]
 

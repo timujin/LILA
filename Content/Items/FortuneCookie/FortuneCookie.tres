@@ -13,7 +13,9 @@ name = "Fortune cookie"
 description = "The taste of future"
 long_description = "Eat it when you're stuck"
 hint = "Eat it and get a hint!"
-actions = "Eat"
+actions = {
+
+}
 type = "Consumable"
 equipment_slot = ""
 category = "Food"

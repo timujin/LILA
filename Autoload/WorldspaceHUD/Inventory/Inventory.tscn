@@ -7,275 +7,84 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
-onready var mode = $\"/root/ModeController\"
+var selected_item = \"CoolHat\"
 
-var item_prototype = preload(\"res://Autoload/Inventory/ItemRenderUI.tscn\")
-var slot_prototype = preload(\"res://Autoload/Inventory/EquipmentSlot.tscn\")
 
-onready var place_for_items = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
-onready var place_for_slots = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
-onready var info_panel = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
-onready var char_doll = $\"Modal/Window/HBoxContainer/Left/Panel/ScrollContainer/VBoxContainer\"
+func render():
+	$\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\".render(selected_item, 1)
+	$\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\".render()
 
-onready var model = $\"/root/CharacterData\"
-
-var current_item = null
-
-func create_item(item, amount:int=1):
-	var rend = item_prototype.instance()
-	place_for_items.add_child(rend)
-	rend.render(item, amount)
-	rend.visible = true
-	rend.connect(\"selected\", self, \"_on_Item_select\")
-	
-func clear():
-	for child in place_for_items.get_children():
-		child.queue_free()
-	for child in place_for_slots.get_children():
-		child.queue_free()
-		
-func render_all():
-	clear()
-	var items = model.items.keys()
-	print(items)
-	for item in items:
-		if model.is_equipped(item):
-			continue
-		var it = InventoryItem.load_by_id(item)
-		create_item(it, model.items[item])
-	render_equipment()
-		
-func render_equipment():
-	for slot in model.equipment_slots:
-		var equipped = model.equipped.get(slot)
-		var rend = slot_prototype.instance()
-		rend.connect(\"selected\", self, \"_on_Equipment_select\")
-		rend.connect(\"equip\", self, \"_on_Equip\")
-		rend.connect(\"unequip\", self, \"_on_Unequip\")
-		rend.init(slot)
-		place_for_slots.add_child(rend)
-		if equipped != null:
-			equipped = InventoryItem.load_by_id(equipped)
-			rend.equip(equipped.id, equipped.name, equipped.icon)
-		
-		
-func filter(t:String):
-	var ch = place_for_items.get_children()
-	for child in ch:
-		#print(\">%s %s<\" %[t, child.item.type])
-		if t == \"All\" or t == child.item.type:
-			child.visible = true
-		else:
-			child.visible = false
-
-func _on_Item_select(item)->void:
-	info_panel.render(item, 0)
-	current_item = item
-	
-func _on_Equipment_select(item)->void:
-	var it = InventoryItem.load_by_id(item)
-	info_panel.render(it, 0)
-	current_item = it
-
-func _ready():
-	#hide()
-	mode.connect(\"reset\", self, \"on_reset\")
-	
-func on_reset():
-	hide()
-	
-var ui_inventory_pressed = false
+func unhide():
+	visible = true
+	render()
 
 func hide():
-	ui_inventory_pressed = false
 	visible = false
-	info_panel.clear()
+
+func _ready():
+	hide()
+	$\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"\\
+	.connect(\"item_selected\", self, \"on_item_selected\")
 	
-func _process(delta):
-	return
-	if Input.is_action_pressed(\"ui_inventory\"):
-		if not ui_inventory_pressed:
-			ui_inventory_pressed = true
-			$Modal.visible = !($Modal.visible)
-			render_all()
-	elif ui_inventory_pressed:
-		ui_inventory_pressed = false
-        ## done once when the key is released
+func on_item_selected(itemid):
+	selected_item = itemid
+	$\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\".render(selected_item, CharacterData.items[selected_item])
 	
-	
+		
 func on_using_item(action:String):
-	print(current_item)
-	if current_item == null:
+	print(selected_item)
+	if selected_item == null:
 		printerr(\"Trying to use an unselected item!\")
 		return
-	current_item.iscript.use(action, current_item, get_tree())
-	
-func _on_Cancel_pressed():
-	hide()
-
-func _on_Unequip(slot:String):
-	model.unequip(slot)
-	render_all()
-	
-func _on_Equip(slot:String):
-	if current_item != null:
-		if model.is_equippable(current_item, slot):
-			model.equip(current_item.id, slot)
-	render_all()
-
-
-func _on_Inventory_visibility_changed():
-	render_all()
-"
+	InventoryItem.load_by_id(selected_item).iscript.use(action, InventoryItem.load_by_id(selected_item), get_tree())
+	"
 
 [sub_resource type="GDScript" id=2]
-script/source = "extends Node
-		
-var items:Dictionary = {} # ID -> amount
-
-var equipment_slots = [
-	\"Head\", \"Chest\", \"Main\", \"Off\", \"Gloves\", \"Lapel\", \"Pants\", \"Shoes\", \"Amulet\", 
-	\"Ring1\",\"Ring2\",
-	\"Accessory1\",\"Accessory2\",\"Accessory3\",\"Accessory4\",\"Accessory5\"
-]
-
-var equipped:Dictionary = {} # Equipment slot -> ID
-
-func try_equip(id:String, slot:String):
-	if !equipment_slots.has(slot):
-		printerr(\"No such slot exists: %s\" % slot)
-		return
-	if InventoryItem.load_by_id(id).equipment_slot != slot_type(slot):
-		print(\"Can't equip into this slot\")
-		return
-	unequip(slot)
-	equip(id, slot)
-	
-func equip(id:String, slot:String):
-	equipped[slot] = id
-	
-func unequip(slot:String):
-	equipped.erase(slot)
-	
-func is_equipped(id:String)->bool:
-	for slot in equipped.keys():
-		if equipped[slot] == id:
-			return true
-	return false
-	
-static func is_equippable(current_item, slot:String):
-	return current_item.equipment_slot == slot_type(slot)
-
-static func slot_type(slot:String)->String:
-	if [\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"0\"].has(slot[slot.length()-1]):
-		return slot_type(slot.substr(0,slot.length()-1))
-	return slot
-
-
-
-func add_item_silent(id:String, number:int = 1):
-	if items.has(id):
-		items[id] += number
-	else:
-		items[id] = number
-		
-func add_item(id:String, number:int = 1):
-	add_item_silent(id, number)
-	var itemget = preload(\"res://Autoload/Inventory/ItemGet.tscn\").instance()
-	$\"/root\".add_child(itemget)
-	itemget.render(id, number)
-	return itemget
-	
-func remove_item(id:String, number:int = -1):
-	if not items.has(id):
-		printerr(\"Warning: trying to remove a nonexistent item: %s\" % id)
-		return
-	items[id] -= number
-	if items[id] <= 0 or number == -1:
-		items.erase(id)
-		var todelete = null
-		for key in equipped.keys():
-			if id == equipped.get(key):
-				todelete = key
-				break
-		if todelete != null:
-			unequip(todelete)
-	
-		
-func has_item(id:String, number:int = 1)->bool:
-	if not items.has(id):
-		return false
-	return items[id] >= number
-		
-func _ready():
-	self.items = {
-		\"CoolHat\": 5,
-		\"FortuneCookie\": 1,
-		\"StarterKnife\": 0,
-		\"BlahBlah\": 88
-		}
-	self.equipped = {
-		\"Head\": \"CoolHat\",
-		\"Main\": \"StarterKnife\",
-		\"Lapel\": \"ErrorItem\"
-		}
-
-func _on_Misc_pressed():
-	pass # Replace with function body.
-"
-
-[sub_resource type="GDScript" id=3]
 script/source = "extends VBoxContainer
-
-onready var itemname = $\"ItemName\"
-onready var itemdescription = $\"ItemDescription\"
-onready var itemhint = $\"ItemHint\"
 
 onready var butt1 = $\"Buttons/Button\"
 onready var butt2 = $\"Buttons/Button2\"
 onready var butt3 = $\"Buttons/Button3\"
 
-func render(item, amount:int):
-	itemname.text = item.name
-	itemdescription.text = item.long_description
-	itemhint.text = item.hint
-	
-	butt1.visible = false
-	butt2.visible = false
-	butt3.visible = false
-	#print(item.actions)
-	var btnss = item.actions.split('\\n')
-	var btns = []
-	for btn in btnss:
-		btns.append(btn.strip_edges())
-	#print(btns)
-	if btns[0] == \"\":
+func render(itemid, amount:int):
+	if itemid == null:
+		clear()
 		return
-	if btns.size () >= 1:
-		butt1.visible = true
-		butt1.text = btns[0]
-	if btns.size () >= 2:
-		butt2.visible = true
-		butt2.text = btns[1]
-	if btns.size () >= 3:
-		butt3.visible = true
-		butt3.text = btns[2]
+	var item = InventoryItem.load_by_id(itemid)
+	
+	$\"ItemName\".text = item.name
+	$\"ItemDescription\".text = item.description
+	$\"ItemHint\".text = item.hint
+	
+	if item.actions != null:
+		var actions = item.actions.keys()
+		if actions.size() > 0:
+			butt1.text = actions[0]
+			butt1.visible = true
+		if actions.size() > 1:
+			butt2.text = actions[1]
+			butt2.visible = true
+		if actions.size() > 2:
+			butt3.text = actions[2]
+			butt3.visible = true
+		
+	
 		
 func clear():
-	itemname.text = \"Select an item\"
-	itemdescription.text = \"\"
-	itemhint.text = \"\"
+	$\"ItemName\".text = \"Select an item\"
+	$\"ItemDescription\".text = \"\"
+	$\"ItemHint\".text = \"\"
 	
 	butt1.visible = false
 	butt2.visible = false
 	butt3.visible = false
 	"
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=3]
 size = 21
 font_data = ExtResource( 2 )
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Button
 
 # Declare member variables here. Examples:
@@ -295,14 +104,34 @@ func _on_Button_pressed():
 	$\"/root/WSHUD/Inventory\".on_using_item(self.text)
 "
 
+[sub_resource type="GDScript" id=5]
+script/source = "extends VBoxContainer
+
+signal item_selected
+
+func render():
+	clear()
+	var itemids = CharacterData.items.keys()
+	
+	var item_renderer = preload(\"res://Autoload/WorldspaceHUD/Inventory/ItemRenderUI.tscn\")
+	for itemid in itemids:
+		var renderer = item_renderer.instance()
+		add_child(renderer)
+		renderer.render(itemid, CharacterData.items[itemid])
+		renderer.connect_me(self, \"on_item_selected\")
+	
+func clear():
+	for child in get_children():
+		child.queue_free()
+		
+func on_item_selected(itemid):
+	emit_signal(\"item_selected\", itemid)"
+
 [node name="Inventory" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
 script = SubResource( 1 )
-
-[node name="Modeltodelete" type="Node" parent="."]
-script = SubResource( 2 )
 
 [node name="Modal" type="Panel" parent="."]
 self_modulate = Color( 1, 1, 1, 0.439216 )
@@ -348,20 +177,22 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
+editor/display_folded = true
 margin_top = 389.0
 margin_right = 398.0
 margin_bottom = 775.0
 size_flags_vertical = 3
 
 [node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
+editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = SubResource( 3 )
+script = SubResource( 2 )
 
 [node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
 margin_right = 398.0
 margin_bottom = 25.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 3 )
 text = "INFO"
 align = 1
 valign = 1
@@ -402,7 +233,7 @@ margin_left = 173.0
 margin_right = 221.0
 margin_bottom = 20.0
 text = "Apply"
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
 visible = false
@@ -410,7 +241,7 @@ margin_left = 173.0
 margin_right = 221.0
 margin_bottom = 20.0
 text = "Apply"
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
 visible = false
@@ -418,7 +249,7 @@ margin_left = 173.0
 margin_right = 221.0
 margin_bottom = 20.0
 text = "Apply"
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="Right" type="PanelContainer" parent="Modal/Window/HBoxContainer"]
 margin_left = 402.0
@@ -439,31 +270,31 @@ margin_bottom = 60.0
 size_flags_vertical = 3
 
 [node name="Equipment" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_right = 183.0
+margin_right = 106.0
 margin_bottom = 60.0
-text = "Equipmentdfsdfdsf"
+text = "Equipment"
 
 [node name="Consumables" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 187.0
-margin_right = 316.0
+margin_left = 110.0
+margin_right = 239.0
 margin_bottom = 60.0
 text = "Consumables"
 
 [node name="Tools" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 320.0
-margin_right = 379.0
+margin_left = 243.0
+margin_right = 302.0
 margin_bottom = 60.0
 text = "Tools"
 
 [node name="Misc" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 383.0
-margin_right = 437.0
+margin_left = 306.0
+margin_right = 360.0
 margin_bottom = 60.0
 text = "Misc"
 
 [node name="All" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 441.0
-margin_right = 476.0
+margin_left = 364.0
+margin_right = 399.0
 margin_bottom = 60.0
 text = "All"
 
@@ -484,6 +315,7 @@ size_flags_stretch_ratio = 11.6
 [node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
 margin_right = 1035.0
 size_flags_horizontal = 3
+script = SubResource( 5 )
 
 [node name="Button" type="Button" parent="Modal"]
 anchor_left = 1.0
@@ -502,4 +334,4 @@ icon = ExtResource( 3 )
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Tools" to="." method="filter" binds= [ "Tool" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Misc" to="." method="filter" binds= [ "Misc" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/All" to="." method="filter" binds= [ "All" ]]
-[connection signal="pressed" from="Modal/Button" to="." method="_on_Cancel_pressed"]
+[connection signal="pressed" from="Modal/Button" to="." method="hide"]

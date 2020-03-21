@@ -56,7 +56,7 @@ func hold(item, callback_str):
 	
 func apply_item(obj):
 	if get_is_player_holding_item():
-		holding_item.call(holding_callback, obj)
+		holding_item.iscript.call(holding_callback, obj)
 	else:
 		printerr(\"No item held!\")
 

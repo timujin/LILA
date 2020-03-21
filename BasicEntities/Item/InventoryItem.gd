@@ -9,7 +9,7 @@ export(String) var name
 export(String) var description
 export(String, MULTILINE) var long_description
 export(String, MULTILINE) var hint
-export(String, MULTILINE) var actions
+export(Dictionary) var actions
 
 export(String, "Equipment", "Consumable", "Tool", "Misc") var type = "Misc"
 export(String, \
