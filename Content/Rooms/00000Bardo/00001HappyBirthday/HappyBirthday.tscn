@@ -217,7 +217,7 @@ func activate():
 script/source = "extends Node
 
 func doorCode():
-	return \"HappyBirthdayRoomDoor\""
+	return \"HappyBirdthdayRoomDoor\""
 
 [node name="Room" index="0" instance=ExtResource( 1 )]
 roomName = "Birthday room"
