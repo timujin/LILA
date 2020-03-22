@@ -1,0 +1,24 @@
+[gd_resource type="Resource" load_steps=4 format=2]
+
+[ext_resource path="res://Content/Items/HappyBirthdayDoorKey/HappyBirthdayRoomKey.gd" type="Script" id=1]
+[ext_resource path="res://Content/Items/HappyBirthdayDoorKey/key.png" type="Texture" id=2]
+[ext_resource path="res://BasicEntities/Item/Item.gd" type="Script" id=3]
+
+[resource]
+script = ExtResource( 3 )
+id = "HappyBirthdayRoomKey"
+title = "Cake key"
+icon = ExtResource( 2 )
+description = "Still has some frosting on it"
+long_description = "A key found in your birthday cake. "
+hint = "Persumably unlocks a door."
+category = "Keys"
+countable = false
+actions = {
+"Apply": ExtResource( 1 )
+}
+other_data = {
+
+}
+type = "Misc"
+equipment_slot = "None"

@@ -1,0 +1,3 @@
+extends GDScript
+
+class_name ItemAction

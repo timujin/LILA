@@ -1,20 +1,23 @@
-[gd_resource type="Resource" load_steps=4 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://Content/Items/GOEEsNote/GOEEsNote.PNG" type="Texture" id=1]
-[ext_resource path="res://Content/Items/GOEEsNote/GOEEsNote.gd" type="Script" id=2]
-[ext_resource path="res://BasicEntities/Item/InventoryItem.gd" type="Script" id=3]
+[ext_resource path="res://BasicEntities/Item/Item.gd" type="Script" id=2]
 
 [resource]
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 id = "GOEEsNote"
+title = "Letter from the Goddess"
 icon = ExtResource( 1 )
-iscript = ExtResource( 2 )
-name = "Goddess's note"
 description = "Smells vaguely of oranges"
-long_description = "This is the happy birthday note from the Goddess of Everything Else. Cherish it."
+long_description = "This is a happy birthday note from the Goddess of Everything Else. Cherish it."
 hint = ""
-actions = "Read"
-type = "Misc"
-equipment_slot = "None"
 category = "Books"
 countable = false
+actions = {
+"Read": null
+}
+other_data = {
+
+}
+type = "Misc"
+equipment_slot = "None"

@@ -9,7 +9,8 @@ script/source = "extends CanvasLayer
 signal dismissed
 
 func render(id:String, number:int = -1):
-	var item = InventoryItem.load_by_id(id)
+	return
+	var item = null #InventoryItem.load_by_id(id)
 	$\"Modal/Panel/Name\".text = item.name
 	$\"Modal/Panel/Desc\".text = item.description
 	$\"Modal/Panel/Icon\".texture = item.icon

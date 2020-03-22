@@ -10,29 +10,14 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "Activator",
-"language": "GDScript",
-"path": "res://BasicEntities/Object/BaseInteractable.gd"
-}, {
-"base": "Node",
 "class": "BasePickler",
 "language": "GDScript",
-"path": "res://BasicEntities/Object/BasePickler.gd"
+"path": "res://BasicEntities/Interactable/BasePickler.gd"
 }, {
 "base": "Node2D",
 "class": "BaseRoom",
 "language": "GDScript",
 "path": "res://BasicEntities/Room/BaseRoom.gd"
-}, {
-"base": "Control",
-"class": "ClickArea",
-"language": "GDScript",
-"path": "res://BasicEntities/Interactable/ClickableArea.gd"
-}, {
-"base": "Resource",
-"class": "InventoryItem",
-"language": "GDScript",
-"path": "res://BasicEntities/Item/InventoryItem.gd"
 }, {
 "base": "Resource",
 "class": "Item",
@@ -40,36 +25,39 @@ _global_script_classes=[ {
 "path": "res://BasicEntities/Item/Item.gd"
 }, {
 "base": "GDScript",
-"class": "ItemScript",
+"class": "ItemAction",
 "language": "GDScript",
-"path": "res://BasicEntities/Item/ItemScript.gd"
+"path": "res://BasicEntities/Item/ItemActionScript.gd"
+}, {
+"base": "Resource",
+"class": "ItemInventory",
+"language": "GDScript",
+"path": "res://BasicEntities/Item/ItemInventory.gd"
+}, {
+"base": "Resource",
+"class": "KarmaInventory",
+"language": "GDScript",
+"path": "res://BasicEntities/KarmaItem/KarmaInventory.gd"
 }, {
 "base": "Resource",
 "class": "KarmaItem",
 "language": "GDScript",
-"path": "res://BasicEntities/Item/KarmaItem.gd"
+"path": "res://BasicEntities/KarmaItem/KarmaItem.gd"
 }, {
 "base": "Resource",
 "class": "SaveGame",
 "language": "GDScript",
 "path": "res://Autoload/DeveloperConsole/SaveGame.gd"
-}, {
-"base": "Resource",
-"class": "TestResource",
-"language": "GDScript",
-"path": "res://ResourceTest.gd"
 } ]
 _global_script_class_icons={
-"Activator": "",
 "BasePickler": "",
 "BaseRoom": "",
-"ClickArea": "",
-"InventoryItem": "",
 "Item": "",
-"ItemScript": "",
+"ItemAction": "",
+"ItemInventory": "",
+"KarmaInventory": "",
 "KarmaItem": "",
-"SaveGame": "",
-"TestResource": ""
+"SaveGame": ""
 }
 
 [application]
@@ -83,10 +71,8 @@ config/icon="res://Assets/Placeholders/icon.png"
 RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
 ModeController="*res://Autoload/ModeController.tscn"
 InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
-Global="*res://Autoload/Global.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
-CharacterData="*res://Autoload/CharacterData.tscn"
-WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
+GlobalRegister="*res://Autoload/GlobalRegister.tscn"
 
 [display]
 

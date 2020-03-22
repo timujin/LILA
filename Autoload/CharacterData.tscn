@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -8,179 +8,168 @@ Stores inventory, quests, etc. All the data associated with the PC.
 This is intended to be pickled *in entirety*.
 \"\"\"
 
-signal item_got (id, amount)
-signal karma_got (id, xp)
+onready var karma = get_node(\"Karma\")
+onready var inventory = get_node(\"Inventory\")
+onready var variables = get_node(\"Variables\")"
 
-####################
-# KARMA
-####################
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
 
-var karma = {
-		\"StateOfSugar\": 190,
-		\"Brutality\": 17,
-		\"Trickery\": 11,
-	}
+signal karma_got (karma, xp)
+
+var karma = []
+
+func fetch_karma(id:String):
+	# Loads an item by ID. If there is no such karma item, one is created
 	
-# Functions return how much the karma value changed... I guess?
-# TODO this needs to be worked out into a proper animation
-# The entire system of representing a karma with XP only is pretty inconvenient
-func add_xp(id:String, amount:int, verbose=true):
-	if karma.has(id):
-		karma[id] += amount
-	else:
-		karma[id] = amount
-	if verbose:
-		emit_signal(\"karma_got\", id, amount)
-		var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
-		$\"/root\".add_child(popup)
-		popup.render(id, amount)
-		return popup
+	for item in karma:
+		if item.is_id(id):
+			return item
+	var n = KarmaInventory.new(id)
+	karma.append(n)
+	return n
+	
+func add_xp(id:String, amount:int):
+	var item = fetch_karma(id)
+	item.add_xp(amount)
+	clear_empty_karma()
 		
-func add_levels(id:String, amount:int, verbose=true):
-	if amount < 0:
-		printerr(\"Trying to add negative levels\")
-		return
-	if amount == 0:
-		if verbose:
-			emit_signal(\"karma_got\", id, amount)
-			var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
-			$\"/root\".add_child(popup)
-			popup.render(id, amount)
-			return popup
-		return
-	if amount > 0:
-		add_xp(id, 0) # to initialize
-		var xp_curve = KarmaItem.load_by_id(id).xp_curve(karma[id])
-		var to_next = xp_curve[\"to_next\"]
-		var remain  = xp_curve[\"remain\"]
-		if amount > 0:
-			add_levels(id, amount-1)
-		else:
-			add_xp(id, to_next - remain)
+func add_levels(id:String, amount:int):
+	var item = fetch_karma(id)
+	item.add_levels(amount)
+	clear_empty_karma()
 			
-func bring_up_to_level(id:String, amount:int, verbose=true):
-	add_xp(id, 0) # to initialize
-	var current_level = KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
-	if current_level >= amount:
-		return
-	karma.erase(id)
-	add_levels(id, amount)
-	if verbose:
-		emit_signal(\"karma_got\", id, amount)
-		var popup = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\").instance()
-		$\"/root\".add_child(popup)
-		popup.render(id, amount)
-		return popup
+func bring_up_to_level(id:String, amount:int):
+	var item = fetch_karma(id)
+	item.bring_up_to_level(amount)
+	clear_empty_karma()
 	
 func get_levels(id:String):
-	if karma.has(id):
-		return KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
-	else:
-		return 0
+	var item = fetch_karma(id)
+	var res = item.level
+	clear_empty_karma()
+	return res
 		
 func is_enough_levels(id:String, amount:int):
-	add_xp(id, 0) # to initialize
-	var current_level = KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
-	return current_level >= amount
+	var item = fetch_karma(id)
+	var res = item.is_enough_levels(amount)
+	clear_empty_karma()
+	return res
 	
+func drain_levels(id:String, amount:int):
+	var item = fetch_karma(id)
+	item.drain_levels(amount)
+	clear_empty_karma()
 	
-func remove_levels(id:String, amount:int):
-	add_xp(id, 0) # to initialize
-	var current_level = KarmaItem.load_by_id(id).xp_curve(karma[id])[\"level\"]
-	var current_xp    = KarmaItem.load_by_id(id).xp_curve(karma[id])[\"remain\"]
-	var target_level  = current_level - amount
-	karma.erase(id)
-	if target_level < 0:
-		return
-	add_levels(id, target_level)
-	add_xp(id, current_xp)
-	
-####################
-# INVENTORY
-####################
-		
-var items:Dictionary = {} # ID -> amount
-var equipped:Dictionary = {} # Equipment slot -> ID
+func clear_empty_karma():
+	var res = []
+	for item in karma:
+		if item.level == 0 and item.xp == 0:
+			pass
+		else:
+			res.add(item)
+	karma = res
+	"
 
-var equipment_slots = [
-	\"Head\", \"Chest\", \"Main\", \"Off\", \"Gloves\", \"Lapel\", \"Pants\", \"Shoes\", \"Neck\", 
-	\"Ring1\",\"Ring2\",
-	\"Accessory1\",\"Accessory2\",\"Accessory3\",\"Accessory4\",\"Accessory5\"
-]
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
 
-func try_equip(id:String, slot:String):
-	if !equipment_slots.has(slot):
-		printerr(\"No such slot exists: %s\" % slot)
-		return
-	if InventoryItem.load_by_id(id).equipment_slot != slot_type(slot):
-		print(\"Can't equip into this slot\")
-		return
-	unequip(slot)
-	equip(id, slot)
-	
-func equip(id:String, slot:String):
-	equipped[slot] = id
-	
-func unequip(slot:String):
-	equipped.erase(slot)
-	
-func is_equipped(id:String)->bool:
-	for slot in equipped.keys():
-		if equipped[slot] == id:
-			return true
-	return false
-	
-static func is_equippable(current_item, slot:String):
-	return current_item.equipment_slot == slot_type(slot)
+#signal item_got (item, amount)
 
-static func slot_type(slot:String)->String:
-	if [\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"0\"].has(slot[slot.length()-1]):
-		return slot_type(slot.substr(0,slot.length()-1))
-	return slot
+var inventory = []
 
-func add_item(id:String, number:int = 1, verbose=true):
-	if items.has(id):
-		items[id] += number
+func fetch_item(id:String):
+	# Loads an item by ID. If there is no such item, one is created
+	
+	for item in inventory:
+		if item.is_id(id):
+			return item
+	var n = ItemInventory.new(id)
+	inventory.append(n)
+	return n
+	
+func add_item(id:String, amount:int):
+	var item = fetch_item(id)
+	item.add_items(amount)
+	clear_empty()
+	
+func bring_up_to_amount(id:String, amount:int):
+	var item = fetch_item(id)
+	item.bring_up_to_amount(amount)
+	clear_empty()
+	
+func remove_item(id:String, amount:int):
+	var item = fetch_item(id)
+	item.remove_items(amount)
+	clear_empty()
+	
+func clear_empty():
+	var res = []
+	for item in inventory:
+		if item.amount == 0:
+			pass
+		else:
+			res.add(item)
+	inventory = res
+	
+"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Node
+
+var default_values:Dictionary = {
+	\"newborn\" : true,
+	\"ui_unlocked\": false,
+	\"00002 Picked up GOEE's note\": false
+}
+\"\"\"
+##########################
+# Room pickleables
+##########################
+
+var pickled_rooms:Dictionary = {}
+
+func pickle(room_path:NodePath, data:Dictionary):
+	#ModeController.set_mode(ModeController.EXPLORE)
+	# Room path must be to the room's .gd script, not .tscn
+	assert(data != null)
+	pickled_rooms[room_path] = data
+	
+func unpickle(room_path:NodePath, default:Dictionary):
+	if not pickled_rooms.has(room_path):
+		return default
 	else:
-		items[id] = number
-	if verbose:
-		emit_signal(\"item_got\", id, number)
-		var popup = preload(\"res://Autoload/WorldspaceHUD/ItemGet.tscn\").instance()
-		$\"/root\".add_child(popup)
-		popup.render(id, number)
-		return popup
+		return pickled_rooms[room_path]
+\"\"\"
+
+##########################
+# Regular-ass global variables
+##########################
+
+var values:Dictionary = {}
+
+func set_value(key:String, value):
+	values[key] = value
 	
-func remove_item(id:String, number:int = -1):
-	if not items.has(id):
-		printerr(\"Warning: trying to remove a nonexistent item: %s\" % id)
-		return
-	items[id] -= number
-	if items[id] <= 0 or number == -1:
-		items.erase(id)
-		var todelete = null
-		for key in equipped.keys():
-			if id == equipped.get(key):
-				todelete = key
-				break
-		if todelete != null:
-			unequip(todelete)
-	
-func has_item(id:String, number:int = 1)->bool:
-	if not items.has(id):
-		return false
-	return items[id] >= number
+func get_value(key:String, default):
+	if values.has(key):
+		return values[key]
+	else:
+		if default_values.has(key):
+			return default_values[key]
+		else:
+			return default
 		
-func _ready():
-	self.items = {
-		\"CoolHat\": 5,
-		\"FortuneCookie\": 1,
-		\"BlahBlah\": 88
-		}
-	self.equipped = {
-		\"Head\": \"CoolHat\",
-		\"Lapel\": \"ErrorItem\"
-		}
-	#connect(\"item_got\", "
+"
 
 [node name="CharacterData" type="Node"]
 script = SubResource( 1 )
+
+[node name="Karma" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="Inventory" type="Node" parent="."]
+script = SubResource( 3 )
+
+[node name="Variables" type="Node" parent="."]
+script = SubResource( 4 )

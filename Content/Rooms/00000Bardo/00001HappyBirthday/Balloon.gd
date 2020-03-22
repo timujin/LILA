@@ -1,4 +1,4 @@
-extends Activator
+extends Node
 
 func on_activate():
 	get_parent().queue_free()
