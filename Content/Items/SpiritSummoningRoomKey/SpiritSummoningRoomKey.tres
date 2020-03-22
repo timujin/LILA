@@ -14,9 +14,9 @@ description = "It opens locks"
 long_description = "It opens locks all day long"
 hint = "Use it to open a lock"
 actions = {
-"Use": "Use"
+
 }
 type = "Misc"
-equipment_slot = ""
+equipment_slot = "None"
 category = "Keys"
 countable = false
