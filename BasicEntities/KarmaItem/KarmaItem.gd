@@ -2,6 +2,7 @@ extends Resource
 
 class_name KarmaItem
 
+export(String) var id
 export(String) var title
 export(String) var description
 export(Texture) var icon

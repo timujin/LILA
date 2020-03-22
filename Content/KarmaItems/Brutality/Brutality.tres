@@ -5,7 +5,9 @@
 
 [resource]
 script = ExtResource( 2 )
+id = "Brutality"
 title = "Brutality"
 description = "Do you like hurting other people?"
 icon = ExtResource( 1 )
 category = "Capacities"
+xp_curve = "FL"

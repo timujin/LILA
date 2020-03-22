@@ -74,6 +74,7 @@ InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
 GlobalRegister="*res://Autoload/GlobalRegister.tscn"
 CharacterData="*res://Autoload/CharacterData.tscn"
+WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
 
 [display]
 

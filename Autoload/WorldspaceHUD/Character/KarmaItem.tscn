@@ -5,6 +5,20 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
+func render(karmaiinventory):
+	var species = karmaiinventory.species
+	var level   = karmaiinventory.level
+	var xp      = karmaiinventory.xp
+	var to_next = species.curve(level)
+	
+	$Icon.texture = species.icon
+	$Title.text = species.title
+	$Description.text = species.description
+	$Number.text = str(xp)
+	$ProgressBar.value = 100.0 * xp / to_next
+
+
+\"\"\"
 func render_values(icon, title, desc, amount, percentxp):
 	$Icon.texture = icon
 	$Title.text = title
@@ -29,7 +43,8 @@ func render_id(id:String):
 		render_item(item, 0)
 		
 func _ready():
-	render_id(\"Luck\")"
+	render_id(\"Luck\")
+\"\"\""
 
 [node name="KarmaItem" type="Control"]
 anchor_right = 1.0

@@ -122,7 +122,7 @@ func _process(delta):
 		direction *= -1
 		accum -= period"
 
-[node name="Room" instance=ExtResource( 1 )]
+[node name="Room" index="0" instance=ExtResource( 1 )]
 roomName = "Birthday room"
 roomID = "00000HappyBirthday"
 
@@ -166,7 +166,6 @@ autoplay = "fadeout"
 anims/fadeout = SubResource( 3 )
 
 [node name="Cake" parent="." index="4" instance=ExtResource( 4 )]
-editor/display_folded = true
 position = Vector2( 767.98, 731.493 )
 
 [node name="Sprite" parent="Cake" index="0"]

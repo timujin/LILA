@@ -12,8 +12,9 @@ export(int) var xp
 func _init(id):
 	var item = GlobalRegister.karma(id)
 	if item == null:
+		printerr("Not found")
 		return null
-	self.species = species
+	self.species = item
 	self.level = 0
 	self.xp    = 0
 	

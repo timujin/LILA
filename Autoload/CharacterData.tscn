@@ -19,6 +19,10 @@ signal karma_got (karma, xp)
 
 var karma = []
 
+func _ready():
+	add_xp(\"BlessedByTheGoddess\", 17)
+	add_xp(\"Brutality\", 2)
+
 func fetch_karma(id:String):
 	# Loads an item by ID. If there is no such karma item, one is created
 	
@@ -67,7 +71,7 @@ func clear_empty_karma():
 		if item.level == 0 and item.xp == 0:
 			pass
 		else:
-			res.add(item)
+			res.append(item)
 	karma = res
 	"
 

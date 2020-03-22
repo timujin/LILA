@@ -4,14 +4,21 @@
 script/source = "extends Button
 
 var script = null
+var item = null
 
-func attach(text:String, script):
+func attach(text:String, item):
 	self.text = text
-	self.script = script
+	self.item = item
+	self.script = item.actions[text]
 	connect(\"pressed\", self, \"run\")
 
 func run():
-	self.script.run()"
+	print(self.script)
+	print(self.script.has_method(\"run\"))
+	#if self.script.has_method(\"run\"): !!! returns false all the time even when the method is there
+	self.script.run(item, script)
+	#else:
+	#	printerr(\"Script not attached\")"
 
 [node name="Button" type="Button"]
 margin_left = 173.0

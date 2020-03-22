@@ -86,3 +86,4 @@ visible = false
 [node name="Character" parent="." instance=ExtResource( 2 )]
 visible = false
 [connection signal="pressed" from="HBoxContainer/Inventory" to="Inventory" method="unhide"]
+[connection signal="pressed" from="HBoxContainer/Character" to="Character" method="unhide"]

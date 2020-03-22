@@ -72,7 +72,7 @@ func render(inventoryitem):
 			for action in actions:
 				var btn = preload(\"res://Autoload/WorldspaceHUD/Inventory/ActionButton.tscn\").instance()
 				$Buttons.add_child(btn)
-				btn.attach(action, item.actions[action])
+				btn.attach(action, item)
 				
 		
 	
@@ -90,7 +90,7 @@ func clear():
 size = 21
 font_data = ExtResource( 2 )
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends VBoxContainer
 
 signal item_selected
@@ -287,7 +287,7 @@ size_flags_stretch_ratio = 11.6
 [node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
 margin_right = 1035.0
 size_flags_horizontal = 3
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="Button" type="Button" parent="Modal"]
 anchor_left = 1.0

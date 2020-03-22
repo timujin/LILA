@@ -1,20 +1,41 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Autoload/WorldspaceHUD/KarmaCategoryDelimeter.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Autoload/WorldspaceHUD/KarmaItem.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 
 [sub_resource type="GDScript" id=1]
+script/source = "extends Panel
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+func hide():
+	visible = false
+	
+func unhide():
+	visible = true
+"
+
+[sub_resource type="GDScript" id=2]
 script/source = "extends VBoxContainer
 
-onready var category_renderer = preload(\"res://Autoload/WorldspaceHUD/KarmaCategory.tscn\")
-onready var delimeter = preload(\"res://Autoload/WorldspaceHUD/KarmaCategoryDelimeter.tscn\")
+onready var category_renderer = preload(\"res://Autoload/WorldspaceHUD/Character/KarmaCategory.tscn\")
+onready var delimeter = preload(\"res://Autoload/WorldspaceHUD/Character/KarmaCategoryDelimeter.tscn\")
 
 func render():
 	clear()
-	var karma = CharacterData.karma
+	var karma = CharacterData.karma.karma
 	var categories = {}
-	for key in karma.keys():
-		var category = KarmaItem.load_by_id(key).category
+	for item in karma:
+		var category = item.species.category
 		categories[category] = 0 # using dictionary as a non-repeating set
 	categories = categories.keys()
 	categories.sort()
@@ -39,54 +60,12 @@ func _on_KarmaRenderer_visibility_changed():
 	render()
 "
 
-[sub_resource type="Gradient" id=2]
-offsets = PoolRealArray( 0.0366795, 0.588803, 0.915058, 0.992278, 1 )
-colors = PoolColorArray( 0.838989, 0.838989, 0.838989, 1, 0.930502, 0.930502, 0.930502, 1, 0, 0, 0, 1, 0.0385415, 0.0385415, 0.0385415, 1, 0.997716, 0.997716, 0.997716, 1 )
-
-[sub_resource type="GradientTexture" id=3]
-gradient = SubResource( 2 )
-
-[sub_resource type="GDScript" id=4]
-script/source = "extends TextureRect
-
-func render_category(category:String):
-	$Label.text = category
-	
-	"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Control
-
-func render_values(icon, title, desc, amount, percentxp):
-	$Icon.texture = icon
-	$Title.text = title
-	$Description.text = desc
-	$Number.text = str(amount)
-	$ProgressBar.value = percentxp
-	
-func render_item(item, totalxp):
-	var icon = item.icon
-	var title = item.title
-	var description = item.description
-	var amount = item.xp_curve(totalxp)[\"level\"]
-	var remain = item.xp_curve(totalxp)[\"remain\"]
-	var tonext = item.xp_curve(totalxp)[\"to_next\"]
-	render_values(icon, title, description, amount, 100.0 * remain / tonext)
-	
-func render_id(id:String):
-	var item = KarmaItem.load_by_id(id)
-	if $\"/root/CharacterData\".karma.has(id):
-		render_item(item, $\"/root/CharacterData\".karma[id])
-	else:
-		render_item(item, 0)
-		
-func _ready():
-	render_id(\"Luck\")"
-
 [node name="Character" type="Panel"]
 self_modulate = Color( 1, 1, 1, 0.482353 )
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = SubResource( 1 )
 
 [node name="Panel" type="Panel" parent="."]
 anchor_right = 1.0
@@ -120,21 +99,21 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Karma" type="Button" parent="Panel/VBoxContainer/Menu"]
-margin_right = 52.0
+margin_right = 43.0
 margin_bottom = 42.0
-text = "Karma"
+text = "Does"
 
 [node name="Perks" type="Button" parent="Panel/VBoxContainer/Menu"]
-margin_left = 56.0
-margin_right = 103.0
+margin_left = 47.0
+margin_right = 78.0
 margin_bottom = 42.0
-text = "Perks"
+text = "Not"
 
 [node name="Abilities" type="Button" parent="Panel/VBoxContainer/Menu"]
-margin_left = 107.0
-margin_right = 172.0
+margin_left = 82.0
+margin_right = 128.0
 margin_bottom = 42.0
-text = "Abilities"
+text = "Work"
 
 [node name="Content" type="Panel" parent="Panel/VBoxContainer"]
 margin_top = 46.0
@@ -153,59 +132,6 @@ margin_right = -38.0
 margin_bottom = -25.0
 
 [node name="KarmaRenderer" type="VBoxContainer" parent="Panel/VBoxContainer/Content/ScrollContainer"]
-margin_right = 1321.0
-margin_bottom = 330.0
-script = SubResource( 1 )
-
-[node name="Delimeter" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer" instance=ExtResource( 1 )]
-margin_top = 0.0
-margin_bottom = 20.97
-texture = SubResource( 3 )
-script = SubResource( 4 )
-
-[node name="Label" type="Label" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer"]
-margin_top = 24.0
-margin_right = 1321.0
-margin_bottom = 38.0
-text = "fdssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssdffdfs"
-
-[node name="GridContainer2" type="GridContainer" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer"]
-margin_top = 42.0
-margin_right = 1321.0
-margin_bottom = 184.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 2
-
-[node name="KarmaItem" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer/GridContainer2" instance=ExtResource( 2 )]
-anchor_right = 0.0
-margin_right = 650.0
-script = SubResource( 5 )
-
-[node name="KarmaItem2" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer/GridContainer2" instance=ExtResource( 2 )]
-anchor_right = 0.0
-margin_left = 654.0
-margin_right = 1304.0
-script = SubResource( 5 )
-
-[node name="GridContainer3" type="GridContainer" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer"]
-editor/display_folded = true
-margin_top = 188.0
-margin_right = 1321.0
-margin_bottom = 330.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-columns = 2
-
-[node name="KarmaItem" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer/GridContainer3" instance=ExtResource( 2 )]
-anchor_right = 0.0
-margin_right = 650.0
-script = SubResource( 5 )
-
-[node name="KarmaItem2" parent="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer/GridContainer3" instance=ExtResource( 2 )]
-anchor_right = 0.0
-margin_left = 654.0
-margin_right = 1304.0
-script = SubResource( 5 )
+script = SubResource( 2 )
 [connection signal="pressed" from="Panel/Close" to="." method="set_visible" binds= [ false ]]
 [connection signal="visibility_changed" from="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer" to="Panel/VBoxContainer/Content/ScrollContainer/KarmaRenderer" method="_on_KarmaRenderer_visibility_changed"]

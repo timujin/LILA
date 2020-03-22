@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource( 2 )
+id = "BlessedByTheGoddess"
 title = "Blessed by the Goddess"
 description = "Is she on your side, or are you on hers?"
 icon = ExtResource( 1 )

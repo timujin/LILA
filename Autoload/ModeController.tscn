@@ -43,25 +43,28 @@ func disable_scrolling():
 ############
 
 var holding_item = null
+var holding_action = null
 var holding_callback = null
 
 func get_is_player_holding_item():
 	return (holding_item != null)
 	
-func hold(item, callback_str):
+func hold(item, script, callback_str):
 	holding_item = item
+	holding_action = script
 	holding_callback = callback_str
 	Input.set_custom_mouse_cursor(item.icon)
 	Input.set_custom_mouse_cursor(item.icon, Input.CURSOR_POINTING_HAND)
 	
 func apply_item(obj):
 	if get_is_player_holding_item():
-		holding_item.iscript.call(holding_callback, obj)
+		holding_action.call(holding_callback, obj)
 	else:
 		printerr(\"No item held!\")
 
 func drop_held_item():
 	holding_item = null
+	holding_action = null
 	holding_callback = null
 	Input.set_custom_mouse_cursor(null)
 	Input.set_custom_mouse_cursor(null, Input.CURSOR_POINTING_HAND)
