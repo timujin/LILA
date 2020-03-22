@@ -17,8 +17,11 @@ var itemid = null
 var amount := 1
 
 func render(itemid, amount:int = -1):
+	return
+	\"\"\"
 	self.itemid = itemid
 	return render_obj(InventoryItem.load_by_id(itemid))
+	\"\"\"
 
 func render_obj(item, amount:int = -1)->void:
 	self.item = item

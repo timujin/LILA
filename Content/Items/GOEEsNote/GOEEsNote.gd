@@ -1,6 +1,8 @@
 extends ItemAction
 
-static func run(item:InventoryItem):
+static func run():
+	print("RUN INSIDE")
+	"""
 	var VN
 	#tree.get_root().get_node("/root/WSHUD/Inventory").hide()
 	printerr("TODO: hide inventory")
@@ -9,4 +11,5 @@ static func run(item:InventoryItem):
 	RoomSwitcher.get_tree().get_root().get_node("/root/Room").add_child(VN)
 	yield(VN.run(), "completed")
 	VN.queue_free()
-	ModeController.is_world_scrollable = true
+	ModeController.is_world_scrollable = tru
+	"""

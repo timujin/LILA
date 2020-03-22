@@ -12,7 +12,7 @@ func _init(id):
 	var item = GlobalRegister.item(id)
 	if item == null:
 		return null
-	self.species = species
+	self.species = item
 	self.amount = 0
 	
 func is_id(id:String):

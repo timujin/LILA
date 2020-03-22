@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=2]
@@ -7,12 +7,14 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Control
 
-var selected_item = \"CoolHat\"
+var selected_item = null
 
+onready var infocontainer = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
+onready var item_list = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"
 
 func render():
-	$\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\".render(selected_item, 1)
-	$\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\".render()
+	infocontainer.render(selected_item)
+	item_list.render()
 
 func unhide():
 	visible = true
@@ -22,51 +24,49 @@ func hide():
 	visible = false
 
 func _ready():
-	hide()
-	$\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer\"\\
-	.connect(\"item_selected\", self, \"on_item_selected\")
+	#hide()
+	render()
+	item_list.connect(\"item_selected\", self, \"on_item_selected\")
 	
-func on_item_selected(itemid):
-	selected_item = itemid
-	$\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\".render(selected_item, CharacterData.items[selected_item])
+func on_item_selected(item):
+	selected_item = item
+	infocontainer.render(item)
 	
-		
+\"\"\"
 func on_using_item(action:String):
 	print(selected_item)
 	if selected_item == null:
 		printerr(\"Trying to use an unselected item!\")
 		return
 	InventoryItem.load_by_id(selected_item).iscript.use(action, InventoryItem.load_by_id(selected_item), get_tree())
-	"
+\"\"\""
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends VBoxContainer
 
-onready var butt1 = $\"Buttons/Button\"
-onready var butt2 = $\"Buttons/Button2\"
-onready var butt3 = $\"Buttons/Button3\"
-
-func render(itemid, amount:int):
-	if itemid == null:
-		clear()
+func render(inventoryitem):
+	clear()
+	#inventoryitem = load(\"res://Content/Items/GOEEsNote/GOEEsNote.tres\")
+	#inventoryitem = load(\"res://Autoload/WorldspaceHUD/Inventory/test.tres\")
+	inventoryitem = load(\"res://BasicEntities/Item/ItemInventory.gd\").new(\"GOEEsNote\")
+	if inventoryitem == null:
 		return
-	var item = InventoryItem.load_by_id(itemid)
+		
+	var item = inventoryitem.species
+	var amount = inventoryitem.amount
 	
-	$\"ItemName\".text = item.name
+	$\"ItemName\".text = item.title
 	$\"ItemDescription\".text = item.description
 	$\"ItemHint\".text = item.hint
 	
 	if item.actions != null:
 		var actions = item.actions.keys()
 		if actions.size() > 0:
-			butt1.text = actions[0]
-			butt1.visible = true
-		if actions.size() > 1:
-			butt2.text = actions[1]
-			butt2.visible = true
-		if actions.size() > 2:
-			butt3.text = actions[2]
-			butt3.visible = true
+			for action in actions:
+				var btn = preload(\"res://Autoload/WorldspaceHUD/Inventory/ActionButton.tscn\").instance()
+				$Buttons.add_child(btn)
+				btn.attach(action, item.actions[action])
+				
 		
 	
 		
@@ -75,34 +75,13 @@ func clear():
 	$\"ItemDescription\".text = \"\"
 	$\"ItemHint\".text = \"\"
 	
-	butt1.visible = false
-	butt2.visible = false
-	butt3.visible = false
+	for child in $Buttons.get_children():
+		child.queue_free()
 	"
 
 [sub_resource type="DynamicFont" id=3]
 size = 21
 font_data = ExtResource( 2 )
-
-[sub_resource type="GDScript" id=4]
-script/source = "extends Button
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_Button_pressed():
-	$\"/root/WSHUD/Inventory\".on_using_item(self.text)
-"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends VBoxContainer
@@ -110,6 +89,8 @@ script/source = "extends VBoxContainer
 signal item_selected
 
 func render():
+	return
+	\"\"\"
 	clear()
 	var itemids = CharacterData.items.keys()
 	
@@ -119,6 +100,7 @@ func render():
 		add_child(renderer)
 		renderer.render(itemid, CharacterData.items[itemid])
 		renderer.connect_me(self, \"on_item_selected\")
+	\"\"\"
 	
 func clear():
 	for child in get_children():
@@ -166,18 +148,16 @@ margin_bottom = 385.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Left/Panel"]
+[node name="Label" type="Label" parent="Modal/Window/HBoxContainer/Left/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Panel/ScrollContainer"]
-margin_right = 398.0
-margin_bottom = 385.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+text = "Equipment slots not implemented yet.
+Maybe there even wouldn't be equippable 
+items."
+align = 1
+valign = 1
 
 [node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
-editor/display_folded = true
 margin_top = 389.0
 margin_right = 398.0
 margin_bottom = 775.0
@@ -187,69 +167,55 @@ size_flags_vertical = 3
 editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 15.0
+margin_right = -15.0
+margin_bottom = -15.0
 script = SubResource( 2 )
 
-[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_right = 398.0
-margin_bottom = 25.0
+[node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
+editor/display_folded = true
+margin_right = 368.0
+margin_bottom = 36.61
+rect_min_size = Vector2( 0, 36.61 )
+
+[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 custom_fonts/font = SubResource( 3 )
 text = "INFO"
 align = 1
 valign = 1
 
 [node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 29.0
-margin_right = 398.0
-margin_bottom = 48.0
+margin_top = 40.0
+margin_right = 368.0
+margin_bottom = 59.0
 text = "<ITEM NAME>"
 align = 1
 valign = 1
 
 [node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 52.0
-margin_right = 398.0
-margin_bottom = 93.0
+margin_top = 63.0
+margin_right = 368.0
+margin_bottom = 104.0
 text = "Item description.
 May be multiline"
 align = 1
 
 [node name="ItemHint" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 97.0
-margin_right = 398.0
-margin_bottom = 138.0
+margin_top = 108.0
+margin_right = 368.0
+margin_bottom = 149.0
 text = "Item hint
 Increases your nothing by zero"
 align = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 142.0
-margin_right = 398.0
-margin_bottom = 142.0
+margin_top = 153.0
+margin_right = 368.0
+margin_bottom = 153.0
 alignment = 1
-
-[node name="Button" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
-margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 4 )
-
-[node name="Button2" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
-margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 4 )
-
-[node name="Button3" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons"]
-visible = false
-margin_left = 173.0
-margin_right = 221.0
-margin_bottom = 20.0
-text = "Apply"
-script = SubResource( 4 )
 
 [node name="Right" type="PanelContainer" parent="Modal/Window/HBoxContainer"]
 margin_left = 402.0
@@ -326,9 +292,6 @@ margin_right = -56.4758
 margin_bottom = 100.426
 icon = ExtResource( 3 )
 [connection signal="visibility_changed" from="." to="." method="_on_Inventory_visibility_changed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button" method="_on_Button_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button2" method="_on_Button_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" to="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Buttons/Button3" method="_on_Button_pressed"]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Equipment" to="." method="filter" binds= [ "Equipment" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Consumables" to="." method="filter" binds= [ "Consumable" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Tools" to="." method="filter" binds= [ "Tool" ]]

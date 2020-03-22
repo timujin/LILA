@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+var script = null
+
+func attach(text:String, script):
+	self.text = text
+	self.script = script
+	connect(\"pressed\", self, \"run\")
+
+func run():
+	self.script.run()"
+
+[node name="Button" type="Button"]
+margin_left = 173.0
+margin_right = 221.0
+margin_bottom = 20.0
+text = "Apply"
+script = SubResource( 1 )
