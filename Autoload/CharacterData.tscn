@@ -78,6 +78,10 @@ script/source = "extends Node
 
 var inventory = []
 
+func _ready():
+	add_item(\"GOEEsNote\", 1)
+	add_item(\"HappyBirthdayDoorKey\", 5)
+
 func fetch_item(id:String):
 	# Loads an item by ID. If there is no such item, one is created
 	
@@ -109,7 +113,7 @@ func clear_empty():
 		if item.amount == 0:
 			pass
 		else:
-			res.add(item)
+			res.append(item)
 	inventory = res
 	
 "

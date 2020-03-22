@@ -28,27 +28,34 @@ func _ready():
 	render()
 	item_list.connect(\"item_selected\", self, \"on_item_selected\")
 	
+\"\"\"
 func on_item_selected(item):
 	selected_item = item
 	infocontainer.render(item)
 	
-\"\"\"
 func on_using_item(action:String):
 	print(selected_item)
 	if selected_item == null:
 		printerr(\"Trying to use an unselected item!\")
 		return
 	InventoryItem.load_by_id(selected_item).iscript.use(action, InventoryItem.load_by_id(selected_item), get_tree())
-\"\"\""
+\"\"\"
+
+func _on_VBoxContainer_item_selected(item):
+	print(item)
+	selected_item = item
+	infocontainer.render(item)
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends VBoxContainer
 
 func render(inventoryitem):
+	#print(inventoryitem)
 	clear()
 	#inventoryitem = load(\"res://Content/Items/GOEEsNote/GOEEsNote.tres\")
 	#inventoryitem = load(\"res://Autoload/WorldspaceHUD/Inventory/test.tres\")
-	inventoryitem = load(\"res://BasicEntities/Item/ItemInventory.gd\").new(\"GOEEsNote\")
+	#inventoryitem = load(\"res://BasicEntities/Item/ItemInventory.gd\").new(\"GOEEsNote\")
 	if inventoryitem == null:
 		return
 		
@@ -89,25 +96,23 @@ script/source = "extends VBoxContainer
 signal item_selected
 
 func render():
-	return
-	\"\"\"
 	clear()
-	var itemids = CharacterData.items.keys()
 	
 	var item_renderer = preload(\"res://Autoload/WorldspaceHUD/Inventory/ItemRenderUI.tscn\")
-	for itemid in itemids:
+	for item in CharacterData.inventory.inventory:
 		var renderer = item_renderer.instance()
 		add_child(renderer)
-		renderer.render(itemid, CharacterData.items[itemid])
+		renderer.render(item)
 		renderer.connect_me(self, \"on_item_selected\")
-	\"\"\"
+	
+	return
 	
 func clear():
 	for child in get_children():
 		child.queue_free()
 		
-func on_item_selected(itemid):
-	emit_signal(\"item_selected\", itemid)"
+func on_item_selected(item):
+	emit_signal(\"item_selected\", item)"
 
 [node name="Inventory" type="Control"]
 anchor_right = 1.0
@@ -143,6 +148,7 @@ margin_bottom = 775.0
 size_flags_horizontal = 3
 
 [node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
+editor/display_folded = true
 margin_right = 398.0
 margin_bottom = 385.0
 size_flags_horizontal = 3
@@ -236,33 +242,33 @@ margin_bottom = 60.0
 size_flags_vertical = 3
 
 [node name="Equipment" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_right = 106.0
+margin_right = 38.0
 margin_bottom = 60.0
-text = "Equipment"
+text = "This"
 
 [node name="Consumables" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 110.0
-margin_right = 239.0
+margin_left = 42.0
+margin_right = 85.0
 margin_bottom = 60.0
-text = "Consumables"
+text = "Does"
 
 [node name="Tools" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 243.0
-margin_right = 302.0
+margin_left = 89.0
+margin_right = 120.0
 margin_bottom = 60.0
-text = "Tools"
+text = "Not"
 
 [node name="Misc" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 306.0
-margin_right = 360.0
+margin_left = 124.0
+margin_right = 170.0
 margin_bottom = 60.0
-text = "Misc"
+text = "Work"
 
 [node name="All" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 364.0
-margin_right = 399.0
+margin_left = 174.0
+margin_right = 203.0
 margin_bottom = 60.0
-text = "All"
+text = "Yet"
 
 [node name="Delimeter" type="Panel" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
 margin_top = 64.0
@@ -297,4 +303,5 @@ icon = ExtResource( 3 )
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Tools" to="." method="filter" binds= [ "Tool" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Misc" to="." method="filter" binds= [ "Misc" ]]
 [connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/All" to="." method="filter" binds= [ "All" ]]
+[connection signal="item_selected" from="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/VBoxContainer" to="." method="_on_VBoxContainer_item_selected"]
 [connection signal="pressed" from="Modal/Button" to="." method="hide"]

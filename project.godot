@@ -73,6 +73,7 @@ ModeController="*res://Autoload/ModeController.tscn"
 InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
 DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
 GlobalRegister="*res://Autoload/GlobalRegister.tscn"
+CharacterData="*res://Autoload/CharacterData.tscn"
 
 [display]
 
