@@ -8,20 +8,15 @@ script/source = "extends CanvasLayer
 
 signal dismissed
 
-func render(id:String, number:int = -1):
-	return
-	var item = null #InventoryItem.load_by_id(id)
-	$\"Modal/Panel/Name\".text = item.name
-	$\"Modal/Panel/Desc\".text = item.description
-	$\"Modal/Panel/Icon\".texture = item.icon
-	if number == -1:
+func render(inventoryitem):
+	$\"Modal/Panel/Name\".text = inventoryitem.species.title
+	$\"Modal/Panel/Desc\".text = inventoryitem.species.description
+	$\"Modal/Panel/Icon\".texture = inventoryitem.species.icon
+	if inventoryitem.amount == -1:
 		$\"Modal/Panel/Count\".visible = false
 	else:
 		$\"Modal/Panel/Count\".visible = true
-		$\"Modal/Panel/Count\".text = \"x\" + str(number)
-		
-func _ready():
-	render(\"GOEEsNote\", 77)
+		$\"Modal/Panel/Count\".text = \"x\" + str(inventoryitem.amount)
 
 func _on_Button_pressed():
 	emit_signal(\"dismissed\")
@@ -33,7 +28,7 @@ size = 26
 font_data = ExtResource( 1 )
 
 [node name="ItemGet" type="CanvasLayer"]
-layer = 62
+layer = 100
 script = SubResource( 1 )
 
 [node name="Modal" type="TextureRect" parent="."]

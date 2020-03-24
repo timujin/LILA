@@ -12,12 +12,28 @@ script/source = "extends CanvasLayer
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	print(\"WSHUF ready\")
 	ModeController.connect(\"ui_reset\", self, \"reset\")
+	var item = CharacterData.karma.karma[0]
+	karmaget(item)
+	
 	
 func reset():
 	$Unlockeds.update()
 	$Inventory.hide()
-	$Character.hide()"
+	$Character.hide()
+	
+func itemget(item):
+	var prototype = preload(\"res://Autoload/WorldspaceHUD/ItemGet.tscn\")
+	var get = prototype.instance()
+	add_child(get)
+	get.render(item)
+	
+func karmaget(item):
+	var prototype = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\")
+	var get = prototype.instance()
+	add_child(get)
+	get.render(item)"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -39,6 +55,7 @@ func update():
 	$\"../HBoxContainer/Menu\".visible = menu_unlocked"
 
 [node name="WSHUD" type="CanvasLayer"]
+layer = 20
 script = SubResource( 1 )
 
 [node name="Unlockeds" type="Node" parent="."]

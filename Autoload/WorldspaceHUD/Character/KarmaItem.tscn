@@ -14,7 +14,7 @@ func render(karmaiinventory):
 	$Icon.texture = species.icon
 	$Title.text = species.title
 	$Description.text = species.description
-	$Number.text = str(xp)
+	$Number.text = str(level)
 	$ProgressBar.value = 100.0 * xp / to_next
 
 

@@ -100,6 +100,7 @@ func add_item(id:String, amount:int):
 	var item = fetch_item(id)
 	item.add_items(amount)
 	clear_empty()
+	return item
 	
 func bring_up_to_amount(id:String, amount:int):
 	var item = fetch_item(id)

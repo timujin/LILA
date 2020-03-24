@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=2]
@@ -8,15 +8,21 @@ script/source = "extends CanvasLayer
 
 signal dismissed
 
-func render(id:String, xp:int):
-	var item = KarmaItem.load_by_id(id)
-	$\"Modal/Panel/Name\".text = item.title
-	$\"Modal/Panel/Desc\".text = item.description
-	$\"Modal/Panel/Icon\".texture = item.icon
-	$\"Modal/Panel/Count\".text = str(xp) + \"xp\"
+func render(karmainventory):
+	var species = karmainventory.species
+	var level   = karmainventory.level
+	var xp      = karmainventory.xp
+	var to_next = species.curve(level)
+	
+	$\"Modal/Panel/Icon\".texture = species.icon
+	$\"Modal/Panel/Name\".text = species.title
+	$\"Modal/Panel/Desc\".text = species.description
+	$\"Modal/Panel/Level\".text = str(level)
+	$\"Modal/Panel/ProgressBar\".value = 100.0 * xp / to_next
+
 		
 func _ready():
-	render(\"GOEEsNote\", 77)
+	pass #render(\"GOEEsNote\", 77)
 
 func _on_Button_pressed():
 	emit_signal(\"dismissed\")
@@ -27,7 +33,11 @@ func _on_Button_pressed():
 size = 26
 font_data = ExtResource( 1 )
 
-[node name="ItemGet" type="CanvasLayer"]
+[sub_resource type="DynamicFont" id=3]
+size = 70
+font_data = ExtResource( 1 )
+
+[node name="KarmaGet" type="CanvasLayer"]
 layer = 62
 script = SubResource( 1 )
 
@@ -61,29 +71,19 @@ margin_top = 78.0
 margin_right = -24.0
 margin_bottom = 119.0
 custom_fonts/font = SubResource( 2 )
-text = "[Item name goes here]"
+text = "[Karma name goes here]"
 align = 1
 valign = 1
 
 [node name="Desc" type="Label" parent="Modal/Panel"]
 anchor_right = 1.0
 margin_left = 185.67
-margin_top = 143.137
+margin_top = 105.905
 margin_right = -22.3298
-margin_bottom = 184.137
+margin_bottom = 146.905
 custom_fonts/font = SubResource( 2 )
-text = "[Item short desc goes here]"
+text = "[Karma short desc goes here]"
 align = 1
-valign = 1
-
-[node name="Count" type="Label" parent="Modal/Panel"]
-anchor_right = 1.0
-margin_left = 162.0
-margin_top = 195.0
-margin_right = -481.0
-margin_bottom = 236.0
-custom_fonts/font = SubResource( 2 )
-text = "x99"
 valign = 1
 
 [node name="Icon" type="TextureRect" parent="Modal/Panel"]
@@ -96,12 +96,29 @@ margin_bottom = 62.3403
 texture = ExtResource( 2 )
 expand = true
 
+[node name="ProgressBar" type="ProgressBar" parent="Modal/Panel"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 269.0
+margin_top = 17.5
+margin_right = -116.0
+margin_bottom = 58.5
+
+[node name="Level" type="Label" parent="Modal/Panel"]
+margin_left = 172.0
+margin_top = 97.0
+margin_right = 249.0
+margin_bottom = 194.0
+custom_fonts/font = SubResource( 3 )
+text = "5"
+
 [node name="Button" type="Button" parent="Modal/Panel"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -63.3615
+margin_left = -63.3616
 margin_top = 11.6913
-margin_right = -13.3615
+margin_right = -13.3616
 margin_bottom = 64.6913
 text = "X"
 [connection signal="pressed" from="Modal/Panel/Button" to="." method="_on_Button_pressed"]
