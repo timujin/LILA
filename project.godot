@@ -43,11 +43,6 @@ _global_script_classes=[ {
 "class": "KarmaItem",
 "language": "GDScript",
 "path": "res://BasicEntities/KarmaItem/KarmaItem.gd"
-}, {
-"base": "Resource",
-"class": "SaveGame",
-"language": "GDScript",
-"path": "res://Autoload/DeveloperConsole/SaveGame.gd"
 } ]
 _global_script_class_icons={
 "BasePickler": "",
@@ -56,8 +51,7 @@ _global_script_class_icons={
 "ItemAction": "",
 "ItemInventory": "",
 "KarmaInventory": "",
-"KarmaItem": "",
-"SaveGame": ""
+"KarmaItem": ""
 }
 
 [application]

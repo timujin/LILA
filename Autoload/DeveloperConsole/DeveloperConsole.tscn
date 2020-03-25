@@ -1,11 +1,12 @@
-[gd_scene load_steps=4 format=2]
-
-[ext_resource path="res://new_resource.tres" type="Resource" id=1]
+[gd_scene load_steps=3 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
 signal skip_cutscene
+
+var history = []
+var history_position = 0
 
 var ui_console_pressed = false
 func _process(delta):
@@ -19,6 +20,20 @@ func _process(delta):
 	elif ui_console_pressed:
 		ui_console_pressed = false
 	## done once when the key is released
+	
+func _input(event):
+	if event.is_action_pressed(\"ui_up\"):
+		if history_position >= history.size():
+			return
+		$Modal/LineEdit.text = history[history_position]
+		#$Modal/LineEdit.caret_position = $Modal/LineEdit.text.length()-1
+		history_position += 1
+	if event.is_action_pressed(\"ui_down\"):
+		if history_position == 0:
+			return
+		history_position -= 1
+		$Modal/LineEdit.text = history[history_position]
+		#$Modal/LineEdit.caret_position = $Modal/LineEdit.text.length()-1
 	
 var is_console_open = false
 
@@ -34,10 +49,13 @@ func open_console():
 	is_console_open = true
 	$Modal.visible = true
 	$Modal/LineEdit.grab_focus()
+	$Modal/LineEdit.clear()
 	get_tree().paused = true
 
 func _on_LineEdit_text_entered(new_text):
 	echo(\"> \"+new_text)
+	history.push_front(new_text)
+	history_position = 0
 	$Modal/LineEdit.clear()
 	$Interpreter.interpret(new_text)
 
@@ -74,8 +92,6 @@ func interpret(input:String):
 	var command = parsed[0]
 	parsed.remove(0)
 	match command:
-		\"save\": gsave(parsed)
-		\"load\": gload()
 		\"warp\": warp(parsed)
 		\"skip\": skip()
 		\"win\" : win()
@@ -87,6 +103,9 @@ func interpret(input:String):
 		_     : echoerr(\"Command not found: \"+command)
 		
 func warp(args):
+	echoerr(\"Not implemeted yet\")
+	return
+	
 	if $\"/root/ModeController\".is_player_controllable == false:
 		echowarn(\"Trying to warp during a cutscene or an open dialog! This may cause unintended and undefined behaviour\")
 	if args.size() == 1:
@@ -142,6 +161,8 @@ func print_karma():
 export(Resource) var test_sg
 	
 func gsave(parsed):
+	return
+	\"\"\"
 	var i = parsed[0]
 	var save_game = test_sg # load(\"res://Autoload/DeveloperConsole/SaveGame.gd\").new()
 	#save_game.data = i
@@ -154,8 +175,11 @@ func gsave(parsed):
 	var error : int = ResourceSaver.save(save_path, save_game)
 	if error != OK:
 		print('There was an issue writing the save to %s: %s' % [save_path, error])
+	\"\"\"
 		
 func gload():
+	return
+	\"\"\"
 	var save_file_path : String = \"user://debug/save\".plus_file(\"save.tres\")
 	var file : File = File.new()
 	if not file.file_exists(save_file_path):
@@ -173,11 +197,12 @@ func gload():
 	
 	print(save_game)
 	print(save_game.data)
-	echo(save_game.data)"
+	echo(save_game.data)
+	\"\"\""
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2
-layer = 100
+layer = 125
 script = SubResource( 1 )
 
 [node name="Modal" type="ColorRect" parent="."]
@@ -210,5 +235,4 @@ margin_bottom = -34.0
 
 [node name="Interpreter" type="Node" parent="."]
 script = SubResource( 2 )
-test_sg = ExtResource( 1 )
 [connection signal="text_entered" from="Modal/LineEdit" to="." method="_on_LineEdit_text_entered"]

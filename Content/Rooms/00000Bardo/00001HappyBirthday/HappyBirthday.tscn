@@ -62,7 +62,7 @@ tracks/1/keys = {
 script/source = "extends Node
 
 func on_activate():
-	$\"/root/CharacterData\".add_item(\"SpiritSummoningRoomKey\")"
+	WSHUD.itemget(CharacterData.inventory.add_item(\"HappyBirthdayDoorKey\", 1))"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends Node
