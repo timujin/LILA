@@ -24,6 +24,7 @@ func _gui_input(event):
 		return
 	else:
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		
 	if not event is InputEventMouseButton:
 		return
 	if event.button_index != BUTTON_LEFT or not event.pressed:
@@ -47,9 +48,30 @@ func blurb(text:String):
 		printerr(\"No blurb point set!\")
 	else:
 		$\"../BlurbPoint\".blurb(text)
-        
+		
 func _ready():
-    mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND"
+    mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+
+		
+var floatie = null
+func _on_ClickArea_mouse_entered():
+	print(\"entered\")
+	if floatie == null:
+		floatie = preload(\"res://Autoload/WorldspaceHUD/Floatie.tscn\").instance()
+		add_child(floatie)
+		if ActivatorName == null:
+			floatie.display(\"[no name]\")
+		else:
+			floatie.display(ActivatorName)
+
+
+func _on_ClickArea_mouse_exited():
+	#return
+	print(\"exited\")
+	if floatie != null:
+		floatie.queue_free()
+		floatie = null
+"
 
 [node name="BaseObject" type="Node2D"]
 
@@ -69,4 +91,5 @@ mouse_default_cursor_shape = 2
 script = SubResource( 2 )
 
 [node name="Activator" type="Node" parent="."]
-[connection signal="gui_input" from="ClickArea" to="ClickArea" method="_on_ClickArea_gui_input"]
+[connection signal="mouse_entered" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_entered"]
+[connection signal="mouse_exited" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_exited"]
