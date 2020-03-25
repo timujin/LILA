@@ -49,13 +49,17 @@ func r(key:String):
 	if rooms.has(key):
 		return rooms[key]
 	else:
-		return null
+		Global.set_value(\"attempted_load_room\", key)
+		return r(\"FFFFFDogroom\")
 
 var rooms = {
 	# Tutorial phase
 	\"00000BirthCorridor\": \"res://Content/Rooms/00000Bardo/00000BirthCorridor/BirthCorridor.tscn\",
-	\"00000HappyBirthday\": \"res://Content/Rooms/00000Bardo/00001HappyBirthday/HappyBirthday.tscn\"
+	\"00000HappyBirthday\": \"res://Content/Rooms/00000Bardo/00001HappyBirthday/HappyBirthday.tscn\",
 	
+	
+	# Technical rooms
+	\"FFFFFDogroom\": \"res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn\"
 	}"
 
 [node name="GlobalRegister" type="Node"]

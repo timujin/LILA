@@ -69,6 +69,7 @@ DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
 GlobalRegister="*res://Autoload/GlobalRegister.tscn"
 CharacterData="*res://Autoload/CharacterData.tscn"
 WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
+Global="*res://Autoload/Global.tscn"
 
 [display]
 

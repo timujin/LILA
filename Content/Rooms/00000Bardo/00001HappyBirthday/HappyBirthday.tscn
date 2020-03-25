@@ -122,7 +122,7 @@ func _process(delta):
 		direction *= -1
 		accum -= period"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 roomName = "Birthday room"
 roomID = "00000HappyBirthday"
 
