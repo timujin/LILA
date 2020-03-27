@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource( 3 )
-id = "HappyBirthdayRoomKey"
+id = "HappyBirthdayDoorKey"
 title = "Cake key"
 icon = ExtResource( 2 )
 description = "Still has some frosting on it"

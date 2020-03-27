@@ -90,6 +90,10 @@ func fetch_item(id:String):
 	# Loads an item by ID. If there is no such item, one is created
 	
 	for item in inventory:
+		print(item)
+		print(id)
+		print(item.species.id)
+		print(item.is_id(id))
 		if item.is_id(id):
 			return item
 	var n = ItemInventory.new(id)
@@ -109,7 +113,10 @@ func bring_up_to_amount(id:String, amount:int):
 	
 func remove_item(id:String, amount:int):
 	var item = fetch_item(id)
-	item.remove_items(amount)
+	if amount == -1:
+		item.amount = 0
+	else:
+		item.remove_items(amount)
 	clear_empty()
 	
 func clear_empty():

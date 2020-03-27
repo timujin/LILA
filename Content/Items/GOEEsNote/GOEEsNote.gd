@@ -1,6 +1,6 @@
 extends ItemAction
 
-static func run():
+static func run(item, script):
 	print("RUN INSIDE")
 	"""
 	var VN

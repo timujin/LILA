@@ -1,26 +1,27 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/HappyBirthdayRoom.png" type="Texture" id=2]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Table.png" type="Texture" id=3]
 [ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Cake.png" type="Texture" id=5]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Giftbox.png" type="Texture" id=6]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Envelope.png" type="Texture" id=7]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/H3.png" type="Texture" id=8]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Balloon.gd" type="Script" id=9]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/A3.png" type="Texture" id=10]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/P1.png" type="Texture" id=11]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/P2.png" type="Texture" id=12]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y2.png" type="Texture" id=13]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/B.png" type="Texture" id=14]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/I.png" type="Texture" id=15]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/R.png" type="Texture" id=16]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/T.png" type="Texture" id=17]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/H2.png" type="Texture" id=18]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/D.png" type="Texture" id=19]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/A2.png" type="Texture" id=20]
-[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y.png" type="Texture" id=21]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Door.png" type="Texture" id=6]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Giftbox.png" type="Texture" id=7]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Envelope.png" type="Texture" id=8]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/H3.png" type="Texture" id=9]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Balloon.gd" type="Script" id=10]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/A3.png" type="Texture" id=11]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/P1.png" type="Texture" id=12]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/P2.png" type="Texture" id=13]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y2.png" type="Texture" id=14]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/B.png" type="Texture" id=15]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/I.png" type="Texture" id=16]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/R.png" type="Texture" id=17]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/T.png" type="Texture" id=18]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/H2.png" type="Texture" id=19]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/D.png" type="Texture" id=20]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/A2.png" type="Texture" id=21]
+[ext_resource path="res://Content/Rooms/00000Bardo/00001HappyBirthday/Graphics/Balloons/Y.png" type="Texture" id=22]
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0, 0.0207547 )
@@ -63,6 +64,39 @@ script/source = "extends Node
 
 func on_activate():
 	WSHUD.itemget(CharacterData.inventory.add_item(\"HappyBirthdayDoorKey\", 1))"
+
+[sub_resource type="GDScript" id=10]
+script/source = "extends Node
+
+func on_activate():
+	if $\"../LockednessOfDoor\".door_locked:
+		get_parent().get_node(\"BlurbPoint\").blurb(\"Door locked\")
+	else:
+		get_parent().get_node(\"BlurbPoint\").blurb(\"Go through\")
+		"
+
+[sub_resource type="GDScript" id=8]
+script/source = "extends BasePickler
+
+export(bool) var door_locked = true
+
+func deserialize(params:Dictionary)->void:
+	self.door_locked = params.get(\"door_locked\", true)
+
+func serialize()->Dictionary:
+	return {\"door_locked\": door_locked}
+
+func default_parameters()->Dictionary:
+	return {\"door_locked\":true}"
+
+[sub_resource type="GDScript" id=9]
+script/source = "extends Node
+
+func doorCode():
+	return \"HappyBirthdayRoomDoor\"
+	
+func unlock():
+	$\"../LockednessOfDoor\".door_locked = false"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends Node
@@ -122,7 +156,7 @@ func _process(delta):
 		direction *= -1
 		accum -= period"
 
-[node name="Room" instance=ExtResource( 1 )]
+[node name="Room" index="0" instance=ExtResource( 1 )]
 roomName = "Birthday room"
 roomID = "00000HappyBirthday"
 
@@ -183,14 +217,41 @@ ActivatorName = "Cake"
 [node name="Activator" parent="Cake" index="3"]
 script = SubResource( 4 )
 
-[node name="Giftbox" parent="." index="5" instance=ExtResource( 4 )]
+[node name="Door" parent="." index="5" instance=ExtResource( 4 )]
+position = Vector2( 1470, 510 )
+
+[node name="Sprite" parent="Door" index="0"]
+position = Vector2( 49.7661, -20.7141 )
+scale = Vector2( 0.521478, 0.537824 )
+texture = ExtResource( 6 )
+
+[node name="BlurbPoint" parent="Door" index="1"]
+position = Vector2( -10, -150 )
+
+[node name="ClickArea" parent="Door" index="2"]
+margin_left = -70.0
+margin_top = -250.0
+margin_right = 160.0
+margin_bottom = 266.0
+ActivatorName = "Door"
+
+[node name="Activator" parent="Door" index="3"]
+script = SubResource( 10 )
+
+[node name="LockednessOfDoor" type="Node" parent="Door" index="4"]
+script = SubResource( 8 )
+
+[node name="Unlockable" type="Node" parent="Door" index="5"]
+script = SubResource( 9 )
+
+[node name="Giftbox" parent="." index="6" instance=ExtResource( 4 )]
 editor/display_folded = true
 position = Vector2( 652.735, 719.883 )
 
 [node name="Sprite" parent="Giftbox" index="0"]
 position = Vector2( 49.7661, -20.7141 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 6 )
+texture = ExtResource( 7 )
 
 [node name="ClickArea" parent="Giftbox" index="2"]
 margin_left = 23.0
@@ -202,14 +263,13 @@ ActivatorName = "Giftbox"
 [node name="Activator" parent="Giftbox" index="3"]
 script = SubResource( 5 )
 
-[node name="Envelope" parent="." index="6" instance=ExtResource( 4 )]
-editor/display_folded = true
+[node name="Envelope" parent="." index="7" instance=ExtResource( 4 )]
 position = Vector2( 587.036, 677.27 )
 
 [node name="Sprite" parent="Envelope" index="0"]
 position = Vector2( 135.085, 51.3085 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 7 )
+texture = ExtResource( 8 )
 
 [node name="ClickArea" parent="Envelope" index="2"]
 margin_left = 81.0
@@ -221,7 +281,7 @@ ActivatorName = "Envelope"
 [node name="Activator" parent="Envelope" index="3"]
 script = SubResource( 6 )
 
-[node name="Balloons" type="Node2D" parent="." index="7"]
+[node name="Balloons" type="Node2D" parent="." index="8"]
 editor/display_folded = true
 script = SubResource( 7 )
 
@@ -231,7 +291,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/H" index="0"]
 position = Vector2( 140.813, -80.4337 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 8 )
+texture = ExtResource( 9 )
 
 [node name="ClickArea" parent="Balloons/H" index="2"]
 margin_left = 76.0
@@ -241,7 +301,7 @@ margin_bottom = -49.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/H" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="A" parent="Balloons" index="1" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -250,7 +310,7 @@ position = Vector2( 542.014, 481.324 )
 [node name="Sprite" parent="Balloons/A" index="0"]
 position = Vector2( 129.357, -99.0495 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 10 )
+texture = ExtResource( 11 )
 
 [node name="ClickArea" parent="Balloons/A" index="2"]
 margin_left = 76.0
@@ -260,7 +320,7 @@ margin_bottom = -49.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/A" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="P" parent="Balloons" index="2" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -269,7 +329,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/P" index="0"]
 position = Vector2( 362.77, -142.009 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 11 )
+texture = ExtResource( 12 )
 
 [node name="ClickArea" parent="Balloons/P" index="2"]
 margin_left = 303.612
@@ -279,7 +339,7 @@ margin_bottom = -92.0617
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/P" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="P1" parent="Balloons" index="3" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -288,7 +348,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/P1" index="0"]
 position = Vector2( 484.488, -113.369 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 12 )
+texture = ExtResource( 13 )
 
 [node name="ClickArea" parent="Balloons/P1" index="2"]
 margin_left = 437.0
@@ -298,7 +358,7 @@ margin_bottom = -93.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/P1" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="Y" parent="Balloons" index="4" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -307,7 +367,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/Y" index="0"]
 position = Vector2( 581.863, -96.1855 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 13 )
+texture = ExtResource( 14 )
 
 [node name="ClickArea" parent="Balloons/Y" index="2"]
 margin_left = 550.0
@@ -317,7 +377,7 @@ margin_bottom = -70.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/Y" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="B" parent="Balloons" index="5" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -326,7 +386,7 @@ position = Vector2( -84.4236, 689.374 )
 [node name="Sprite" parent="Balloons/B" index="0"]
 position = Vector2( 597.729, -73.972 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 14 )
+texture = ExtResource( 15 )
 
 [node name="ClickArea" parent="Balloons/B" index="2"]
 margin_left = 544.0
@@ -336,7 +396,7 @@ margin_bottom = -84.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/B" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="I" parent="Balloons" index="6" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -345,7 +405,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/I" index="0"]
 position = Vector2( 177.259, 103.736 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 15 )
+texture = ExtResource( 16 )
 
 [node name="ClickArea" parent="Balloons/I" index="2"]
 margin_left = 134.0
@@ -355,7 +415,7 @@ margin_bottom = 70.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/I" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="R" parent="Balloons" index="7" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -364,7 +424,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/R" index="0"]
 position = Vector2( 267.7, 62.4825 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 16 )
+texture = ExtResource( 17 )
 
 [node name="ClickArea" parent="Balloons/R" index="2"]
 margin_left = 231.0
@@ -374,7 +434,7 @@ margin_bottom = 55.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/R" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="T" parent="Balloons" index="8" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -383,7 +443,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/T" index="0"]
 position = Vector2( 378.768, 22.8156 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 17 )
+texture = ExtResource( 18 )
 
 [node name="ClickArea" parent="Balloons/T" index="2"]
 margin_left = 324.0
@@ -393,7 +453,7 @@ margin_bottom = 42.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/T" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="H1" parent="Balloons" index="9" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -402,7 +462,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/H1" index="0"]
 position = Vector2( 519.982, 27.5756 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 18 )
+texture = ExtResource( 19 )
 
 [node name="ClickArea" parent="Balloons/H1" index="2"]
 margin_left = 452.0
@@ -412,7 +472,7 @@ margin_bottom = 44.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/H1" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="D" parent="Balloons" index="10" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -421,7 +481,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/D" index="0"]
 position = Vector2( 605.663, 43.4425 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 19 )
+texture = ExtResource( 20 )
 
 [node name="ClickArea" parent="Balloons/D" index="2"]
 margin_left = 552.0
@@ -431,7 +491,7 @@ margin_bottom = 48.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/D" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="A1" parent="Balloons" index="11" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -440,7 +500,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/A1" index="0"]
 position = Vector2( 683.41, 65.656 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 20 )
+texture = ExtResource( 21 )
 
 [node name="ClickArea" parent="Balloons/A1" index="2"]
 margin_left = 636.0
@@ -449,7 +509,7 @@ margin_bottom = 84.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/A1" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [node name="Y1" parent="Balloons" index="12" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -458,7 +518,7 @@ position = Vector2( 421.728, 494.212 )
 [node name="Sprite" parent="Balloons/Y1" index="0"]
 position = Vector2( 742.117, 103.736 )
 scale = Vector2( 0.521478, 0.537824 )
-texture = ExtResource( 21 )
+texture = ExtResource( 22 )
 
 [node name="ClickArea" parent="Balloons/Y1" index="2"]
 margin_left = 718.0
@@ -468,9 +528,11 @@ margin_bottom = 117.0
 ActivatorName = "H"
 
 [node name="Activator" parent="Balloons/Y1" index="3"]
-script = ExtResource( 9 )
+script = ExtResource( 10 )
 
 [editable path="Cake"]
+
+[editable path="Door"]
 
 [editable path="Giftbox"]
 

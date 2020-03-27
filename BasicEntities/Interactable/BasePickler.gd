@@ -1,3 +1,4 @@
+
 extends Node
 
 class_name BasePickler
@@ -16,7 +17,9 @@ func repickle():
 
 func prepare():
 	unpickle()
-
+	
+func _ready():
+	add_to_group("picklers")
 ##########################
 # THESE MUST BE OVERRIDDEN
 ##########################

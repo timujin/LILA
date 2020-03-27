@@ -20,10 +20,11 @@ static func unlock(door:Node):
 		door.get_node("BlurbPoint").blurb("Key doesn't match")
 		return
 		
-	#door.get_node("/root/Room").\
-	#	set_room_parameter("res://Content/Locations/FortressOfChains/SpiritSummoningRoom/SpiritSummoningRoom.gd", "door_locked", false)
+	if unlockable.has_method("unlock") == false:
+		door.get_node("BlurbPoint").blurb("ERROR: no 'unlock' method provided!")
+		return
+		
+	unlockable.unlock()		
 	door.get_node("BlurbPoint").blurb("Door unlocked!")
-	ModeController.drop()
-	#door.get_tree().get_root().get_node("Inventory/Model").remove_item("SpiritSummoningRoomKey")
-	
-	
+	ModeController.drop_held_item()
+	CharacterData.inventory.remove_item("HappyBirthdayRoomKey", -1)
