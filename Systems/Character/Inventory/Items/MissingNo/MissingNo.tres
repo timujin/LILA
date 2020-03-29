@@ -1,0 +1,22 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Character/Inventory/Items/MissingNo/MissingNo.png" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Inventory/Item.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+id = "MissingNo"
+title = "ERROR ITEM"
+icon = ExtResource( 1 )
+description = "An item failed to load. Report to the developer"
+long_description = ""
+hint = ""
+category = "Misc"
+countable = false
+actions = {
+
+}
+other_data = {
+
+}
+equipment_slot = "None"

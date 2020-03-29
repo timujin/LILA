@@ -1,6 +1,6 @@
 extends Resource
 
-class_name Item
+class_name Item_td
 
 export(String) var id
 export(String) var title
@@ -10,6 +10,8 @@ export(String, MULTILINE) var long_description
 export(String, MULTILINE) var hint
 export(String) var category
 export(bool)   var countable
+
+export(Array) var test_array
 
 export(Dictionary) var actions = {} # Human-readable name -> activation script
 export(Dictionary) var other_data = {} # String -> anything

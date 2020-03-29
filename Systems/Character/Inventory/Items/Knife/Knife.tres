@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Character/Inventory/Items/Knife/Knife.png" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Inventory/Item.gd" type="Script" id=2]
+
+[resource]
+script = ExtResource( 2 )
+id = "Knife"
+title = "Knife"
+icon = ExtResource( 1 )
+description = "Normal-looking kitchen knife"
+long_description = "It's a weapon. It deals damage. What else do you need?"
+hint = "Use it"
+category = "Tools"
+countable = true
+actions = {
+
+}
+combat_cards = [  ]
+other_data = {
+
+}
+equipment_slot = "None"

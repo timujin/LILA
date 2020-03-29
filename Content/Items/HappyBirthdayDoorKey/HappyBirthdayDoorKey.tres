@@ -14,6 +14,7 @@ long_description = "A key found in your birthday cake. "
 hint = "Persumably unlocks a door."
 category = "Keys"
 countable = false
+test_array = [ "test2" ]
 actions = {
 "Apply": ExtResource( 1 )
 }
