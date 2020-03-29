@@ -20,6 +20,11 @@ _global_script_classes=[ {
 "path": "res://BasicEntities/Room/BaseRoom.gd"
 }, {
 "base": "Resource",
+"class": "CombatCard",
+"language": "GDScript",
+"path": "res://BasicEntities/CombatCard/CombatCard.gd"
+}, {
+"base": "Resource",
 "class": "Item",
 "language": "GDScript",
 "path": "res://BasicEntities/Item/Item.gd"
@@ -47,6 +52,7 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "BasePickler": "",
 "BaseRoom": "",
+"CombatCard": "",
 "Item": "",
 "ItemAction": "",
 "ItemInventory": "",

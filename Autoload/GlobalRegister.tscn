@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -56,10 +56,18 @@ var rooms = {
 	# Tutorial phase
 	\"00000BirthCorridor\": \"res://Content/Rooms/00000Bardo/00000BirthCorridor/BirthCorridor.tscn\",
 	\"00000HappyBirthday\": \"res://Content/Rooms/00000Bardo/00001HappyBirthday/HappyBirthday.tscn\",
-	
+	\"00002CombatTest\": \"res://Content/Rooms/00000Bardo/00002CombatTest/00002CombatTest.tscn\",
 	
 	# Technical rooms
 	\"FFFFFDogroom\": \"res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn\"
+	}"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+var combatcards = {
+	
+	\"Slice\": \"res://Content/CombatCards/Slice/Slice.tres\",
 	}"
 
 [node name="GlobalRegister" type="Node"]
@@ -73,3 +81,6 @@ script = SubResource( 3 )
 
 [node name="Rooms" type="Node" parent="."]
 script = SubResource( 4 )
+
+[node name="CombatCards" type="Node" parent="."]
+script = SubResource( 5 )

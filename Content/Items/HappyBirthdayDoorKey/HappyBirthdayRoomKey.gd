@@ -27,4 +27,4 @@ static func unlock(door:Node):
 	unlockable.unlock()		
 	door.get_node("BlurbPoint").blurb("Door unlocked!")
 	ModeController.drop_held_item()
-	CharacterData.inventory.remove_item("HappyBirthdayRoomKey", -1)
+	CharacterData.inventory.remove_item("HappyBirthdayDoorKey", -1)

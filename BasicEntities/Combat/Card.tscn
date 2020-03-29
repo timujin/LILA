@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+func render(combatcard):
+	text = combatcard.title
+	"
+
+[node name="Card" type="Button"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1450.0
+margin_bottom = -680.0
+rect_min_size = Vector2( 150, 220 )
+script = SubResource( 1 )

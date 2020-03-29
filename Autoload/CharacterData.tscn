@@ -10,7 +10,8 @@ This is intended to be pickled *in entirety*.
 
 onready var karma = get_node(\"Karma\")
 onready var inventory = get_node(\"Inventory\")
-onready var variables = get_node(\"Variables\")"
+onready var variables = get_node(\"Variables\")
+onready var combatcards = get_node(\"CombatCards\")"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -119,6 +120,13 @@ func remove_item(id:String, amount:int):
 		item.remove_items(amount)
 	clear_empty()
 	
+func has_item(id:String, amount:int = -1):
+	var item = fetch_item(id)
+	if amount == -1:
+		return item.amount > 0
+	else:
+		return item.amount >= amount
+	
 func clear_empty():
 	var res = []
 	for item in inventory:
@@ -189,3 +197,5 @@ script = SubResource( 3 )
 
 [node name="Variables" type="Node" parent="."]
 script = SubResource( 4 )
+
+[node name="CombatCards" type="Node" parent="."]

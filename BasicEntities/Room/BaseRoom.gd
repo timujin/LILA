@@ -41,9 +41,10 @@ func pickle():
 	for pickler in picklers:
 		pickler.pickle()
 	
-	
 func reload_items():
 	print("Reloading...")
 	var picklers = get_tree().get_nodes_in_group("picklers")
 	for pickler in picklers:
 		pickler.unpickle()
+		
+	

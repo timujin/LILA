@@ -58,11 +58,11 @@ var floatie = null
 func _on_ClickArea_mouse_entered():
 	if floatie == null:
 		floatie = preload(\"res://Autoload/WorldspaceHUD/Floatie.tscn\").instance()
-		add_child(floatie)
-		if ActivatorName == null:
-			floatie.display(\"[no name]\")
-		else:
-			floatie.display(ActivatorName)
+	add_child(floatie)
+	if ActivatorName == null:
+		floatie.display(\"[no name]\")
+	else:
+		floatie.display(ActivatorName)
 
 
 func _on_ClickArea_mouse_exited():

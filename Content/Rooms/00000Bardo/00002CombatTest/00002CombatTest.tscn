@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://BasicEntities/Interactable/BaseObject.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+onready var combat = preload(\"res://Content/Rooms/00000Bardo/00002CombatTest/ExampleCombat.tscn\")
+
+func activate():
+	var c = combat.instance()
+	get_tree().get_root().add_child(c)
+	ModeController.start_combat()"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Combat test"
+roomID = "00002CombatTest"
+
+[node name="Geometry" parent="." index="1"]
+editor/display_folded = true
+
+[node name="FirstPersonCamera" parent="." index="2"]
+position = Vector2( 788.673, 455.154 )
+
+[node name="StartCombat" parent="." index="3" instance=ExtResource( 2 )]
+position = Vector2( -275.759, 320.898 )
+
+[node name="Sprite" parent="StartCombat" index="0"]
+position = Vector2( 131.894, 126.54 )
+scale = Vector2( 4.60821, 4.90965 )
+
+[node name="ClickArea" parent="StartCombat" index="2"]
+margin_right = 276.0
+margin_bottom = 286.0
+ActivatorName = "Start combat"
+
+[node name="Activator" parent="StartCombat" index="3"]
+script = SubResource( 1 )
+
+[editable path="StartCombat"]

@@ -13,7 +13,7 @@ const verti_margin = 0.2
 #var scrolling_enabled = true
 
 func _process(delta):
-	if ModeController.is_world_scrollable:
+	if ModeController.is_world_scrollable and ModeController.mode == ModeController.EXPLORE:
 		screen_scrolling(delta)
 	
 	

@@ -7,7 +7,7 @@ script/source = "extends Node
 
 class_name ModeController
 
-
+signal reset
 signal ui_reset
 
 func reset():
@@ -20,15 +20,32 @@ func reset():
 # Base mode
 ############
 
-enum {EXPLORE, HUD, CUTSCENE, VN}
+enum {EXPLORE, HUD, CUTSCENE, VN, COMBAT}
 
 var mode = EXPLORE
 func set_mode(value):
-	if [EXPLORE, HUD, CUTSCENE, VN].has(value):
+	if [EXPLORE, HUD, CUTSCENE, VN, COMBAT].has(value):
 		mode = value
+		emit_signal(\"reset\")
 		drop_held_item()
 	else:
 		printerr(\"Invalid mode: \" + str(value))
+
+############
+# Base mode
+############
+
+func start_combat():
+	set_mode(COMBAT)
+	var room = $\"/root/Room\"
+	if room:
+		room.visible = false
+		
+func end_combat():
+	set_mode(EXPLORE)
+	var room = $\"/root/Room\"
+	if room:
+		room.visible = true
 
 ##############
 # Cutscenes 

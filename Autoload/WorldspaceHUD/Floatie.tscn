@@ -7,8 +7,12 @@ var text:String = \"[NOT SET]\"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	return
 	$Control.visible = false
+	ModeController.connect(\"reset\", self, \"reset\")
+	
+func reset():
+	print(\"resetting\")
+	stop_displaying()
 
 func display(value:String):
 	$Control.visible = true

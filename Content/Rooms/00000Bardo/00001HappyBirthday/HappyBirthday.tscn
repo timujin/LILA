@@ -65,17 +65,17 @@ script/source = "extends Node
 func on_activate():
 	WSHUD.itemget(CharacterData.inventory.add_item(\"HappyBirthdayDoorKey\", 1))"
 
-[sub_resource type="GDScript" id=10]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 func on_activate():
 	if $\"../LockednessOfDoor\".door_locked:
 		get_parent().get_node(\"BlurbPoint\").blurb(\"Door locked\")
 	else:
-		get_parent().get_node(\"BlurbPoint\").blurb(\"Go through\")
+		RoomSwitcher.switch_to(\"00002CombatTest\")
 		"
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=6]
 script/source = "extends BasePickler
 
 export(bool) var door_locked = true
@@ -89,7 +89,7 @@ func serialize()->Dictionary:
 func default_parameters()->Dictionary:
 	return {\"door_locked\":true}"
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=7]
 script/source = "extends Node
 
 func doorCode():
@@ -98,7 +98,7 @@ func doorCode():
 func unlock():
 	$\"../LockednessOfDoor\".door_locked = false"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=8]
 script/source = "extends Node
 
 var VN
@@ -118,7 +118,7 @@ func on_activate():
 	$\"/root/ModeController\".is_world_scrollable = true
 	"
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=9]
 script/source = "extends Node
 
 var VN
@@ -141,7 +141,7 @@ func on_activate():
 	ModeController.is_world_scrollable = true
 	"
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=10]
 script/source = "extends Node2D
 
 var magnitude = 10
@@ -236,13 +236,13 @@ margin_bottom = 266.0
 ActivatorName = "Door"
 
 [node name="Activator" parent="Door" index="3"]
-script = SubResource( 10 )
+script = SubResource( 5 )
 
 [node name="LockednessOfDoor" type="Node" parent="Door" index="4"]
-script = SubResource( 8 )
+script = SubResource( 6 )
 
 [node name="Unlockable" type="Node" parent="Door" index="5"]
-script = SubResource( 9 )
+script = SubResource( 7 )
 
 [node name="Giftbox" parent="." index="6" instance=ExtResource( 4 )]
 editor/display_folded = true
@@ -261,7 +261,7 @@ margin_bottom = 31.0
 ActivatorName = "Giftbox"
 
 [node name="Activator" parent="Giftbox" index="3"]
-script = SubResource( 5 )
+script = SubResource( 8 )
 
 [node name="Envelope" parent="." index="7" instance=ExtResource( 4 )]
 position = Vector2( 587.036, 677.27 )
@@ -279,11 +279,11 @@ margin_bottom = 82.0
 ActivatorName = "Envelope"
 
 [node name="Activator" parent="Envelope" index="3"]
-script = SubResource( 6 )
+script = SubResource( 9 )
 
 [node name="Balloons" type="Node2D" parent="." index="8"]
 editor/display_folded = true
-script = SubResource( 7 )
+script = SubResource( 10 )
 
 [node name="H" parent="Balloons" index="0" instance=ExtResource( 4 )]
 position = Vector2( 421.728, 494.212 )
