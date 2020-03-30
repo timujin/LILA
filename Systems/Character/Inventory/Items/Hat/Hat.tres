@@ -1,17 +1,17 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
-[ext_resource path="res://Systems/Character/Inventory/Items/MissingNo/MissingNo.png" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Inventory/Items/Hat/Hat.png" type="Texture" id=1]
 [ext_resource path="res://Systems/Character/Inventory/Item.gd" type="Script" id=2]
 
 [resource]
 script = ExtResource( 2 )
-id = "MissingNo"
-title = "ERROR ITEM"
+id = "Hat"
+title = "Hat"
 icon = ExtResource( 1 )
-description = "An item failed to load. Report to the developer"
+description = "Goes on the head"
 long_description = ""
 hint = ""
-category = "Misc"
+category = "Hats"
 countable = false
 actions = {
 
@@ -20,4 +20,4 @@ combat_cards = [  ]
 other_data = {
 
 }
-equipment_slot = "None"
+equipment_slot = "Head"

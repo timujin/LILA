@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func item(id:String):
+	if $Items.items.has(id):
+		return load($Items.items[id])
+	else:
+		return item(\"MissingNo\")
+		
+
+func karmaitem(id:String):
+	if $KarmaItems.karmaitems.has(id):
+		return load($KarmaItems.karmaitems[id])
+	else:
+		return karmaitem(\"MissingNo\")
+	"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+export var items = {
+	
+	\"GOEEsNote\": \"res://Systems/Character/Inventory/Items/GOEEsNote/GOEEsNote.tres\",
+	\"Knife\": \"res://Systems/Character/Inventory/Items/Knife/Knife.tres\",
+	\"Lockpick\": \"res://Systems/Character/Inventory/Items/Lockpick/Lockpick.tres\",
+	\"MissingNo\": \"res://Systems/Character/Inventory/Items/MissingNo/MissingNo.tres\",
+	\"Hat\": \"res://Systems/Character/Inventory/Items/Hat/Hat.tres\",
+	\"DifferentHat\":\"res://Systems/Character/Inventory/Items/DifferentHat/DifferentHat.tres\" ,
+	}"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+export var karmaitems = {
+	
+	\"BlessedByTheGoddess\": \"res://Systems/Character/Karma/KarmaItems/BlessedByTheGoddess/BlessedByTheGoddess.tres\",
+	\"Brutality\": \"res://Systems/Character/Karma/KarmaItems/Brutality/Brutality.tres\",
+	\"Trickery\": \"res://Systems/Character/Karma/KarmaItems/Trickery/Trickery.tres\",
+	\"MissingNo\": \"res://Systems/Character/Karma/KarmaItems/MissingNo/MissingNo.tres\"
+	}"
+
+[node name="GlobalRegister" type="Node"]
+script = SubResource( 1 )
+
+[node name="Items" type="Node" parent="."]
+script = SubResource( 2 )
+
+[node name="KarmaItems" type="Node" parent="."]
+script = SubResource( 3 )
+
+[node name="Rooms" type="Node" parent="."]
+
+[node name="CombatCards" type="Node" parent="."]

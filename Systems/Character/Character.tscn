@@ -36,6 +36,8 @@ func _ready():
 	add_item(\"GOEEsNote\", 1)
 	add_item(\"Lockpick\", 5)
 	add_item(\"Knife\", 5)
+	add_item(\"Hat\", 1)
+	add_item(\"DifferentHat\", 1)
 
 func fetch_item(id:String):
 	\"\"\"Loads an item by ID. If there is no such item, one is created\"\"\"
@@ -44,7 +46,7 @@ func fetch_item(id:String):
 			if item.is_id(id):
 				return item
 				
-	var n = ItemInventory.new(id)
+	var n = InventoryEntry.new(id)
 	entries.append(n)
 	return n
 	
@@ -96,14 +98,14 @@ func what_is_equipped_in_slot(slot:String):
 	
 func clear_equipment_slot(slot:String):
 	for item in entries:
-		if item.equipped == slot:
-			item.equipped = \"None\"
+		if item.species.equipment_slot == slot:
+			item.equipped = false
 	
 func equip_in_slot(id:String, slot:String):
 	clear_equipment_slot(slot)
 	for item in entries:
 		if item.is_id(id):
-			item.equipped = slot
+			item.equipped = true
 			return
 	printerr(\"Attempt to equip nonexistent item!\")
 	"

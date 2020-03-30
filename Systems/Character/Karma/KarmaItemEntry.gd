@@ -7,6 +7,7 @@ export(int) var level
 export(int) var xp
 
 func _init(id):
+	print(id)
 	var item = KarmaItem.load_by_id(id)
 	self.species = item
 	self.level = 0

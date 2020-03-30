@@ -16,6 +16,7 @@ countable = false
 actions = {
 
 }
+combat_cards = [  ]
 other_data = {
 
 }

@@ -1,0 +1,93 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
+[ext_resource path="res://Assets/Placeholders/circlet.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Button
+
+signal request_unequip (entry)
+
+onready var iicon = $\"HBoxContainer/Container/Icon\"
+onready var title = $\"HBoxContainer/VBoxContainer/Name\"
+onready var slot = $\"HBoxContainer/MarginContainer/Slot\"
+
+var item = null
+var inventoryentry = null
+
+
+func render(inventoryentry)->void:
+	self.item = inventoryentry.species
+	self.inventoryentry = inventoryentry
+	
+	iicon.texture = item.icon
+	title.text   = item.title
+	slot.text     = item.equipment_slot
+	
+func refresh():
+	render(self.inventoryentry)
+		
+func _on_Unequip_pressed():
+	emit_signal(\"request_unequip\", self.inventoryentry)
+"
+
+[node name="ItemPrototype" type="Button"]
+margin_right = 417.0
+margin_bottom = 43.0
+rect_min_size = Vector2( 0, 40 )
+size_flags_vertical = 3
+theme = ExtResource( 1 )
+script = SubResource( 1 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = 1.0
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+margin_right = 88.0
+margin_bottom = 44.0
+rect_min_size = Vector2( 88, 44 )
+
+[node name="Slot" type="Label" parent="HBoxContainer/MarginContainer"]
+margin_top = 12.0
+margin_right = 88.0
+margin_bottom = 31.0
+text = "Slot"
+
+[node name="Container" type="Control" parent="HBoxContainer"]
+margin_left = 92.0
+margin_right = 146.43
+margin_bottom = 44.0
+rect_min_size = Vector2( 54.43, 3.69 )
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer/Container"]
+margin_top = 3.0
+margin_right = 53.0
+margin_bottom = 36.0
+size_flags_vertical = 3
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 150.0
+margin_right = 317.0
+margin_bottom = 44.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 9.33
+
+[node name="Name" type="Label" parent="HBoxContainer/VBoxContainer"]
+margin_top = 12.0
+margin_right = 167.0
+margin_bottom = 31.0
+size_flags_vertical = 6
+text = "Item name"
+
+[node name="Unequip" type="Button" parent="HBoxContainer"]
+margin_left = 321.0
+margin_right = 417.0
+margin_bottom = 44.0
+text = "  Unequip  "
+[connection signal="pressed" from="." to="." method="_on_ItemPrototype_pressed"]
+[connection signal="pressed" from="HBoxContainer/Unequip" to="." method="_on_Unequip_pressed"]

@@ -1,0 +1,280 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+signal skip_cutscene
+
+var history = []
+var history_position = 0
+
+var ui_console_pressed = false
+func _process(delta):
+	if Input.is_action_pressed(\"ui_devconsole\"):
+		if not ui_console_pressed:
+			ui_console_pressed = true
+			if is_console_open:
+				close_console()
+			else:
+				open_console()
+	elif ui_console_pressed:
+		ui_console_pressed = false
+	## done once when the key is released
+	
+func _input(event):
+	if event.is_action_pressed(\"ui_up\"):
+		if history_position >= history.size():
+			return
+		$Modal/LineEdit.text = history[history_position]
+		#$Modal/LineEdit.caret_position = $Modal/LineEdit.text.length()-1
+		history_position += 1
+	if event.is_action_pressed(\"ui_down\"):
+		if history_position == 0:
+			return
+		history_position -= 1
+		$Modal/LineEdit.text = history[history_position]
+		#$Modal/LineEdit.caret_position = $Modal/LineEdit.text.length()-1
+	
+var is_console_open = false
+
+func _ready():
+	close_console()
+	
+func close_console():
+	is_console_open = false
+	$Modal.visible = false
+	get_tree().paused = false
+	
+func open_console():
+	is_console_open = true
+	$Modal.visible = true
+	$Modal/LineEdit.grab_focus()
+	$Modal/LineEdit.clear()
+	get_tree().paused = true
+
+func _on_LineEdit_text_entered(new_text):
+	echo(\"> \"+new_text)
+	history.push_front(new_text)
+	history_position = 0
+	$Modal/LineEdit.clear()
+	$Interpreter.interpret(new_text)
+
+func echo(text:String, repeat_in_stdout=true):
+	var x = $Modal/VBoxContainer/GreetingLabel.duplicate()
+	$Modal/VBoxContainer.add_child(x)
+	x.text = text
+	if repeat_in_stdout:
+		print(text)
+		
+func echoerr(text:String, repeat_in_stdout=true):
+	var x = $Modal/VBoxContainer/GreetingLabel.duplicate()
+	$Modal/VBoxContainer.add_child(x)
+	x.text = \"ERROR! \" + text
+	if repeat_in_stdout:
+		print(text)"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+func echoerr(text:String):
+	get_parent().echo(\"!!! \" + text)
+	
+func echowarn(text:String):
+	get_parent().echo(\"??? \" + text)
+	
+func echo(text:String):
+	get_parent().echo(text)
+
+func interpret(input:String):
+	var parsed = input.split(\" \")
+	if parsed.size() == 0:
+		return
+	var command = parsed[0]
+	parsed.remove(0)
+	match command:
+		# Inventory
+		\"print_inventory\": print_inventory()
+		\"add_item\": add_item(parsed)
+		\"remove_item\": remove_item(parsed)
+		
+		# Karma
+		\"print_karma\": print_karma()
+		\"add_karma_xp\": add_karma_xp(parsed)
+		\"add_karma_levels\": add_karma_levels(parsed)
+		\"drain_karma_levels\": drain_karma_levels(parsed)
+		
+		#\"warp\": warp(parsed)
+		#\"skip\": skip()
+		#\"win\" : win()
+		#\"call\": call(parsed)
+		#\"add_karma_xp\": add_karma_xp(parsed)
+		#\"add_karma_levels\": add_karma_levels(parsed)
+		#\"remove_karma_levels\": remove_karma_levels(parsed)
+		#\"print_karma\": print_karma()
+		_     : echoerr(\"Command not found: \"+command)
+	
+func print_inventory():
+	var inventory = Character.inventory.entries
+	for entry in inventory:
+		echo(\"%s - %s\" % [entry.species.title, entry.amount])
+
+func add_item(args):
+	if args.size() != 2:
+		echoerr(\"'add_item' expects 2 arguments!\")
+	else:
+		Character.inventory.add_item(args[0], int(args[1]))
+		
+func remove_item(args):
+	if args.size() != 2:
+		echoerr(\"'remove_item' expects 2 arguments!\")
+	else:
+		Character.inventory.remove_item(args[0], int(args[1]))
+
+
+func print_karma():
+	for entry in Character.karma.entries:
+		echo(\"%s - LV %s XP %s\" % [entry.species.title, entry.level, entry.xp])
+
+func add_karma_xp(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'add_karma_xp' expects 2 arguments!\")
+	else:
+		Character.karma.add_xp(parsed[0], int(parsed[1]))
+		
+func add_karma_levels(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'add_karma_levels' expects 2 arguments!\")
+	else:
+		Character.karma.add_levels(parsed[0], int(parsed[1]))
+		
+func drain_karma_levels(parsed):
+	if parsed.size() != 2:
+		echoerr(\"'remove_karma_levels' expects 2 arguments!\")
+	else:
+		Character.karma.drain_levels(parsed[0], int(parsed[1]))
+
+
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+		
+func warp(args):
+	echoerr(\"Not implemeted yet\")
+	return
+	
+	if $\"/root/ModeController\".is_player_controllable == false:
+		echowarn(\"Trying to warp during a cutscene or an open dialog! This may cause unintended and undefined behaviour\")
+	if args.size() == 1:
+		var location = args[0]
+		var room = $\"/root/RoomSwitcher\".load_room(location)
+		if room == null:
+			echoerr(\"No room found: \" + args[0])
+		else:
+			$\"/root/RoomSwitcher\".switch_room(room)
+	elif args.size() == 2:
+		var location = args[0]
+		var destination = args[1]
+		var room = $\"/root/RoomSwitcher\".load_room(location)
+		if room == null:
+			echoerr(\"No room found: \" + args[0])
+		else:
+			$\"/root/RoomSwitcher\".switch_room(room, destination)
+	else:
+		echoerr(\"'warp' expects 1 or 2 arguments!\")
+		return
+	echo(\"Warped\")
+	
+func skip():
+	$'..'.emit_signal(\"skip_cutscene\")
+	
+func win():
+	$\"/root/CombatController\".stop_combat({\"artificial\":true})
+	
+func call(parsed):
+	get_tree().get_root().get_node(parsed[0]).call_deferred(parsed[1])
+
+#func print_karma():
+#	echo(str($\"/root/CharacterData\".karma))
+	
+export(Resource) var test_sg
+	
+func gsave(parsed):
+	return
+	\"\"\"
+	var i = parsed[0]
+	var save_game = test_sg # load(\"res://Autoload/DeveloperConsole/SaveGame.gd\").new()
+	#save_game.data = i
+	
+	var directory : Directory = Directory.new()
+	if not directory.dir_exists(\"user://debug/save\"):
+		directory.make_dir_recursive(\"user://debug/save\")
+	
+	var save_path = \"user://debug/save\".plus_file(\"save.tres\")
+	var error : int = ResourceSaver.save(save_path, save_game)
+	if error != OK:
+		print('There was an issue writing the save to %s: %s' % [save_path, error])
+	\"\"\"
+		
+func gload():
+	return
+	\"\"\"
+	var save_file_path : String = \"user://debug/save\".plus_file(\"save.tres\")
+	var file : File = File.new()
+	if not file.file_exists(save_file_path):
+		print(\"Save file %s doesn't exist\" % save_file_path)
+		return
+
+	var save_game : SaveGame = load(save_file_path)
+	var save_game2 : SaveGame = load(save_file_path)
+	
+	
+	var test_key = {}
+	test_key[save_game] = 1
+	test_key[save_game2] = 6
+	print(test_key)
+	
+	print(save_game)
+	print(save_game.data)
+	echo(save_game.data)
+	\"\"\""
+
+[node name="DeveloperConsole" type="CanvasLayer"]
+pause_mode = 2
+layer = 125
+script = SubResource( 1 )
+
+[node name="Modal" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.156863 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Modal"]
+anchor_bottom = 1.0
+margin_left = 56.0
+margin_top = 47.0
+margin_right = 1534.0
+margin_bottom = -129.0
+alignment = 2
+
+[node name="GreetingLabel" type="Label" parent="Modal/VBoxContainer"]
+margin_top = 710.0
+margin_right = 1478.0
+margin_bottom = 724.0
+text = "Enter commands here."
+
+[node name="LineEdit" type="LineEdit" parent="Modal"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 33.0
+margin_top = -68.0
+margin_right = -37.0
+margin_bottom = -34.0
+
+[node name="Interpreter" type="Node" parent="."]
+script = SubResource( 2 )
+[connection signal="text_entered" from="Modal/LineEdit" to="." method="_on_LineEdit_text_entered"]

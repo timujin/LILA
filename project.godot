@@ -98,14 +98,10 @@ config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
-RoomSwitcher="*res://Autoload/RoomSwitcher.tscn"
-ModeController="*res://Autoload/ModeController.tscn"
-InteractionBlurb="*res://Autoload/WorldspaceHUD/InteractionBlurb.tscn"
-DeveloperConsole="*res://Autoload/DeveloperConsole/DeveloperConsole.tscn"
-GlobalRegister="*res://Autoload/GlobalRegister.tscn"
-CharacterData="*res://Autoload/CharacterData.tscn"
-WSHUD="*res://Autoload/WorldspaceHUD/WSHUD.tscn"
-Global="*res://Autoload/Global.tscn"
+Character="*res://Systems/Character/Character.tscn"
+GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
+DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
+ModeController="*res://Systems/ModeController/ModeController.tscn"
 
 [display]
 

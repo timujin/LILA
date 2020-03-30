@@ -20,4 +20,7 @@ export(String, \
 	 var equipment_slot = "None"
 	
 static func load_by_id(id:String):
-	assert(false)
+	var res = GlobalRegister.item(id)
+	if res == null:
+		res = GlobalRegister.item("MissingNo")
+	return res

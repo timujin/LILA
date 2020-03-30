@@ -17,6 +17,7 @@ countable = false
 actions = {
 "Read": ExtResource( 1 )
 }
+combat_cards = [  ]
 other_data = {
 
 }
