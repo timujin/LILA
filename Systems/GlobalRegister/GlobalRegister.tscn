@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -15,7 +15,14 @@ func karmaitem(id:String):
 		return load($KarmaItems.karmaitems[id])
 	else:
 		return karmaitem(\"MissingNo\")
-	"
+	
+func room(id:String):
+	if $Rooms.rooms.has(id):
+		return load($Rooms.rooms[id])
+	else:
+		return room(\"Dogroom\")
+	
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -41,6 +48,21 @@ export var karmaitems = {
 	\"MissingNo\": \"res://Systems/Character/Karma/KarmaItems/MissingNo/MissingNo.tres\"
 	}"
 
+[sub_resource type="GDScript" id=4]
+script/source = "extends Node
+
+export var rooms = {
+	
+	# Testinghall
+	
+	\"FFFFFDogroom\":\"res://Systems/Rooms/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn\",
+	\"FFFFFRedroom\":\"res://Systems/Rooms/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn\",
+	\"FFFFFBlueroom\":\"res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn\",
+	\"FFFFFGreenroom\":\"res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn\",
+	
+	
+	}"
+
 [node name="GlobalRegister" type="Node"]
 script = SubResource( 1 )
 
@@ -51,5 +73,6 @@ script = SubResource( 2 )
 script = SubResource( 3 )
 
 [node name="Rooms" type="Node" parent="."]
+script = SubResource( 4 )
 
 [node name="CombatCards" type="Node" parent="."]

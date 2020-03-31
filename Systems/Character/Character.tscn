@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -12,6 +12,7 @@ onready var inventory = get_node(\"Inventory\")
 onready var karma = get_node(\"Karma\")
 onready var perks = get_node(\"Perks\")
 onready var combatcards = get_node(\"CombatCards\")
+onready var pickles = get_node(\"Pickles\")
 onready var variables = get_node(\"Variables\")
 
 # Add Journal entities: quests, map, notes, etc..."
@@ -202,6 +203,28 @@ func get_value(key:String, default=null):
 			return default
 		"
 
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+var pickled_rooms:Dictionary = {}
+
+func pickle(roomid:String, nodepath:NodePath, data:Dictionary):
+	if not pickled_rooms.has(roomid):
+		pickled_rooms[roomid] = {}
+	pickled_rooms[roomid][nodepath] = data
+	print(\"Pickled: %s - %s - %s\" % [roomid, nodepath, str(data)])
+	
+	
+	
+func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
+	if not pickled_rooms.has(roomid):
+		return default
+	if not pickled_rooms[roomid].has(nodepath):
+		return default
+	return pickled_rooms[roomid][nodepath]
+
+"
+
 [node name="Character" type="Node"]
 script = SubResource( 1 )
 
@@ -219,3 +242,6 @@ script = SubResource( 3 )
 
 [node name="Variables" type="Node" parent="."]
 script = SubResource( 4 )
+
+[node name="Pickles" type="Node" parent="."]
+script = SubResource( 5 )

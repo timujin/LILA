@@ -12,10 +12,20 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "BasePickler",
 "language": "GDScript",
+"path": "res://Systems/Rooms/BasePickler.gd"
+}, {
+"base": "Node",
+"class": "BasePickler_td",
+"language": "GDScript",
 "path": "res://BasicEntities/Interactable/BasePickler.gd"
 }, {
 "base": "Node2D",
 "class": "BaseRoom",
+"language": "GDScript",
+"path": "res://Systems/Rooms/BaseRoom.gd"
+}, {
+"base": "Node2D",
+"class": "BaseRoom_td",
 "language": "GDScript",
 "path": "res://BasicEntities/Room/BaseRoom.gd"
 }, {
@@ -76,7 +86,9 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "BasePickler": "",
+"BasePickler_td": "",
 "BaseRoom": "",
+"BaseRoom_td": "",
 "CombatCard": "",
 "InventoryEntry": "",
 "Item": "",
@@ -102,6 +114,7 @@ Character="*res://Systems/Character/Character.tscn"
 GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
 DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
 ModeController="*res://Systems/ModeController/ModeController.tscn"
+RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 
 [display]
 

@@ -1,7 +1,7 @@
 
 extends Node
 
-class_name BasePickler
+class_name BasePickler_td
 
 func pickle():
 	var parameters = serialize()

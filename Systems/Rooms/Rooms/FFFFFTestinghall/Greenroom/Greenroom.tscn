@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
+
+[node name="Room" instance=ExtResource( 1 )]
+
+[node name="Redroom" type="Sprite" parent="Background" index="0"]
+position = Vector2( 897.96, 435.697 )
+scale = Vector2( 2.11991, 1.80825 )
+texture = ExtResource( 2 )
+
+[node name="CameraLimitLeft" parent="Geometry" index="0"]
+position = Vector2( -141.468, 456.359 )
+
+[node name="CameraLimitTop" parent="Geometry" index="1"]
+position = Vector2( 938.961, -25.7302 )
+
+[node name="CameraLimitBottom" parent="Geometry" index="2"]
+position = Vector2( 939.081, 895.861 )
+
+[node name="CameraLimitRight" parent="Geometry" index="3"]
+position = Vector2( 1934.06, 473.655 )
+
+[node name="FirstPersonCamera" parent="." index="2"]
+position = Vector2( 815.474, 456.717 )

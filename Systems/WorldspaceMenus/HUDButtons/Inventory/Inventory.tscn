@@ -17,10 +17,12 @@ func render():
 	item_list.render()
 
 func unhide():
+	ModeController.set_mode(ModeController.MENU)
 	visible = true
 	render()
 
 func hide():
+	ModeController.set_mode(ModeController.EXPLORE)
 	visible = false
 
 func _ready():

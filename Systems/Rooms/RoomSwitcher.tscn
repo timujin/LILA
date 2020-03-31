@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+class_name RoomSwitcher
+
+func r(id:String):
+	return GlobalRegister.room(id)
+
+#####################
+## ROOM LOADING #####
+#####################
+
+
+var room:Node2D = null
+	
+func switch_room_obj(to_room):
+	$\"/root/Room\".pickle()
+	$\"/root/Room\".name = \"Todelete_room\"
+	$\"/root/Todelete_room\".queue_free()
+	room = to_room.instance()
+	get_tree().get_root().add_child(room)
+
+func switch_to(id:String):
+	Character.variables.set_value(\"attempted_load_room\", id)
+	var roomscene = r(id)
+	if roomscene == null:
+		DeveloperConsole.echo(\"!!! Room not found!: \" + id)
+	else:
+		switch_room_obj(roomscene)
+"
+
+[node name="RoomSwitcher" type="Node"]
+script = SubResource( 1 )
