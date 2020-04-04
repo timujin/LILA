@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.png" type="Texture" id=2]
@@ -36,6 +36,13 @@ func _on_OnOff_unpickled(data):
 func switch():
 	visible = not visible
 	$\"../OnOff\".update(\"is_on\", visible)"
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+func activate():
+	ModeController.set_mode(ModeController.COMBAT)
+	add_child(preload(\"res://Systems/Combat/BaseCombat.tscn\").instance())"
 
 [node name="Room" instance=ExtResource( 1 )]
 roomID = "FFFFFBlueroom"
@@ -137,6 +144,9 @@ margin_left = -69.0
 margin_top = -332.0
 margin_right = 169.0
 margin_bottom = -2.0
+
+[node name="Activator" parent="Suit" index="2"]
+script = SubResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="Suit" index="3"]
 position = Vector2( 53.6682, -162.855 )

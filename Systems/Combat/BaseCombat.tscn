@@ -1,0 +1,147 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Systems/Combat/BaseEnemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Sprites/Enemies/Suit.png" type="Texture" id=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+func damage_player(amount:int):
+	print(\"Player takes %s damage!\" % amount)"
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+var to_move = \"player\"
+
+var initiative_queue = []
+
+func finish_player_turn():
+	pass
+	
+
+func _on_EndTurn_pressed():
+	print(\"pressed\")
+	if to_move != \"player\":
+		return
+	initiative_queue = $\"../Enemies\".get_children()
+	to_move = \"enemy\"
+	yield($\"../HUD/Continue\", \"pressed\")
+	yield(execute_intents(), \"completed\")
+	yield(generate_intents(), \"completed\")
+	to_move = \"player\"
+
+func execute_intents():
+	for enemy in initiative_queue:
+		if enemy == null:
+			continue
+		print(\"Enemy move...\")
+		enemy.execute($\"..\")
+		yield($\"../HUD/Continue\", \"pressed\")
+	
+func generate_intents():
+	for enemy in initiative_queue:
+		if enemy == null:
+			continue
+		print(\"Enemy intenting...\")
+		enemy.generate_intent()
+		yield($\"../HUD/Continue\", \"pressed\")
+	
+"
+
+[node name="BaseCombat" type="Node2D"]
+script = SubResource( 2 )
+
+[node name="Conductor" type="Node" parent="."]
+script = SubResource( 1 )
+
+[node name="HUD" type="Control" parent="."]
+margin_right = 1598.0
+margin_bottom = 894.0
+
+[node name="Modal" type="Panel" parent="HUD"]
+self_modulate = Color( 0, 0.0156863, 1, 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -191.0
+margin_top = -107.0
+margin_right = 304.0
+margin_bottom = 143.0
+
+[node name="PlayersHP" type="ProgressBar" parent="HUD"]
+margin_left = 39.0
+margin_top = 822.0
+margin_right = 1573.0
+margin_bottom = 860.0
+value = 100.0
+
+[node name="Hand" type="Panel" parent="HUD"]
+editor/display_folded = true
+margin_left = 96.0
+margin_top = 590.0
+margin_right = 1369.0
+margin_bottom = 782.0
+
+[node name="Panel" type="Panel" parent="HUD/Hand"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_left = 22.0
+margin_top = 21.0
+margin_right = 136.0
+margin_bottom = 172.0
+
+[node name="Panel2" type="Panel" parent="HUD/Hand"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_left = 164.16
+margin_top = 21.0
+margin_right = 278.16
+margin_bottom = 172.0
+
+[node name="Panel3" type="Panel" parent="HUD/Hand"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_left = 314.074
+margin_top = 19.7076
+margin_right = 428.074
+margin_bottom = 170.708
+
+[node name="Energy" type="Panel" parent="HUD"]
+editor/display_folded = true
+margin_left = 120.0
+margin_top = 513.0
+margin_right = 342.0
+margin_bottom = 571.0
+
+[node name="Label" type="Label" parent="HUD/Energy"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Energy: 3"
+align = 1
+valign = 1
+
+[node name="EndTurn" type="Button" parent="HUD"]
+margin_left = 1405.0
+margin_top = 606.0
+margin_right = 1555.0
+margin_bottom = 713.0
+text = "End turn"
+
+[node name="Continue" type="Button" parent="HUD"]
+margin_left = 1407.0
+margin_top = 729.0
+margin_right = 1557.0
+margin_bottom = 776.0
+text = "Continue"
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Suit1" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 275.84, 256.098 )
+
+[node name="Sprite" type="Sprite" parent="Enemies/Suit1"]
+texture = ExtResource( 2 )
+
+[node name="Suit2" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 1048.66, 244.679 )
+
+[node name="Sprite" type="Sprite" parent="Enemies/Suit2"]
+texture = ExtResource( 2 )
+[connection signal="pressed" from="HUD/EndTurn" to="Conductor" method="_on_EndTurn_pressed"]

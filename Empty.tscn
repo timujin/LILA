@@ -26,7 +26,7 @@ func dir_contents(path):
 func recursively_enumerate(path):
 	var dirs = dir_contents(path)
 	for dir in dirs:
-		dir_contents(dir)
+		recursively_enumerate(dir)
 	
 func _ready():
 	var res =recursively_enumerate(\"res://Systems/Character/Inventory/Items/\")
