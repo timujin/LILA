@@ -20,7 +20,7 @@ func room(id:String):
 	if $Rooms.rooms.has(id):
 		return load($Rooms.rooms[id])
 	else:
-		return room(\"Dogroom\")
+		return room(\"FFFFFDogroom\")
 	
 "
 
@@ -52,6 +52,8 @@ export var karmaitems = {
 script/source = "extends Node
 
 export var rooms = {
+	
+	\"00000Corridor\": \"res://Systems/Rooms/Rooms/00000Tutorial/Corridor/Corridor.tscn\",
 	
 	# Testinghall
 	
