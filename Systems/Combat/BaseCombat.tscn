@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Systems/Combat/BaseEnemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/Sprites/Enemies/Suit.png" type="Texture" id=2]
@@ -6,8 +6,17 @@
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
+func _ready():
+	ModeController.combat = self	
+
 func damage_player(amount:int):
-	print(\"Player takes %s damage!\" % amount)"
+	print(\"Player takes %s damage!\" % amount)
+	
+func click_enemy(enemy):
+	var held_card = $\"HUD/Hand\".selected_card
+	if held_card != null:
+		print(\"Damaging %s by 10!\" % enemy)
+	$\"HUD/Hand\".selected_card = null"
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -49,92 +58,48 @@ func generate_intents():
 	
 "
 
+[sub_resource type="GDScript" id=3]
+script/source = "extends Panel
+
+var selected_card = null
+
+func select_card(card):
+	selected_card = card"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Panel
+
+func _gui_input(event):
+	if not event is InputEventMouseButton:
+		return
+	if event.button_index != BUTTON_LEFT or not event.pressed:
+		return
+	print(\"Selected %s\" % self)
+	$\"../..\".select_card(self)
+	"
+
 [node name="BaseCombat" type="Node2D"]
 script = SubResource( 2 )
 
 [node name="Conductor" type="Node" parent="."]
 script = SubResource( 1 )
 
-[node name="HUD" type="Control" parent="."]
-margin_right = 1598.0
-margin_bottom = 894.0
-
-[node name="Modal" type="Panel" parent="HUD"]
+[node name="Modal" type="Panel" parent="."]
 self_modulate = Color( 0, 0.0156863, 1, 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -191.0
+margin_left = -188.0
 margin_top = -107.0
-margin_right = 304.0
-margin_bottom = 143.0
-
-[node name="PlayersHP" type="ProgressBar" parent="HUD"]
-margin_left = 39.0
-margin_top = 822.0
-margin_right = 1573.0
-margin_bottom = 860.0
-value = 100.0
-
-[node name="Hand" type="Panel" parent="HUD"]
-editor/display_folded = true
-margin_left = 96.0
-margin_top = 590.0
-margin_right = 1369.0
-margin_bottom = 782.0
-
-[node name="Panel" type="Panel" parent="HUD/Hand"]
-self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
-margin_left = 22.0
-margin_top = 21.0
-margin_right = 136.0
-margin_bottom = 172.0
-
-[node name="Panel2" type="Panel" parent="HUD/Hand"]
-self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
-margin_left = 164.16
-margin_top = 21.0
-margin_right = 278.16
-margin_bottom = 172.0
-
-[node name="Panel3" type="Panel" parent="HUD/Hand"]
-self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
-margin_left = 314.074
-margin_top = 19.7076
-margin_right = 428.074
-margin_bottom = 170.708
-
-[node name="Energy" type="Panel" parent="HUD"]
-editor/display_folded = true
-margin_left = 120.0
-margin_top = 513.0
-margin_right = 342.0
-margin_bottom = 571.0
-
-[node name="Label" type="Label" parent="HUD/Energy"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-text = "Energy: 3"
-align = 1
-valign = 1
-
-[node name="EndTurn" type="Button" parent="HUD"]
-margin_left = 1405.0
-margin_top = 606.0
-margin_right = 1555.0
-margin_bottom = 713.0
-text = "End turn"
-
-[node name="Continue" type="Button" parent="HUD"]
-margin_left = 1407.0
-margin_top = 729.0
-margin_right = 1557.0
-margin_bottom = 776.0
-text = "Continue"
+margin_right = 1787.0
+margin_bottom = 1039.0
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="Suit1" parent="Enemies" instance=ExtResource( 1 )]
 position = Vector2( 275.84, 256.098 )
+
+[node name="InteractiveArea" parent="Enemies/Suit1" index="3"]
+margin_left = -639.0
 
 [node name="Sprite" type="Sprite" parent="Enemies/Suit1"]
 texture = ExtResource( 2 )
@@ -144,4 +109,114 @@ position = Vector2( 1048.66, 244.679 )
 
 [node name="Sprite" type="Sprite" parent="Enemies/Suit2"]
 texture = ExtResource( 2 )
+
+[node name="HUD" type="Control" parent="."]
+margin_top = 498.0
+margin_right = 1598.0
+margin_bottom = 894.0
+
+[node name="PlayersHP" type="ProgressBar" parent="HUD"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 39.0
+margin_top = -59.0
+margin_right = -25.0
+margin_bottom = -21.0
+value = 100.0
+
+[node name="Hand" type="Panel" parent="HUD"]
+editor/display_folded = true
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 96.0
+margin_top = -291.0
+margin_right = -229.0
+margin_bottom = -99.0
+script = SubResource( 3 )
+
+[node name="VBoxContainer" type="HBoxContainer" parent="HUD/Hand"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="Panel" parent="HUD/Hand/VBoxContainer"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_right = 131.29
+margin_bottom = 192.0
+rect_min_size = Vector2( 131.29, 0 )
+size_flags_vertical = 3
+script = SubResource( 4 )
+
+[node name="Label" type="Label" parent="HUD/Hand/VBoxContainer/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "1"
+
+[node name="Panel2" type="Panel" parent="HUD/Hand/VBoxContainer"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_left = 135.0
+margin_right = 266.29
+margin_bottom = 192.0
+rect_min_size = Vector2( 131.29, 0 )
+size_flags_vertical = 3
+script = SubResource( 4 )
+
+[node name="Label" type="Label" parent="HUD/Hand/VBoxContainer/Panel2"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "2"
+
+[node name="Panel3" type="Panel" parent="HUD/Hand/VBoxContainer"]
+self_modulate = Color( 1, 0.0117647, 0.0117647, 1 )
+margin_left = 270.0
+margin_right = 401.29
+margin_bottom = 192.0
+rect_min_size = Vector2( 131.29, 0 )
+size_flags_vertical = 3
+script = SubResource( 4 )
+
+[node name="Label" type="Label" parent="HUD/Hand/VBoxContainer/Panel3"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "3"
+
+[node name="Energy" type="Panel" parent="HUD"]
+editor/display_folded = true
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 120.0
+margin_top = -368.0
+margin_right = -1256.0
+margin_bottom = -310.0
+
+[node name="Label" type="Label" parent="HUD/Energy"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Energy: 3"
+align = 1
+valign = 1
+
+[node name="EndTurn" type="Button" parent="HUD"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1405.0
+margin_top = -275.0
+margin_right = -43.0
+margin_bottom = -168.0
+text = "End turn"
+
+[node name="Continue" type="Button" parent="HUD"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1407.0
+margin_top = -152.0
+margin_right = -41.0
+margin_bottom = -105.0
+text = "Continue"
 [connection signal="pressed" from="HUD/EndTurn" to="Conductor" method="_on_EndTurn_pressed"]
+
+[editable path="Enemies/Suit1"]

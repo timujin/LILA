@@ -47,6 +47,8 @@ func set_mode(value):
 	else:
 		printerr(\"Invalid mode: \" + str(value))
 		assert(false)
+		
+var combat = null
 
 var hud_hidden = false setget set_hud_hidden
 func set_hud_hidden(value):
