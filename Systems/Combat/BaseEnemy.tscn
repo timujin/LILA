@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Assets/Fonts/Days.otf" type="DynamicFontData" id=1]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 export(String) var title
@@ -43,7 +43,7 @@ func execute(combat):
 	else:
 		intent.execute(combat)"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 func get_next_action():
@@ -54,7 +54,7 @@ func get_next_action():
 	else:
 		return $StrongStrike"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 func get_intent():
@@ -63,7 +63,7 @@ func get_intent():
 func execute(combat):
 	combat.damage_player(10)"
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
 func get_intent():
@@ -72,7 +72,7 @@ func get_intent():
 func execute(combat):
 	combat.damage_player(30)"
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Panel
 
 func display_intent(intent:String):
@@ -82,7 +82,7 @@ func display_intent(intent:String):
 func hide_intent():
 	self.visible = false"
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=6]
 size = 60
 font_data = ExtResource( 1 )
 
@@ -104,16 +104,16 @@ func _gui_input(event):
 [node name="BaseEnemy" type="Node2D"]
 position = Vector2( 1.7124, 1.39764 )
 scale = Vector2( 0.576173, 0.576173 )
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [node name="AI" type="Node" parent="."]
-script = SubResource( 4 )
+script = SubResource( 2 )
 
 [node name="WeakStrike" type="Node" parent="AI"]
-script = SubResource( 5 )
+script = SubResource( 3 )
 
 [node name="StrongStrike" type="Node" parent="AI"]
-script = SubResource( 6 )
+script = SubResource( 4 )
 
 [node name="HPBar" type="ProgressBar" parent="."]
 margin_left = -198.0
@@ -127,12 +127,12 @@ margin_left = 260.571
 margin_top = -266.81
 margin_right = 641.571
 margin_bottom = 297.19
-script = SubResource( 2 )
+script = SubResource( 5 )
 
 [node name="Label" type="Label" parent="SpeechBubble"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 6 )
 text = "I intend to attack"
 align = 1
 valign = 1

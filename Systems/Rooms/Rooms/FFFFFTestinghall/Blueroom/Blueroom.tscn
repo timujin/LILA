@@ -88,7 +88,6 @@ script = SubResource( 1 )
 position = Vector2( 264.795, 124.572 )
 
 [node name="Greenroom" parent="." index="4" instance=ExtResource( 3 )]
-editor/display_folded = true
 position = Vector2( 247.729, 405.675 )
 scale = Vector2( 2.11991, 1.80825 )
 

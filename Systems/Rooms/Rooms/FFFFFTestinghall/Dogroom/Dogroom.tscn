@@ -1,74 +1,27 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://BasicEntities/Room/BaseRoom.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Systems/Rooms/BaseRoom.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Fonts/Sketchalot.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://Assets/Fonts/Days.otf" type="DynamicFontData" id=4]
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 
-[sub_resource type="Gradient" id=1]
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Dogroom"
+roomID = "Dogroom"
 
-[sub_resource type="GradientTexture" id=2]
-gradient = SubResource( 1 )
-
-[sub_resource type="DynamicFont" id=3]
-size = 90
-font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=4]
-size = 25
-font_data = ExtResource( 4 )
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Label
-
-func _ready():
-	text = Character.variables.get_value(\"attempted_load_room\", \"(none)\")"
-
-[node name="Room" index="0" instance=ExtResource( 1 )]
-script = ExtResource( 2 )
-
-[node name="Sprite" type="Sprite" parent="Background" index="0"]
-position = Vector2( 927.666, 478.361 )
-scale = Vector2( 1.45549, 1209.31 )
-texture = SubResource( 2 )
-
-[node name="Label" type="Label" parent="Background" index="1"]
-margin_left = 382.156
-margin_top = 145.318
-margin_right = 1412.16
-margin_bottom = 405.318
-custom_fonts/font = SubResource( 3 )
-text = "Room invalid"
-
-[node name="Label2" type="Label" parent="Background" index="2"]
-margin_left = 802.516
-margin_top = 324.589
-margin_right = 1832.52
-margin_bottom = 584.589
-custom_fonts/font = SubResource( 3 )
-text = "ID:"
-
-[node name="Label3" type="Label" parent="Background" index="3"]
-margin_left = 314.156
-margin_top = 599.678
-margin_right = 1344.16
-margin_bottom = 859.678
-custom_fonts/font = SubResource( 4 )
-text = "ID:"
-align = 1
-script = SubResource( 5 )
+[node name="Label" type="Label" parent="Background" index="0"]
+margin_left = 367.0
+margin_top = 203.0
+margin_right = 719.0
+margin_bottom = 479.0
+text = "Invalid room
+Report to the developer"
 
 [node name="CameraLimitLeft" parent="Geometry" index="0"]
-position = Vector2( -403.259, 454.28 )
+position = Vector2( -11.957, 490.788 )
 
 [node name="CameraLimitTop" parent="Geometry" index="1"]
-position = Vector2( 778.335, -117.37 )
+position = Vector2( 820.115, -6.3645 )
 
 [node name="CameraLimitBottom" parent="Geometry" index="2"]
-position = Vector2( 857.465, 1059.11 )
+position = Vector2( 791.814, 918.542 )
 
 [node name="CameraLimitRight" parent="Geometry" index="3"]
-position = Vector2( 1979.69, 495.829 )
-
-[node name="FirstPersonCamera" parent="." index="2"]
-position = Vector2( 934.378, 479.597 )
+position = Vector2( 1605.24, 439.841 )

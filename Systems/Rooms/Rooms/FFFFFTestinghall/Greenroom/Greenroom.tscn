@@ -3,8 +3,8 @@
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
-roomID = "Greenroom"
+[node name="Room" instance=ExtResource( 1 )]
+roomID = "FFFFFGreenroom"
 
 [node name="Redroom" type="Sprite" parent="Background" index="0"]
 position = Vector2( 897.96, 435.697 )
