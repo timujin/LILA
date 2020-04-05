@@ -3,35 +3,15 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
-var files = []
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
 
-func dir_contents(path):
-	if not path.ends_with('/'):
-		path = path + '/'
-	var res = []
-	var dir = Directory.new()
-	if dir.open(path) == OK:
-		dir.list_dir_begin(true)
-		var file_name = dir.get_next()
-		while (file_name != \"\"):
-			if dir.current_is_dir():
-				res.append(path + file_name)
-			else:
-				files.append(path + file_name)
-			file_name = dir.get_next()
-	else:
-		print(\"An error occurred when trying to access the path: %s.\" % path)
-	return res
-	
-func recursively_enumerate(path):
-	var dirs = dir_contents(path)
-	for dir in dirs:
-		recursively_enumerate(dir)
-	
+# Called when the node enters the scene tree for the first time.
 func _ready():
-	var res =recursively_enumerate(\"res://Systems/Character/Inventory/Items/\")
-	for item in files:
-		print(str( load(item) is Item ) + item)"
+	print(GlobalRegister.register.items)"
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
+
+[node name="Node" type="Node" parent="."]

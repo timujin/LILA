@@ -1,0 +1,145 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "tool
+extends Node2D
+
+var files = []
+
+func dir_contents(path):
+	if not path.ends_with('/'):
+		path = path + '/'
+	var res = []
+	var dir = Directory.new()
+	if dir.open(path) == OK:
+		dir.list_dir_begin(true)
+		var file_name = dir.get_next()
+		while (file_name != \"\"):
+			if dir.current_is_dir():
+				res.append(path + file_name)
+			else:
+				files.append(path + file_name)
+			file_name = dir.get_next()
+	else:
+		print(\"An error occurred when trying to access the path: %s.\" % path)
+	return res
+	
+func recursively_enumerate(path):
+	var dirs = dir_contents(path)
+	for dir in dirs:
+		recursively_enumerate(dir)
+	
+func _ready():
+	#var res =recursively_enumerate(\"res://Systems/Character/Inventory/Items/\")
+	#for item in files:
+	#	print(str( load(item) is Item ) + item)
+	pass #load_items()
+	
+export(bool) var reload = false
+
+func _process(delta):
+	if reload:
+		reload = false
+		load_items()
+		load_karma()
+		load_rooms()
+		
+		
+func load_rooms():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Systems/Rooms/\")
+	for item in files:
+		if not item.ends_with(\".tscn\"):
+			continue
+		print(item)
+		var x = load(item).instance()
+		if not (x is BaseRoom):
+			continue
+		var id = x.roomID
+		x.free()
+		if res.has(id):
+			printerr(\"Duplicate room id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+		else:
+			res[id] = item
+	files = []
+			
+	print(OS.get_unix_time() - start)
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.rooms = res
+	print(saver.rooms)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+		
+func load_items():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Systems/Character/Inventory/Items/\")
+	for item in files:
+		if not item.ends_with(\".tres\"):
+			continue
+		print(item)
+		var x = load(item)
+		if not (x is Item):
+			continue
+		var id = x.id
+		if res.has(id):
+			printerr(\"Duplicate item id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+		else:
+			res[id] = item
+	files = []
+			
+	print(OS.get_unix_time() - start)
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.items = res
+	print(saver.items)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+		
+func load_karma():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Systems/Character/Karma/Karmaitems/\")
+	for item in files:
+		if not item.ends_with(\".tres\"):
+			continue
+		print(item)
+		var x = load(item)
+		if not (x is KarmaItem):
+			continue
+		var id = x.id
+		if res.has(id):
+			printerr(\"Duplicate item id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+		else:
+			res[id] = item
+	files = []
+			
+	print(OS.get_unix_time() - start)
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.karmaitems = res
+	print(saver.karmaitems)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)"
+
+[node name="Node2D" type="Node2D"]
+script = SubResource( 1 )

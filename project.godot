@@ -48,6 +48,11 @@ _global_script_classes=[ {
 "class": "KarmaItemEntry",
 "language": "GDScript",
 "path": "res://Systems/Character/Karma/KarmaItemEntry.gd"
+}, {
+"base": "Resource",
+"class": "RegisterResource",
+"language": "GDScript",
+"path": "res://Systems/GlobalRegister/RegisterResource.gd"
 } ]
 _global_script_class_icons={
 "BasePickler": "",
@@ -57,7 +62,8 @@ _global_script_class_icons={
 "ItemAction": "",
 "KarmaAction": "",
 "KarmaItem": "",
-"KarmaItemEntry": ""
+"KarmaItemEntry": "",
+"RegisterResource": ""
 }
 
 [application]

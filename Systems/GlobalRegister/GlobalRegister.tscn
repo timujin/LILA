@@ -1,7 +1,32 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Systems/GlobalRegister/Register.tres" type="Resource" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
+
+export(Resource) var register
+
+func item(id:String):
+	if register.items.has(id):
+		return load(register.items[id])
+	else:
+		return item(\"MissingNo\")
+		
+
+func karmaitem(id:String):
+	if register.karmaitems.has(id):
+		return load(register.karmaitems[id])
+	else:
+		return karmaitem(\"MissingNo\")
+	
+func room(id:String):
+	if register.rooms.has(id):
+		return load(register.rooms[id])
+	else:
+		return room(\"FFFFFDogroom\")
+	
+\"\"\"
 
 func item(id:String):
 	if $Items.items.has(id):
@@ -21,8 +46,8 @@ func room(id:String):
 		return load($Rooms.rooms[id])
 	else:
 		return room(\"FFFFFDogroom\")
-	
-"
+
+\"\"\""
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -35,9 +60,24 @@ export var items = {
 	\"MissingNo\": \"res://Systems/Character/Inventory/Items/MissingNo/MissingNo.tres\",
 	\"Hat\": \"res://Systems/Character/Inventory/Items/Hat/Hat.tres\",
 	\"DifferentHat\":\"res://Systems/Character/Inventory/Items/DifferentHat/DifferentHat.tres\" ,
-	}"
+	}
+	
+export(Resource) var test_items"
 
 [sub_resource type="GDScript" id=3]
+script/source = "extends Resource
+
+class_name ItemRegister
+
+export(Dictionary) var items"
+
+[sub_resource type="Resource" id=4]
+script = SubResource( 3 )
+items = {
+"key": "value"
+}
+
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 export var karmaitems = {
@@ -48,7 +88,7 @@ export var karmaitems = {
 	\"MissingNo\": \"res://Systems/Character/Karma/KarmaItems/MissingNo/MissingNo.tres\"
 	}"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=6]
 script/source = "extends Node
 
 export var rooms = {
@@ -67,14 +107,16 @@ export var rooms = {
 
 [node name="GlobalRegister" type="Node"]
 script = SubResource( 1 )
+register = ExtResource( 1 )
 
 [node name="Items" type="Node" parent="."]
 script = SubResource( 2 )
+test_items = SubResource( 4 )
 
 [node name="KarmaItems" type="Node" parent="."]
-script = SubResource( 3 )
+script = SubResource( 5 )
 
 [node name="Rooms" type="Node" parent="."]
-script = SubResource( 4 )
+script = SubResource( 6 )
 
 [node name="CombatCards" type="Node" parent="."]

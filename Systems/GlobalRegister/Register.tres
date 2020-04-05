@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Systems/GlobalRegister/RegisterResource.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+items = {
+"DifferentHat": "res://Systems/Character/Inventory/Items/DifferentHat/DifferentHat.tres",
+"GOEEsNote": "res://Systems/Character/Inventory/Items/GOEEsNote/GOEEsNote.tres",
+"Hat": "res://Systems/Character/Inventory/Items/Hat/Hat.tres",
+"Knife": "res://Systems/Character/Inventory/Items/Knife/Knife.tres",
+"Lockpick": "res://Systems/Character/Inventory/Items/Lockpick/Lockpick.tres",
+"MissingNo": "res://Systems/Character/Inventory/Items/MissingNo/MissingNo.tres"
+}
+karmaitems = {
+"BlessedByTheGoddess": "res://Systems/Character/Karma/Karmaitems/BlessedByTheGoddess/BlessedByTheGoddess.tres",
+"Brutality": "res://Systems/Character/Karma/Karmaitems/Brutality/Brutality.tres",
+"MissingNo": "res://Systems/Character/Karma/Karmaitems/MissingNo/MissingNo.tres",
+"Trickery": "res://Systems/Character/Karma/Karmaitems/Trickery/Trickery.tres"
+}
+rooms = {
+"00000Corridor": "res://Systems/Rooms/Rooms/00000Tutorial/Corridor/Corridor.tscn",
+"FFFFFBlueroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
+"FFFFFRedroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
+"Greenroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
+"[ID NOT SET]": "res://Systems/Rooms/BaseRoom.tscn"
+}
