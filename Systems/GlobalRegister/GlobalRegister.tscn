@@ -19,6 +19,12 @@ func karmaitem(id:String):
 		return load(register.karmaitems[id])
 	else:
 		return karmaitem(\"MissingNo\")
+
+func combatcard(id:String):
+	if register.combatcards.has(id):
+		return load(register.combatcards[id])
+	else:
+		return karmaitem(\"MissingNo\")
 	
 func room(id:String):
 	if register.rooms.has(id):

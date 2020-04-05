@@ -20,6 +20,16 @@ _global_script_classes=[ {
 "path": "res://Systems/Rooms/BaseRoom.gd"
 }, {
 "base": "Resource",
+"class": "CardPrice",
+"language": "GDScript",
+"path": "res://Systems/Character/Combatcards/CardPrice.gd"
+}, {
+"base": "Resource",
+"class": "Combatcard",
+"language": "GDScript",
+"path": "res://Systems/Character/Combatcards/Combatcard.gd"
+}, {
+"base": "Resource",
 "class": "InventoryEntry",
 "language": "GDScript",
 "path": "res://Systems/Character/Inventory/InventoryEntry.gd"
@@ -57,6 +67,8 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "BasePickler": "",
 "BaseRoom": "",
+"CardPrice": "",
+"Combatcard": "",
 "InventoryEntry": "",
 "Item": "",
 "ItemAction": "",

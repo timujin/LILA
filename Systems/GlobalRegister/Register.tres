@@ -18,6 +18,9 @@ karmaitems = {
 "MissingNo": "res://Systems/Character/Karma/Karmaitems/MissingNo/MissingNo.tres",
 "Trickery": "res://Systems/Character/Karma/Karmaitems/Trickery/Trickery.tres"
 }
+combatcards = {
+
+}
 rooms = {
 "00000Corridor": "res://Systems/Rooms/Rooms/00000Tutorial/Corridor/Corridor.tscn",
 "Dogroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",

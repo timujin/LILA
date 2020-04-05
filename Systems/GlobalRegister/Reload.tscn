@@ -139,7 +139,41 @@ func load_karma():
 	print(ResourceSaver.get_recognized_extensions(saver))
 	var dir = Directory.new()
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
-	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)"
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+
+func load_combatcards():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Systems/Character/Combatcards/Combatcards/\")
+	for item in files:
+		if not item.ends_with(\".tres\"):
+			continue
+		print(item)
+		var x = load(item)
+		if not (x is Combatcard):
+			continue
+		var id = x.id
+		if res.has(id):
+			printerr(\"Duplicate combatcard id: %s\" % id)
+			printerr(\"CC 1: %s\" % item)
+			printerr(\"CC 2: %s\" % res[id])
+		else:
+			res[id] = item
+	files = []
+			
+	print(OS.get_unix_time() - start)
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.combatcards = res
+	print(saver.combatcards)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+		"
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
