@@ -17,7 +17,6 @@ signal on_apply_item
 
 export var ActivatorName : String = \"Unnamed\"
 
-
 func _gui_input(event):
 	if ModeController.mode != ModeController.EXPLORE:
 		mouse_default_cursor_shape = Control.CURSOR_ARROW
@@ -31,19 +30,18 @@ func _gui_input(event):
 		return
 	
 	print(\"Clicked %s!\" % ActivatorName)
-	
-	\"\"\"
+
 	if ModeController.get_is_player_holding_item():
 		emit_signal(\"on_apply_item\", ModeController.holding_item, ModeController.holding_callback)
 		ModeController.apply_item(get_parent())
 	else:
-	\"\"\"
-	emit_signal(\"on_activate\")
-	var activatable = get_parent().get_node(\"Activator\")
-	if activatable != null and activatable.has_method(\"activate\"):
-		activatable.activate()
-	if activatable != null and activatable.has_method(\"on_activate\"):
-		activatable.on_activate()
+
+		emit_signal(\"on_activate\")
+		var activatable = get_parent().get_node(\"Activator\")
+		if activatable != null and activatable.has_method(\"activate\"):
+			activatable.activate()
+		if activatable != null and activatable.has_method(\"on_activate\"):
+			activatable.on_activate()
 
 func blurb(text:String):
 	if $\"../BlurbPoint\" == null:

@@ -44,7 +44,7 @@ func activate():
 	ModeController.set_mode(ModeController.COMBAT)
 	add_child(preload(\"res://Systems/Combat/BaseCombat.tscn\").instance())"
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 roomID = "FFFFFBlueroom"
 
 [node name="Lamp" type="Sprite" parent="Background" index="0"]

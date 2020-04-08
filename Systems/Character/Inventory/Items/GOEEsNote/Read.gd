@@ -1,6 +1,6 @@
 extends GDScript
 
-static func run():
+static func run(item, action):
 	print("GOEE's note activated!")
 	"""
 	var VN

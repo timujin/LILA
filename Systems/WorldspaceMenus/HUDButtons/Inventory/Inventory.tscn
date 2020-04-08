@@ -103,7 +103,7 @@ func render(inventoryitem):
 				
 func on_action(item, action):
 	var script = item.species.actions[action]
-	script.run()
+	script.run(item, action)
 	
 		
 func clear():
