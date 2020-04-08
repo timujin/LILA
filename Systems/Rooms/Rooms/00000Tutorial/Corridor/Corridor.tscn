@@ -92,7 +92,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[node name="Room" instance=ExtResource( 1 )]
+[node name="Room" index="0" instance=ExtResource( 1 )]
 roomName = "Corridor"
 roomID = "00000Corridor"
 

@@ -70,7 +70,7 @@ func render(inventoryitem):
 		var actions = item.actions.keys()
 		if actions.size() > 0:
 			for action in actions:
-				var btn = preload(\"res://Autoload/WorldspaceHUD/Inventory/ActionButton.tscn\").instance()
+				var btn = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/ActionButton.tscn\").instance()
 				$Buttons.add_child(btn)
 				btn.attach(action, item)
 				
@@ -98,8 +98,8 @@ signal item_selected
 func render():
 	clear()
 	
-	var item_renderer = preload(\"res://Autoload/WorldspaceHUD/Inventory/ItemRenderUI.tscn\")
-	for item in CharacterData.inventory.inventory:
+	var item_renderer = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/ItemRenderUI.tscn\")
+	for item in Character.inventory.entries:
 		var renderer = item_renderer.instance()
 		add_child(renderer)
 		renderer.render(item)

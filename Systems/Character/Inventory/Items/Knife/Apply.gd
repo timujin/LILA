@@ -1,4 +1,4 @@
 extends ItemAction
 
-func run():
+static func run():
 	print("Knife activated")

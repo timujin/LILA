@@ -135,12 +135,14 @@ func render():
 		renderer.render(item)
 		#renderer.connect_me(self, \"on_item_selected\")
 		renderer.connect(\"selected\", self, \"on_item_selected\")
+		print(\"Connected\")
 	
 func clear():
 	for child in get_children():
 		child.queue_free()
 		
 func on_item_selected(item):
+	print(\"item selecred\")
 	emit_signal(\"item_selected\", item)"
 
 [node name="Inventory" type="Control"]
@@ -307,9 +309,8 @@ text = "Yet"
 
 [node name="Delimeter" type="Panel" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
 visible = false
-margin_top = 64.0
 margin_right = 1035.0
-margin_bottom = 70.0
+margin_bottom = 6.0
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.1
 
