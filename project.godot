@@ -69,15 +69,15 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn"
+run/main_scene="res://Systems/Rooms/Rooms/00000Tutorial/Corridor/Corridor.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
-Character="*res://Systems/Character/Character.tscn"
 GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
-DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
 ModeController="*res://Systems/ModeController/ModeController.tscn"
+Character="*res://Systems/Character/Character.tscn"
+DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
 RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 HUDButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
 

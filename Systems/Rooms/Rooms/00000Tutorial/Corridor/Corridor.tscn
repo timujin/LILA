@@ -27,14 +27,27 @@ func _ready():
 	VN.poses.reset()
 	VN.speaker.reset()
 	
+
+
+	
 	yield(think(\"It's dark.\"), \"completed\")
-	yield(think(\"I've been walking down this path metaphorically forever.\"), \"completed\")
-	yield(think(\"Blah blah unfinished dialogue\"), \"completed\")
+	yield(think(\"I've been walking down this path forever.\"), \"completed\")
+	yield(think(\"I remember nothing other than this corridor.\"), \"completed\")
+	yield(think(\"The walk is stretching out infinitely into the past, like a temporal vanishing point.\"), \"completed\")
+	yield(think(\"I wonder if it will stretch forever into the future, too.\"), \"completed\")
+	yield(think(\"Walking, walking, and walking.\"), \"completed\")
+	yield(think(\"Forever.\"), \"completed\")
+	yield(think(\"I don't even know who I am.\"), \"completed\")
+	yield(think(\"I don't have anything to latch onto, no reference point to ground myself.\"), \"completed\")
+	yield(think(\"The Universe is nothing but this corridor.\"), \"completed\")
+	yield(think(\"Do I even exist?\"), \"completed\")
+	yield(think(\"I think, therefore, I am.\"), \"completed\")
+	yield(think(\"I think.\"), \"completed\")
 	emit_signal(\"show_door\")
 	yield(self, \"proceed\")
 	yield(think(\"A door?\"), \"completed\")
-	yield(think(\"That's a new development.\"), \"completed\")
-	yield(think(\"Might as go through.\"), \"completed\")
+	yield(think(\"That's new.\"), \"completed\")
+	yield(think(\"Might as well go through.\"), \"completed\")
 	emit_signal(\"finished\")
 	queue_free()
 	
@@ -92,7 +105,7 @@ tracks/1/keys = {
 "values": [  ]
 }
 
-[node name="Room" index="0" instance=ExtResource( 1 )]
+[node name="Room" instance=ExtResource( 1 )]
 roomName = "Corridor"
 roomID = "00000Corridor"
 
