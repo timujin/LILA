@@ -14,7 +14,7 @@ hint = "Use it to open locks. Harder locks might require higher Trickery, and ot
 category = "Tools"
 countable = false
 actions = {
-
+"Pick a lock": null
 }
 combat_cards = [  ]
 other_data = {

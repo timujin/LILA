@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Knife.png-acd4d1daa298db66d26e119cac9681dc.stex"
+path="res://.import/Pendant.png-a98e4eac787f96fe1e3a187ae619cb82.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Systems/Character/Inventory/Items/Knife/Knife.png"
-dest_files=[ "res://.import/Knife.png-acd4d1daa298db66d26e119cac9681dc.stex" ]
+source_file="res://Systems/Character/Inventory/Items/GoddessPendant/Pendant.png"
+dest_files=[ "res://.import/Pendant.png-a98e4eac787f96fe1e3a187ae619cb82.stex" ]
 
 [params]
 

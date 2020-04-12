@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Hat.png-2b8744b9076a2018a3438fdd3c752e24.stex"
+path="res://.import/panties.png-07f2d8f1c635e8f16f630aa6f45cc2b2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Systems/Character/Inventory/Items/Hat/Hat.png"
-dest_files=[ "res://.import/Hat.png-2b8744b9076a2018a3438fdd3c752e24.stex" ]
+source_file="res://Systems/Character/Inventory/Items/GoddessPanties/panties.png"
+dest_files=[ "res://.import/panties.png-07f2d8f1c635e8f16f630aa6f45cc2b2.stex" ]
 
 [params]
 
