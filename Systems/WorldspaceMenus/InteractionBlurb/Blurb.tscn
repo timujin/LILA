@@ -1,0 +1,85 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Assets/Fonts/Days.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Panel
+
+var callback_target = null
+var callback_method = null
+
+func _ready():
+	ModeController.connect(\"reset\", self, \"hide\")
+	hide()
+
+func render(text:String, button:String):
+	$Text.text = text
+	if button == null:
+		$Button.visible = false
+	else:
+		$Button.text = button
+		$Button.visible = true
+		
+func bring_up(at):
+	self.rect_global_position = at.position
+	self.visible = true
+	
+func connect_button(target, method):
+	callback_target = target
+	callback_method = method
+	
+func hide():
+	self.visible = false
+	callback_target = null
+	callback_method = null
+	
+func _input(event):
+	if event is InputEventMouseButton:
+	    if event.button_index == BUTTON_RIGHT and event.pressed:
+	        hide()
+
+func _on_Button_pressed():
+	if callback_target != null and callback_method != null:
+		callback_target.call_deferred(callback_method)
+	hide()
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 32
+font_data = ExtResource( 2 )
+
+[node name="Blurb" type="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -1031.0
+margin_bottom = -654.0
+script = SubResource( 1 )
+
+[node name="Text" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 32.0
+margin_top = 33.0
+margin_right = -35.0
+margin_bottom = -28.0
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center]Item description[/center]"
+text = "Item description"
+
+[node name="Button" type="Button" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 74.0
+margin_top = -71.0
+margin_right = -60.0
+margin_bottom = -21.0
+custom_fonts/font = SubResource( 3 )
+text = "Interact"
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

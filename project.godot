@@ -80,6 +80,7 @@ Character="*res://Systems/Character/Character.tscn"
 DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
 RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 HUDButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
+Blurb="*res://Systems/WorldspaceMenus/InteractionBlurb/Blurb.tscn"
 
 [display]
 

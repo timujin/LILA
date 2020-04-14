@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/Graphics/Room.png" type="Texture" id=2]
@@ -18,6 +18,19 @@
 [ext_resource path="res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/Graphics/Table.png" type="Texture" id=16]
 [ext_resource path="res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/Graphics/Gift.png" type="Texture" id=17]
 [ext_resource path="res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/Graphics/Cake.png" type="Texture" id=18]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func activate():
+	print(\"onactivate\")
+	Blurb.render(\"Hairpin on the floor\", \"Pick up\")
+	Blurb.bring_up($\"../BlurbPoint\")
+	Blurb.connect_button(self, \"blurbclick\")
+	
+	
+func blurbclick():
+	print(\"Activated!\")"
 
 [node name="Room" index="0" instance=ExtResource( 1 )]
 
@@ -167,7 +180,6 @@ position = Vector2( 1295.72, 534.461 )
 texture = ExtResource( 9 )
 
 [node name="Hairpin" parent="." index="10" instance=ExtResource( 3 )]
-editor/display_folded = true
 
 [node name="BlurbPoint" parent="Hairpin" index="0"]
 position = Vector2( 460.806, 625.512 )
@@ -178,6 +190,9 @@ margin_top = 810.0
 margin_right = 451.0
 margin_bottom = 836.0
 ActivatorName = "Hairpin"
+
+[node name="Activator" parent="Hairpin" index="2"]
+script = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="Hairpin" index="3"]
 position = Vector2( 436.008, 824.547 )
@@ -219,6 +234,7 @@ position = Vector2( 1588.07, 564.433 )
 texture = ExtResource( 12 )
 
 [node name="Note" parent="." index="13" instance=ExtResource( 3 )]
+editor/display_folded = true
 
 [node name="BlurbPoint" parent="Note" index="0"]
 position = Vector2( 1106.68, 392.333 )
