@@ -80,6 +80,9 @@ func render(inventoryitem):
 	$\"ItemDescription\".text = item.description
 	$\"ItemHint\".text = item.hint
 	
+	if inventoryitem.error_message != null:
+		$\"ItemHint\".text = inventoryitem.error_message
+	
 	
 	if item.actions != null:
 		var actions = item.actions.keys()

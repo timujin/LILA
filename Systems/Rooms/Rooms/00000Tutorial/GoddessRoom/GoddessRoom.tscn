@@ -79,6 +79,7 @@ func blurbclick():
 	yield(Character.inventory.item_get(\"GoddessPendant\"), \"dismissed\")
 	yield(Character.inventory.item_get(\"GoddessRoomKey\"), \"dismissed\")
 	yield(Character.inventory.item_get(\"GOEEsNote\"), \"dismissed\")
+	yield(Character.inventory.item_get(\"error\"), \"dismissed\")
 	VN.show()
 	yield(VN.think(\"I unfolded the note and read it.\"), \"completed\")
 	VN.hide()

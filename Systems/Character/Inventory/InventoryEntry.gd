@@ -5,9 +5,14 @@ class_name InventoryEntry
 export(Resource) var species
 export(int) var amount
 export(bool) var equipped
+export(String) var error_message # For MissingNo
 
 func _init(id, amount = 0):
 	self.species = Item.load_by_id(id)
+	if self.species.id == "MissingNo":
+		error_message = "Item ID: %s" % id
+	else:
+		error_message = null
 	self.amount = amount
 	self.equipped = false
 	
