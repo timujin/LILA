@@ -5,18 +5,22 @@
 [resource]
 script = ExtResource( 1 )
 items = {
-"DifferentHat": "res://Systems/Character/Inventory/Items/DifferentHat/DifferentHat.tres",
 "GOEEsNote": "res://Systems/Character/Inventory/Items/GOEEsNote/GOEEsNote.tres",
-"Hat": "res://Systems/Character/Inventory/Items/Hat/Hat.tres",
-"Knife": "res://Systems/Character/Inventory/Items/Knife/Knife.tres",
+"GoddessPanties": "res://Systems/Character/Inventory/Items/GoddessPanties/GoddessPanties.tres",
+"GoddessPendant": "res://Systems/Character/Inventory/Items/GoddessPendant/GoddessPendant.tres",
+"GoddessRoomKey": "res://Systems/Character/Inventory/Items/GoddessRoomKey/GoddessRoomKey.tres",
+"Hairpin": "res://Systems/Character/Inventory/Items/Hairpin/Hairpin.tres",
 "Lockpick": "res://Systems/Character/Inventory/Items/Lockpick/Lockpick.tres",
 "MissingNo": "res://Systems/Character/Inventory/Items/MissingNo/MissingNo.tres"
 }
 karmaitems = {
 "BlessedByTheGoddess": "res://Systems/Character/Karma/Karmaitems/BlessedByTheGoddess/BlessedByTheGoddess.tres",
 "Brutality": "res://Systems/Character/Karma/Karmaitems/Brutality/Brutality.tres",
+"Delinquency": "res://Systems/Character/Karma/Karmaitems/Delinquency/Delinquency.tres",
 "MissingNo": "res://Systems/Character/Karma/Karmaitems/MissingNo/MissingNo.tres",
-"Trickery": "res://Systems/Character/Karma/Karmaitems/Trickery/Trickery.tres"
+"Superstimulus": "res://Systems/Character/Karma/Karmaitems/Superstimulus/Superstimulus.tres",
+"Trickery": "res://Systems/Character/Karma/Karmaitems/Trickery/Trickery.tres",
+"VisageOfThePale": "res://Systems/Character/Karma/Karmaitems/VisageOfThePale/VisageOfThePale.tres"
 }
 combatcards = {
 

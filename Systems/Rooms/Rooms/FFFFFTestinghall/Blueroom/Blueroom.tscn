@@ -104,7 +104,6 @@ margin_bottom = 71.0
 script = SubResource( 2 )
 
 [node name="Lamp" parent="." index="5" instance=ExtResource( 3 )]
-editor/display_folded = true
 position = Vector2( 720.573, 538.118 )
 
 [node name="BlurbPoint" parent="Lamp" index="0"]

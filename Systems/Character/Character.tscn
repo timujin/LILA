@@ -34,11 +34,12 @@ Yet to track:
 var entries = []
 
 func _ready():
-	add_item(\"GOEEsNote\", 1)
-	add_item(\"Lockpick\", 5)
-	add_item(\"Knife\", 5)
-	add_item(\"Hat\", 1)
-	add_item(\"DifferentHat\", 1)
+	pass
+	#add_item(\"GOEEsNote\", 1)
+	#add_item(\"Lockpick\", 5)
+	#add_item(\"Knife\", 5)
+	#add_item(\"Hat\", 1)
+	#add_item(\"DifferentHat\", 1)
 
 func fetch_item(id:String):
 	\"\"\"Loads an item by ID. If there is no such item, one is created\"\"\"
@@ -109,7 +110,14 @@ func equip_in_slot(id:String, slot:String):
 			item.equipped = true
 			return
 	printerr(\"Attempt to equip nonexistent item!\")
-	"
+	
+	
+func item_get(id:String, amount:int = 1):
+	var species = add_item(id, amount).species
+	var popup = preload(\"res://Systems/WorldspaceMenus/Popups/ItemGet.tscn\").instance()
+	$\"/root/Room\".add_child(popup)
+	popup.render(species, amount)
+	return popup"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node

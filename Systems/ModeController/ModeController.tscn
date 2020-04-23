@@ -59,6 +59,14 @@ func set_hud_hidden(value):
 	else:
 		emit_signal(\"show_hud\")
 
+func start_cutscene():
+	reset_hud()
+	set_mode(CUTSCENE)
+	
+func stop_cutscene():
+	reset_hud()
+	set_mode(EXPLORE)
+
 #########
 # Helper logical functions.
 # I put them here to be able to change the logic 

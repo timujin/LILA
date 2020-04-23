@@ -141,7 +141,7 @@ func load_karma():
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
 	
-
+\"\"\"
 func load_combatcards():
 	var start = (OS.get_unix_time())
 	var res = {}
@@ -172,8 +172,8 @@ func load_combatcards():
 	var dir = Directory.new()
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
-	
-		"
+\"\"\"	"
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
+reload = true

@@ -1,0 +1,97 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Placeholders/ironallyplating.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Fonts/Days.otf" type="DynamicFontData" id=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends CanvasLayer
+
+signal dismissed
+
+func render(item, amount:int):
+	$ItemGet.visible = true
+	$\"ItemGet/Panel/Icon\".texture = item.icon
+	$\"ItemGet/Panel/Name\".text = item.title
+	$\"ItemGet/Panel/Description\".text = item.description
+	if amount == 1:
+		$\"ItemGet/Panel/Amount\".visible = false
+	else:
+		$\"ItemGet/Panel/Amount\".visible = true
+		$\"ItemGet/Panel/Amount\".text = str(amount)
+		
+func _input(event):
+	if event is InputEventMouseButton:
+		if (event.button_index == BUTTON_RIGHT or event.button_index == BUTTON_LEFT) and event.pressed:
+			emit_signal(\"dismissed\")
+			queue_free()
+		"
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+outline_size = 10
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[node name="ItemGet" type="CanvasLayer"]
+script = SubResource( 2 )
+
+[node name="ItemGet" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="Panel" parent="ItemGet"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 388.0
+margin_top = 245.0
+margin_right = -416.0
+margin_bottom = -307.0
+
+[node name="Icon" type="TextureRect" parent="ItemGet/Panel"]
+anchor_bottom = 1.0
+margin_left = 53.0
+margin_top = 64.0
+margin_right = 296.0
+margin_bottom = -84.0
+texture = ExtResource( 1 )
+expand = true
+
+[node name="Name" type="Label" parent="ItemGet/Panel"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -589.0
+margin_top = 25.0
+margin_right = -33.0
+margin_bottom = 96.0
+custom_fonts/font = SubResource( 1 )
+text = "Item name"
+align = 1
+valign = 1
+
+[node name="Description" type="Label" parent="ItemGet/Panel"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -587.0
+margin_top = 138.0
+margin_right = -45.0
+margin_bottom = -127.0
+custom_fonts/font = SubResource( 1 )
+text = "Item description"
+align = 1
+valign = 1
+
+[node name="Amount" type="Label" parent="ItemGet/Panel"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -133.0
+margin_top = -126.0
+margin_right = -25.0
+margin_bottom = -29.0
+custom_fonts/font = SubResource( 1 )
+text = "99"
+align = 1
+valign = 1
