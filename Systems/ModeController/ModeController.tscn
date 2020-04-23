@@ -61,10 +61,12 @@ func set_hud_hidden(value):
 
 func start_cutscene():
 	reset_hud()
+	HUDButtons.hide()
 	set_mode(CUTSCENE)
 	
 func stop_cutscene():
 	reset_hud()
+	HUDButtons.unhide()
 	set_mode(EXPLORE)
 
 #########

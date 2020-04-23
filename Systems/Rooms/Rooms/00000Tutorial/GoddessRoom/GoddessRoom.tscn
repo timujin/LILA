@@ -78,9 +78,14 @@ func blurbclick():
 	VN.hide()
 	yield(Character.inventory.item_get(\"GoddessPendant\"), \"dismissed\")
 	yield(Character.inventory.item_get(\"GoddessRoomKey\"), \"dismissed\")
+	yield(Character.inventory.item_get(\"GOEEsNote\"), \"dismissed\")
 	VN.show()
 	yield(VN.think(\"I unfolded the note and read it.\"), \"completed\")
-	# Show Goddess's Note!
+	VN.hide()
+	var note = preload(\"res://Systems/Character/Inventory/Items/GOEEsNote/Goddesssnote.tscn\").instance()
+	add_child(note)
+	yield(note, \"dismissed\")
+	VN.show()
 	yield(VN.think(\"//I looked around, evaluting the room.\"), \"completed\")
 	
 	VN.stop_cutscene()
@@ -415,7 +420,6 @@ data = {
 }
 
 [node name="Cake" parent="." index="17" instance=ExtResource( 3 )]
-editor/display_folded = true
 
 [node name="BlurbPoint" parent="Cake" index="0"]
 position = Vector2( 901.256, 412.69 )

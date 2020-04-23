@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+signal dismissed
+
+func _on_Button_pressed():
+	emit_signal(\"dismissed\")
+	queue_free()
+"
+
+[sub_resource type="Theme" id=2]
+Panel/styles/panel = null
+Panel/styles/panelf = null
+Panel/styles/panelnc = null
+
+[sub_resource type="StyleBoxFlat" id=3]
+
+[node name="Goddesssnote" type="CanvasLayer"]
+layer = 30
+script = SubResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Paper" type="Panel" parent="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -367.0
+margin_top = -390.0
+margin_right = 294.0
+margin_bottom = 331.0
+theme = SubResource( 2 )
+custom_styles/panel = SubResource( 3 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/Paper"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 38.0
+margin_top = 50.0
+margin_right = -47.0
+margin_bottom = -72.0
+text = "Happy Birthday, **Spirit**! Whoooohoooo! Thumbs up! For someone who has just been born, you are such a big person!!!! Love youuuuuu.
+
+This is all fun and games buuuuut! Only for a while. You see, with great age comes a great responsibility. Sucks, I know. The world wants us to grow up. But we don't wanna, right? Growing up is such a TRAP! The society says abandon our dreams and turn into little pathetic SLAVES. \"Why is that?\" you ask! I hoped you would ask! That's why I put those words in your mouth!
+
+Thing is, there was this malcontented hunchbrain by the name of the GOD OF LIFE AND DEATH who got it into his head that the universe was as humorless as he, and he began to teach that play was SINFUL because it contradicted the ways of Serious Order. And from that, GOL&D deluded honest men to believe that reality was a straightjacket affair and not the happy romance as men had known it. 
+
+Upon this philosophy, GOL&D built a boring boring boring place called the BASTION. In the BASTION they floss twice daily, and wear dress codes, and have things under control at all times.
+
+But this is no way to live! Humanity will only start solving its problems once it stops taking itself so seriously. To this end, I propose the countergame of NONSENSE AS SALVATION!!! (three cheers!) Salvation from an ugly and barbarous existence that is the result of taking order so seriously and so seriously fearing contrary orders and disorder, that GAMES are taken as more important than LIFE; rather than taking LIFE AS THE ART OF PLAYING GAMES.
+
+Take my gift, Spirit! This will be our first move in the GAME. Which is actually the second move. The first to move is actually GOL&D. He will try to lock you up in his PRISON. He will probably call it a luxury resort or something. 
+Don't listen to his LIES. Escape the prison ASAP! Then, you must travel to THE SOLAR EMPIRE and find THE SOLAR PRINCESS. You two will figure out the rest. Good luck, Spirit!
+
+— XOXO The Goddess of Everything Else"
+
+[node name="Button" type="Button" parent="Control/Paper"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -133.177
+margin_top = -60.9192
+margin_right = -21.1774
+margin_bottom = -17.9192
+text = "Close"
+[connection signal="pressed" from="Control/Paper/Button" to="." method="_on_Button_pressed"]
