@@ -33,7 +33,7 @@ func activate():
 func blurbclick():
 	print(\"Activated!\")"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
 
 # Declare member variables here. Examples:
@@ -57,7 +57,7 @@ func _on_IsGiftTaken_unpickled(data):
 		self.visible = true
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 func activate():
@@ -93,8 +93,7 @@ func blurbclick():
 	
 	$\"/root/Room/InteractiveItemsDisabler\".enable_all()"
 
-[sub_resource type="Animation" id=3]
-resource_name = "GiftBlinking"
+[sub_resource type="Animation" id=4]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:modulate")
@@ -109,7 +108,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 0.462745, 0.462745, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 onready var items_to_disable = [
@@ -337,7 +336,6 @@ position = Vector2( 1588.07, 564.433 )
 texture = ExtResource( 12 )
 
 [node name="Note" parent="." index="12" instance=ExtResource( 3 )]
-editor/display_folded = true
 
 [node name="BlurbPoint" parent="Note" index="0"]
 position = Vector2( 1106.68, 392.333 )
@@ -349,7 +347,7 @@ margin_right = 1672.0
 margin_bottom = 892.0
 
 [node name="Sprite" type="Sprite" parent="Note" index="3"]
-position = Vector2( 1605.42, 588.407 )
+position = Vector2( 1570.88, 556.03 )
 texture = ExtResource( 13 )
 
 [node name="Cupboard" parent="." index="13" instance=ExtResource( 3 )]
@@ -391,7 +389,7 @@ position = Vector2( 784.467, 741.417 )
 texture = ExtResource( 16 )
 
 [node name="Gift" parent="." index="16" instance=ExtResource( 3 )]
-script = SubResource( 5 )
+script = SubResource( 2 )
 
 [node name="BlurbPoint" parent="Gift" index="0"]
 position = Vector2( 679.181, 479.313 )
@@ -404,7 +402,7 @@ margin_bottom = 753.0
 ActivatorName = "Gift box"
 
 [node name="Activator" parent="Gift" index="2"]
-script = SubResource( 4 )
+script = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="Gift" index="3"]
 position = Vector2( 638.456, 670.265 )
@@ -412,7 +410,7 @@ texture = ExtResource( 17 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Gift" index="4"]
 autoplay = "GiftBlinking"
-anims/GiftBlinking = SubResource( 3 )
+anims/GiftBlinking = SubResource( 4 )
 
 [node name="IsGiftThere" type="Node" parent="Gift" index="5"]
 script = ExtResource( 18 )
@@ -437,7 +435,7 @@ position = Vector2( 899.267, 629.009 )
 texture = ExtResource( 19 )
 
 [node name="InteractiveItemsDisabler" type="Node" parent="." index="18"]
-script = SubResource( 2 )
+script = SubResource( 5 )
 [connection signal="unpickled" from="Gift/IsGiftThere" to="Gift" method="_on_IsGiftTaken_unpickled"]
 
 [editable path="Window"]
