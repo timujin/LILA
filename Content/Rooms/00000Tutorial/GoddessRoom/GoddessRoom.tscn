@@ -25,13 +25,14 @@ script/source = "extends Node
 
 func activate():
 	print(\"onactivate\")
-	Blurb.render(\"Hairpin on the floor\", \"Pick up\")
-	Blurb.bring_up($\"../BlurbPoint\")
-	Blurb.connect_button(self, \"blurbclick\")
+	#Blurb.render(\"Hairpin on the floor\", \"Pick up\")
+	#Blurb.bring_up($\"../BlurbPoint\")
+	#Blurb.connect_button(self, \"blurbclick\")
 	
 	
 func blurbclick():
-	print(\"Activated!\")"
+	print(\"Activated!\")
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node2D
@@ -61,11 +62,14 @@ func _on_IsGiftTaken_unpickled(data):
 script/source = "extends Node
 
 func activate():
+	pass
+\"\"\"
 	Blurb.render(\"It's a wrapped gift box.\", \"Unwrap\")
 	Blurb.bring_up($\"../BlurbPoint\")
 	Blurb.connect_button(self, \"blurbclick\")
-	
-	
+\"\"\"
+
+\"\"\"	
 func blurbclick():
 	$\"../IsGiftThere\".update(\"IsGiftThere\", false)
 	$\"../IsGiftThere\".repickle()
@@ -91,7 +95,9 @@ func blurbclick():
 	
 	VN.stop_cutscene()
 	
-	$\"/root/Room/InteractiveItemsDisabler\".enable_all()"
+	$\"/root/Room/InteractiveItemsDisabler\".enable_all()
+\"\"\"
+"
 
 [sub_resource type="Animation" id=4]
 loop = true
@@ -146,7 +152,8 @@ func _ready():
 	if is_gift_taken():
 		enable_all()
 	else:
-		disable_all()"
+		disable_all()
+"
 
 [sub_resource type="GDScript" id=6]
 script/source = "extends Node
@@ -160,9 +167,10 @@ func _on_Room_room_loaded():
 	run_cutscene()
 	
 func run_cutscene():
-	VN.start_cutscene()
-	yield(VN.think(\"(Descriptipon of the room the player finds himself in)\"), \"completed\")
-	VN.stop_cutscene()
+	pass
+	#VN.start_cutscene()
+	#yield(VN.think(\"(Descriptipon of the room the player finds himself in)\"), \"completed\")
+	#VN.stop_cutscene()
 	
 "
 

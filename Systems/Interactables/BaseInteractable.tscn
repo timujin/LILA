@@ -5,15 +5,14 @@ script/source = "extends Position2D
 
 func blurb(text:String):
 	print(text)
-	#InteractionBlurb.display(text, self)"
+	#InteractionBlurb.display(text, self)
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Control
 
-class_name ClickArea
-
 signal on_activate
-signal on_apply_item
+#signal on_apply_item
 
 export var ActivatorName : String = \"Unnamed\"
 export var enabled : bool = true
@@ -39,17 +38,17 @@ func _gui_input(event):
 	
 	print(\"Clicked %s!\" % ActivatorName)
 
-	if ModeController.get_is_player_holding_item():
-		emit_signal(\"on_apply_item\", ModeController.holding_item, ModeController.holding_callback)
-		ModeController.apply_item(get_parent())
-	else:
+	#if ModeController.get_is_player_holding_item():
+	#	emit_signal(\"on_apply_item\", ModeController.holding_item, ModeController.holding_callback)
+	#	ModeController.apply_item(get_parent())
+	#else:
 
-		emit_signal(\"on_activate\")
-		var activatable = get_parent().get_node(\"Activator\")
-		if activatable != null and activatable.has_method(\"activate\"):
-			activatable.activate()
-		if activatable != null and activatable.has_method(\"on_activate\"):
-			activatable.on_activate()
+	emit_signal(\"on_activate\")
+	var activatable = get_parent().get_node(\"Activator\")
+	if activatable != null and activatable.has_method(\"activate\"):
+		activatable.activate()
+	if activatable != null and activatable.has_method(\"on_activate\"):
+		activatable.on_activate()
 
 func blurb(text:String):
 	if $\"../BlurbPoint\" == null:
@@ -58,7 +57,7 @@ func blurb(text:String):
 		$\"../BlurbPoint\".blurb(text)
 		
 func _ready():
-    mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 
 var floatie = null
