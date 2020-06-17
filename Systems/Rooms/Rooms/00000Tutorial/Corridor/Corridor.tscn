@@ -77,7 +77,7 @@ func _on_StartingCutscene_show_door():
 script/source = "extends Node
 
 func activate():
-	RoomSwitcher.switch_to(\"FFFFFBlueroom\")"
+	RoomSwitcher.switch_to(\"GoddessRoom\")"
 
 [sub_resource type="Animation" id=6]
 length = 1.5

@@ -1,9 +1,0 @@
-[gd_resource type="Resource" load_steps=3 format=2]
-
-[ext_resource path="res://BasicEntities/Item/ItemInventory.gd" type="Script" id=1]
-[ext_resource path="res://Content/Items/GOEEsNote/GOEEsNote.tres" type="Resource" id=2]
-
-[resource]
-script = ExtResource( 1 )
-species = ExtResource( 2 )
-amount = 5

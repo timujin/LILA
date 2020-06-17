@@ -1,4 +1,3 @@
-
 extends Node
 
 class_name BasePickler
@@ -9,6 +8,9 @@ export(Dictionary) var data
 
 func update(key:String, value):
 	data[key] = value
+	
+func read(key:String):
+	return (data[key])
 
 func pickle():
 	print("data: %s" % data)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/Graphics/Room.png" type="Texture" id=2]
@@ -148,7 +148,26 @@ func _ready():
 	else:
 		disable_all()"
 
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+func _on_Room_room_loaded():
+	if $OneShotPickle.read(\"first_time\") == false:
+		return
+		
+	$OneShotPickle.update(\"first_time\", false)
+	
+	run_cutscene()
+	
+func run_cutscene():
+	VN.start_cutscene()
+	yield(VN.think(\"(Descriptipon of the room the player finds himself in)\"), \"completed\")
+	VN.stop_cutscene()
+	
+"
+
 [node name="Room" index="0" instance=ExtResource( 1 )]
+roomID = "GoddessRoom"
 
 [node name="Background" parent="." index="0"]
 editor/display_folded = true
@@ -282,6 +301,7 @@ position = Vector2( 1295.72, 534.461 )
 texture = ExtResource( 9 )
 
 [node name="Hairpin" parent="." index="9" instance=ExtResource( 3 )]
+editor/display_folded = true
 
 [node name="BlurbPoint" parent="Hairpin" index="0"]
 position = Vector2( 460.806, 625.512 )
@@ -336,6 +356,7 @@ position = Vector2( 1588.07, 564.433 )
 texture = ExtResource( 12 )
 
 [node name="Note" parent="." index="12" instance=ExtResource( 3 )]
+editor/display_folded = true
 
 [node name="BlurbPoint" parent="Note" index="0"]
 position = Vector2( 1106.68, 392.333 )
@@ -419,6 +440,7 @@ data = {
 }
 
 [node name="Cake" parent="." index="17" instance=ExtResource( 3 )]
+editor/display_folded = true
 
 [node name="BlurbPoint" parent="Cake" index="0"]
 position = Vector2( 901.256, 412.69 )
@@ -436,6 +458,16 @@ texture = ExtResource( 19 )
 
 [node name="InteractiveItemsDisabler" type="Node" parent="." index="18"]
 script = SubResource( 5 )
+
+[node name="KazooCutscene" type="Node" parent="." index="19"]
+script = SubResource( 6 )
+
+[node name="OneShotPickle" type="Node" parent="KazooCutscene" index="0"]
+script = ExtResource( 18 )
+data = {
+"first_time": true
+}
+[connection signal="room_loaded" from="." to="KazooCutscene" method="_on_Room_room_loaded"]
 [connection signal="unpickled" from="Gift/IsGiftThere" to="Gift" method="_on_IsGiftTaken_unpickled"]
 
 [editable path="Window"]

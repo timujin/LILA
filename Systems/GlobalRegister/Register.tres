@@ -31,5 +31,6 @@ rooms = {
 "FFFFFBlueroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
 "FFFFFGreenroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
 "FFFFFRedroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
+"GoddessRoom": "res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn",
 "[ID NOT SET]": "res://Systems/Rooms/BaseRoom.tscn"
 }
