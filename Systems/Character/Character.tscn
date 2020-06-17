@@ -5,15 +5,16 @@ script/source = "extends Node
 
 \"\"\"
 Stores inventory, quests, etc. All the data associated with the PC.
-This is intended to be pickled *in entirety*.
+This is intended to be deserialized into a save file *in entirety*.
 \"\"\"
 
-onready var inventory = get_node(\"Inventory\")
-onready var karma = get_node(\"Karma\")
+#onready var inventory = get_node(\"Inventory\")
+#onready var karma = get_node(\"Karma\")
 onready var pickles = get_node(\"Pickles\")
 onready var variables = get_node(\"Variables\")
 
-# Add Journal entities: quests, map, notes, etc..."
+# Add Journal entities: quests, map, notes, etc...
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -119,7 +120,8 @@ func item_get(id:String, amount:int = 1):
 	var popup = preload(\"res://Systems/WorldspaceMenus/Popups/ItemGet.tscn\").instance()
 	$\"/root/Room\".add_child(popup)
 	popup.render(species, amount)
-	return popup"
+	return popup
+"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node
@@ -180,7 +182,8 @@ func clear_empty_karma():
 		else:
 			res.append(item)
 	entries = res
-	"
+	
+"
 
 [sub_resource type="GDScript" id=4]
 script/source = "extends Node
@@ -211,7 +214,8 @@ func get_value(key:String, default=null):
 			return default_values[key]
 		else:
 			return default
-		"
+		
+"
 
 [sub_resource type="GDScript" id=5]
 script/source = "extends Node
@@ -238,10 +242,10 @@ func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
 [node name="Character" type="Node"]
 script = SubResource( 1 )
 
-[node name="Inventory" type="Node" parent="."]
+[node name="Inventory--" type="Node" parent="."]
 script = SubResource( 2 )
 
-[node name="Karma" type="Node" parent="."]
+[node name="Karma--" type="Node" parent="."]
 script = SubResource( 3 )
 
 [node name="Variables" type="Node" parent="."]
