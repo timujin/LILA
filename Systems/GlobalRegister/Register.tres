@@ -26,11 +26,10 @@ combatcards = {
 
 }
 rooms = {
-"00000Corridor": "res://Systems/Rooms/Rooms/00000Tutorial/Corridor/Corridor.tscn",
-"Dogroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",
-"FFFFFBlueroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
-"FFFFFGreenroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
-"FFFFFRedroom": "res://Systems/Rooms/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
-"GoddessRoom": "res://Systems/Rooms/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn",
-"[ID NOT SET]": "res://Systems/Rooms/BaseRoom.tscn"
+"00000Corridor": "res://Content/Rooms/00000Tutorial/Corridor/Corridor.tscn",
+"Dogroom": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",
+"FFFFFBlueroom": "res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
+"FFFFFGreenroom": "res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
+"FFFFFRedroom": "res://Content/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
+"GoddessRoom": "res://Content/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn"
 }

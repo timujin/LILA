@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Content/KarmaItems/Delinquency/Theft2-300x300.jpg" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Karma/KarmaItem.gd" type="Script" id=2]
+
+
+[resource]
+script = ExtResource( 2 )
+id = "Delinquency"
+title = "Delinquency"
+description = "It doesn't count as evil yet"
+icon = ExtResource( 1 )
+category = "Tendencies"
+xp_curve = "FL"
+actions = {
+
+}
+combat_cards = [  ]
+other_data = {
+
+}

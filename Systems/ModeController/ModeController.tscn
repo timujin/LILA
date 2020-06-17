@@ -1,31 +1,16 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
-
-class_name ModeController
 
 signal reset
 signal mode_changed (mode)
 signal hide_hud
 signal show_hud
 
-onready var cutscenecontrol = $CutsceneControl
-
-
-func reset_hud():
-	# drop held item
-	emit_signal(\"reset\")
-	printerr(\"TODO: Add listener for closing the rest of the UI\")
-
-\"\"\"
 func reset():
 	set_mode(EXPLORE)
-	enable_scrolling()
 	emit_signal(\"reset\")
-	drop_held_item()
-\"\"\"
-
 
 ############
 # Base mode
@@ -34,22 +19,19 @@ func reset():
 \"\"\"
 EXPLORE - basic mode where you interact with stuff in a Room.
 MENU - A HUD window has been opened, s/a Inventory, Journal, etc.
-CUTSCENE - Self-explanatory. Menus not openable and room is not interactable.
-COMBAT - Self-explanatory. Roomspace must be frozen; Combatspace takes entire screen
+CUTSCENE - Self-explanatory. Menus not openable and room is not interactable. Interaction within cutscene is allowed.
 \"\"\"
 
-enum {EXPLORE, MENU, CUTSCENE, COMBAT}
+enum {EXPLORE, MENU, CUTSCENE}
 
 var mode = EXPLORE
 func set_mode(value):
-	if [EXPLORE, MENU, CUTSCENE, COMBAT].has(value):
+	if [EXPLORE, MENU, CUTSCENE].has(value):
 		mode = value
 		emit_signal(\"mode_changed\", mode)
 	else:
 		printerr(\"Invalid mode: \" + str(value))
 		assert(false)
-		
-var combat = null
 
 var hud_hidden = false setget set_hud_hidden
 func set_hud_hidden(value):
@@ -60,13 +42,13 @@ func set_hud_hidden(value):
 		emit_signal(\"show_hud\")
 
 func start_cutscene():
-	reset_hud()
-	HUDButtons.hide()
+	reset()
+	set_hud_hidden(true)
 	set_mode(CUTSCENE)
 	
 func stop_cutscene():
-	reset_hud()
-	HUDButtons.unhide()
+	reset()
+	set_hud_hidden(false)
 	set_mode(EXPLORE)
 
 #########
@@ -84,7 +66,7 @@ func is_menu_openable():
 ############
 # Item holding
 ############
-
+\"\"\"
 var holding_item = null
 var holding_action = null
 var holding_callback = null
@@ -122,27 +104,9 @@ func _input (  event:InputEvent ) :
 		return
 	
 	get_tree().set_input_as_handled()
-	drop_held_item()"
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends TextureRect
-
-func unhide(icon):
-	texture = icon
-	visible = true
-	
-func hide():
-	visible = false
-	
-func _process(delta):
-	return
-	rect_global_position = get_global_mouse_position()"
+	drop_held_item()
+\"\"\"
+"
 
 [node name="ModeController" type="Node"]
 script = SubResource( 1 )
-
-[node name="HeldItemCursor" type="TextureRect" parent="."]
-margin_right = 85.0
-margin_bottom = 85.0
-expand = true
-script = SubResource( 2 )

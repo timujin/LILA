@@ -29,26 +29,20 @@ func recursively_enumerate(path):
 	for dir in dirs:
 		recursively_enumerate(dir)
 	
-func _ready():
-	#var res =recursively_enumerate(\"res://Systems/Character/Inventory/Items/\")
-	#for item in files:
-	#	print(str( load(item) is Item ) + item)
-	pass #load_items()
-	
 export(bool) var reload = false
 
 func _process(delta):
 	if reload:
 		reload = false
-		load_items()
-		load_karma()
+		#load_items()
+		#load_karma()
 		load_rooms()
 		
 		
 func load_rooms():
 	var start = (OS.get_unix_time())
 	var res = {}
-	recursively_enumerate(\"res://Systems/Rooms/\")
+	recursively_enumerate(\"res://Content/Rooms/\")
 	for item in files:
 		if not item.ends_with(\".tscn\"):
 			continue
@@ -66,7 +60,7 @@ func load_rooms():
 			res[id] = item
 	files = []
 			
-	print(OS.get_unix_time() - start)
+	print(\"Rooms loaded in \" + str(OS.get_unix_time() - start))
 	
 	#var saver = RegisterResource.new()
 	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
@@ -77,7 +71,7 @@ func load_rooms():
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
 	
-		
+\"\"\"	
 func load_items():
 	var start = (OS.get_unix_time())
 	var res = {}
@@ -142,6 +136,7 @@ func load_karma():
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
 	
 \"\"\"
+\"\"\"
 func load_combatcards():
 	var start = (OS.get_unix_time())
 	var res = {}
@@ -172,7 +167,9 @@ func load_combatcards():
 	var dir = Directory.new()
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
-\"\"\"	"
+\"\"\"	
+"
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
+reload = true

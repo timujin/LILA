@@ -1,0 +1,500 @@
+[gd_scene load_steps=26 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Room.png" type="Texture" id=2]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Window.png" type="Texture" id=4]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Wastebasket.png" type="Texture" id=5]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Sofa.png" type="Texture" id=6]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Racoon.png" type="Texture" id=7]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Poster.png" type="Texture" id=8]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Microwave.png" type="Texture" id=9]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Hairpin.png" type="Texture" id=10]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Drawer.png" type="Texture" id=11]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Door.png" type="Texture" id=12]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Note.png" type="Texture" id=13]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Cupboard.png" type="Texture" id=14]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Bike.png" type="Texture" id=15]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Table.png" type="Texture" id=16]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Gift.png" type="Texture" id=17]
+[ext_resource path="res://Systems/Rooms/BasePickler.gd" type="Script" id=18]
+[ext_resource path="res://Content/Rooms/00000Tutorial/GoddessRoom/Graphics/Cake.png" type="Texture" id=19]
+
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func activate():
+	print(\"onactivate\")
+	Blurb.render(\"Hairpin on the floor\", \"Pick up\")
+	Blurb.bring_up($\"../BlurbPoint\")
+	Blurb.connect_button(self, \"blurbclick\")
+	
+	
+func blurbclick():
+	print(\"Activated!\")"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node2D
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_IsGiftTaken_unpickled(data):
+	var is_gift_there = data[\"IsGiftThere\"]
+	if not is_gift_there:
+		self.visible = false
+	else:
+		self.visible = true
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+func activate():
+	Blurb.render(\"It's a wrapped gift box.\", \"Unwrap\")
+	Blurb.bring_up($\"../BlurbPoint\")
+	Blurb.connect_button(self, \"blurbclick\")
+	
+	
+func blurbclick():
+	$\"../IsGiftThere\".update(\"IsGiftThere\", false)
+	$\"../IsGiftThere\".repickle()
+	
+	VN.start_cutscene()
+	yield(VN.think(\"I unwrapped and opened the box.\"), \"completed\")
+	yield(VN.think(\"It was more difficult than I expected. My hands were stiff, as if frozen.\"), \"completed\")
+	yield(VN.think(\"But I did it.\"), \"completed\")
+	yield(VN.think(\"Inside were a pendant, a key, and a folded piece of paper.\"), \"completed\")
+	VN.hide()
+	yield(Character.inventory.item_get(\"GoddessPendant\"), \"dismissed\")
+	yield(Character.inventory.item_get(\"GoddessRoomKey\"), \"dismissed\")
+	yield(Character.inventory.item_get(\"GOEEsNote\"), \"dismissed\")
+	yield(Character.inventory.item_get(\"error\"), \"dismissed\")
+	VN.show()
+	yield(VN.think(\"I unfolded the note and read it.\"), \"completed\")
+	VN.hide()
+	var note = preload(\"res://Systems/Character/Inventory/Items/GOEEsNote/Goddesssnote.tscn\").instance()
+	add_child(note)
+	yield(note, \"dismissed\")
+	VN.show()
+	yield(VN.think(\"//I looked around, evaluting the room.\"), \"completed\")
+	
+	VN.stop_cutscene()
+	
+	$\"/root/Room/InteractiveItemsDisabler\".enable_all()"
+
+[sub_resource type="Animation" id=4]
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 0.9 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0.462745, 0.462745, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+onready var items_to_disable = [
+	$\"/root/Room/Window\",
+	$\"/root/Room/Wastebasket\",
+	$\"/root/Room/Sofa\",
+	$\"/root/Room/Racoon\",
+	$\"/root/Room/Poster\",
+	$\"/root/Room/Microwave\",
+	$\"/root/Room/Hairpin\",
+	$\"/root/Room/Drawer\",
+	$\"/root/Room/Door\",
+	$\"/root/Room/Note\",
+	$\"/root/Room/Cupboard\",
+	$\"/root/Room/Bike\",
+	$\"/root/Room/Cake\",
+]
+
+func is_gift_taken():
+	return false
+	
+#func _on_Gift_ClickArea_on_activate():
+#	enable_all()
+	
+func enable_all():
+	for item in items_to_disable:
+		item.get_node(\"ClickArea\").enabled = true
+		
+	
+func disable_all():
+	for item in items_to_disable:
+		item.get_node(\"ClickArea\").enabled = false
+	
+func _ready():
+	if is_gift_taken():
+		enable_all()
+	else:
+		disable_all()"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+func _on_Room_room_loaded():
+	if $OneShotPickle.read(\"first_time\") == false:
+		return
+		
+	$OneShotPickle.update(\"first_time\", false)
+	
+	run_cutscene()
+	
+func run_cutscene():
+	VN.start_cutscene()
+	yield(VN.think(\"(Descriptipon of the room the player finds himself in)\"), \"completed\")
+	VN.stop_cutscene()
+	
+"
+
+[node name="Room" index="0" instance=ExtResource( 1 )]
+roomID = "GoddessRoom"
+
+[node name="Background" parent="." index="0"]
+editor/display_folded = true
+
+[node name="Room" type="Sprite" parent="Background" index="0"]
+position = Vector2( 783.056, 443.474 )
+scale = Vector2( 0.897158, 0.897158 )
+texture = ExtResource( 2 )
+
+[node name="Geometry" parent="." index="1"]
+editor/display_folded = true
+
+[node name="CameraLimitLeft" parent="Geometry" index="0"]
+position = Vector2( -112.245, 463.235 )
+
+[node name="CameraLimitTop" parent="Geometry" index="1"]
+position = Vector2( 807.619, -3.22461 )
+
+[node name="CameraLimitBottom" parent="Geometry" index="2"]
+position = Vector2( 795.581, 887.068 )
+
+[node name="CameraLimitRight" parent="Geometry" index="3"]
+position = Vector2( 1683.57, 445.194 )
+
+[node name="FirstPersonCamera" parent="." index="2"]
+position = Vector2( 805.013, 442.498 )
+
+[node name="Window" parent="." index="3" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Window" index="0"]
+position = Vector2( 347.629, 168.134 )
+
+[node name="ClickArea" parent="Window" index="1"]
+margin_left = 206.0
+margin_top = 30.0
+margin_right = 459.0
+margin_bottom = 389.0
+ActivatorName = "Window"
+
+[node name="Sprite" type="Sprite" parent="Window" index="3"]
+position = Vector2( 330.522, 210.972 )
+texture = ExtResource( 4 )
+
+[node name="Wastebasket" parent="." index="4" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Wastebasket" index="0"]
+position = Vector2( 171.838, 491.396 )
+
+[node name="ClickArea" parent="Wastebasket" index="1"]
+margin_left = 110.0
+margin_top = 561.0
+margin_right = 210.0
+margin_bottom = 716.0
+ActivatorName = "Wastebasket"
+
+[node name="Sprite" type="Sprite" parent="Wastebasket" index="3"]
+position = Vector2( 158.229, 643.463 )
+texture = ExtResource( 5 )
+
+[node name="Sofa" parent="." index="5" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Sofa" index="0"]
+position = Vector2( 501.057, 383.265 )
+
+[node name="ClickArea" parent="Sofa" index="1"]
+margin_left = 212.0
+margin_top = 431.0
+margin_right = 766.0
+margin_bottom = 701.0
+ActivatorName = "Sofa"
+enabled = false
+
+[node name="Sprite" type="Sprite" parent="Sofa" index="3"]
+position = Vector2( 495.783, 559.075 )
+scale = Vector2( 0.9226, 0.965751 )
+texture = ExtResource( 6 )
+
+[node name="Racoon" parent="." index="6" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Racoon" index="0"]
+position = Vector2( 704.997, 369.2 )
+
+[node name="ClickArea" parent="Racoon" index="1"]
+margin_left = 618.0
+margin_top = 439.0
+margin_right = 730.0
+margin_bottom = 568.0
+ActivatorName = "Racoon"
+
+[node name="Sprite" type="Sprite" parent="Racoon" index="3"]
+position = Vector2( 670.714, 496.662 )
+scale = Vector2( 0.935365, 0.912095 )
+texture = ExtResource( 7 )
+
+[node name="Poster" parent="." index="7" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Poster" index="0"]
+position = Vector2( 901.904, 230.311 )
+
+[node name="ClickArea" parent="Poster" index="1"]
+margin_left = 495.0
+margin_top = 54.0
+margin_right = 713.0
+margin_bottom = 354.0
+ActivatorName = "Poster"
+
+[node name="Sprite" type="Sprite" parent="Poster" index="3"]
+position = Vector2( 615.334, 196.907 )
+texture = ExtResource( 8 )
+
+[node name="Microwave" parent="." index="8" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Microwave" index="0"]
+position = Vector2( 1248.25, 261.956 )
+
+[node name="ClickArea" parent="Microwave" index="1"]
+margin_left = 1237.0
+margin_top = 360.0
+margin_right = 1410.0
+margin_bottom = 477.0
+ActivatorName = "Microwave"
+
+[node name="Sprite" type="Sprite" parent="Microwave" index="3"]
+position = Vector2( 1295.72, 534.461 )
+texture = ExtResource( 9 )
+
+[node name="Hairpin" parent="." index="9" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Hairpin" index="0"]
+position = Vector2( 460.806, 625.512 )
+
+[node name="ClickArea" parent="Hairpin" index="1"]
+margin_left = 420.0
+margin_top = 810.0
+margin_right = 451.0
+margin_bottom = 836.0
+ActivatorName = "Hairpin"
+
+[node name="Activator" parent="Hairpin" index="2"]
+script = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="Hairpin" index="3"]
+position = Vector2( 436.008, 824.547 )
+texture = ExtResource( 10 )
+
+[node name="Drawer" parent="." index="10" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Drawer" index="0"]
+position = Vector2( 205.42, 477.462 )
+
+[node name="ClickArea" parent="Drawer" index="1"]
+margin_left = -95.0
+margin_top = 546.0
+margin_right = 88.0
+margin_bottom = 875.0
+ActivatorName = "Drawer"
+
+[node name="Sprite" type="Sprite" parent="Drawer" index="3"]
+position = Vector2( 3.11882, 700.943 )
+scale = Vector2( 0.806375, 0.865023 )
+texture = ExtResource( 11 )
+
+[node name="Door" parent="." index="11" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Door" index="0"]
+position = Vector2( 1349.11, 347.918 )
+
+[node name="ClickArea" parent="Door" index="1"]
+margin_left = 1497.0
+margin_top = 248.0
+margin_right = 1676.0
+margin_bottom = 834.0
+ActivatorName = "Door"
+
+[node name="Sprite" type="Sprite" parent="Door" index="3"]
+position = Vector2( 1588.07, 564.433 )
+texture = ExtResource( 12 )
+
+[node name="Note" parent="." index="12" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Note" index="0"]
+position = Vector2( 1106.68, 392.333 )
+
+[node name="ClickArea" parent="Note" index="1"]
+margin_left = 1488.0
+margin_top = 248.0
+margin_right = 1672.0
+margin_bottom = 892.0
+
+[node name="Sprite" type="Sprite" parent="Note" index="3"]
+position = Vector2( 1570.88, 556.03 )
+texture = ExtResource( 13 )
+
+[node name="Cupboard" parent="." index="13" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Cupboard" index="0"]
+position = Vector2( 1269.53, 179.511 )
+
+[node name="ClickArea" parent="Cupboard" index="1"]
+margin_left = 1121.0
+margin_top = 29.0
+margin_right = 1415.0
+margin_bottom = 316.0
+ActivatorName = "Pantry"
+
+[node name="Sprite" type="Sprite" parent="Cupboard" index="3"]
+position = Vector2( 1265.19, 172.2 )
+texture = ExtResource( 14 )
+
+[node name="Bike" parent="." index="14" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Bike" index="0"]
+position = Vector2( 898.843, 230.996 )
+
+[node name="ClickArea" parent="Bike" index="1"]
+margin_left = 755.0
+margin_top = 312.0
+margin_right = 1130.0
+margin_bottom = 661.0
+ActivatorName = "Exercise bike"
+
+[node name="Sprite" type="Sprite" parent="Bike" index="3"]
+position = Vector2( 939.925, 492.684 )
+texture = ExtResource( 15 )
+
+[node name="Table" type="Sprite" parent="." index="15"]
+position = Vector2( 784.467, 741.417 )
+texture = ExtResource( 16 )
+
+[node name="Gift" parent="." index="16" instance=ExtResource( 3 )]
+script = SubResource( 2 )
+
+[node name="BlurbPoint" parent="Gift" index="0"]
+position = Vector2( 679.181, 479.313 )
+
+[node name="ClickArea" parent="Gift" index="1"]
+margin_left = 564.0
+margin_top = 583.0
+margin_right = 730.0
+margin_bottom = 753.0
+ActivatorName = "Gift box"
+
+[node name="Activator" parent="Gift" index="2"]
+script = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Gift" index="3"]
+position = Vector2( 638.456, 670.265 )
+texture = ExtResource( 17 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Gift" index="4"]
+autoplay = "GiftBlinking"
+anims/GiftBlinking = SubResource( 4 )
+
+[node name="IsGiftThere" type="Node" parent="Gift" index="5"]
+script = ExtResource( 18 )
+data = {
+"IsGiftThere": true
+}
+
+[node name="Cake" parent="." index="17" instance=ExtResource( 3 )]
+editor/display_folded = true
+
+[node name="BlurbPoint" parent="Cake" index="0"]
+position = Vector2( 901.256, 412.69 )
+
+[node name="ClickArea" parent="Cake" index="1"]
+margin_left = 751.0
+margin_top = 564.0
+margin_right = 1037.0
+margin_bottom = 712.0
+ActivatorName = "Cake"
+
+[node name="Sprite" type="Sprite" parent="Cake" index="3"]
+position = Vector2( 899.267, 629.009 )
+texture = ExtResource( 19 )
+
+[node name="InteractiveItemsDisabler" type="Node" parent="." index="18"]
+script = SubResource( 5 )
+
+[node name="KazooCutscene" type="Node" parent="." index="19"]
+script = SubResource( 6 )
+
+[node name="OneShotPickle" type="Node" parent="KazooCutscene" index="0"]
+script = ExtResource( 18 )
+data = {
+"first_time": true
+}
+[connection signal="room_loaded" from="." to="KazooCutscene" method="_on_Room_room_loaded"]
+[connection signal="unpickled" from="Gift/IsGiftThere" to="Gift" method="_on_IsGiftTaken_unpickled"]
+
+[editable path="Window"]
+
+[editable path="Wastebasket"]
+
+[editable path="Sofa"]
+
+[editable path="Racoon"]
+
+[editable path="Poster"]
+
+[editable path="Microwave"]
+
+[editable path="Hairpin"]
+
+[editable path="Drawer"]
+
+[editable path="Door"]
+
+[editable path="Note"]
+
+[editable path="Cupboard"]
+
+[editable path="Bike"]
+
+[editable path="Gift"]
+
+[editable path="Cake"]
