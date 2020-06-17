@@ -172,4 +172,3 @@ func load_combatcards():
 
 [node name="Node2D" type="Node2D"]
 script = SubResource( 1 )
-reload = true

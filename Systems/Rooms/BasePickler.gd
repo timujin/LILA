@@ -25,9 +25,6 @@ func unpickle():
 func repickle():
 	pickle()
 	unpickle()
-
-func prepare():
-	unpickle()
 	
 func _ready():
 	add_to_group("picklers")

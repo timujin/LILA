@@ -75,6 +75,8 @@ config/icon="res://Assets/Placeholders/icon.png"
 [autoload]
 
 ModeController="*res://Systems/ModeController/ModeController.tscn"
+GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
+RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 
 [display]
 
