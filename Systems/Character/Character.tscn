@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -8,7 +8,7 @@ Stores inventory, quests, etc. All the data associated with the PC.
 This is intended to be deserialized into a save file *in entirety*.
 \"\"\"
 
-#onready var inventory = get_node(\"Inventory\")
+onready var inventory = get_node(\"Inventory\")
 #onready var karma = get_node(\"Karma\")
 onready var pickles = get_node(\"Pickles\")
 onready var variables = get_node(\"Variables\")
@@ -70,6 +70,25 @@ func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
 
 "
 
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+
+# Declare member variables here. Examples:
+# var a = 2
+# var b = \"text\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+"
+
 [node name="Character" type="Node"]
 script = SubResource( 1 )
 
@@ -78,3 +97,6 @@ script = SubResource( 4 )
 
 [node name="Pickles" type="Node" parent="."]
 script = SubResource( 5 )
+
+[node name="Inventory" type="Node" parent="."]
+script = SubResource( 6 )

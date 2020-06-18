@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://Systems/Character/Karma--/KarmaItem.gd" type="Script" id=1]
+
+
+[resource]
+script = ExtResource( 1 )
+id = "MissingNo"
+title = "MissingNo"
+description = ""
+category = ""
+xp_curve = "FL"
+actions = {
+
+}
+combat_cards = [  ]
+other_data = {
+
+}

@@ -5,13 +5,8 @@
 [resource]
 script = ExtResource( 1 )
 items = {
-"GOEEsNote": "res://Systems/Character/Inventory/Items/GOEEsNote/GOEEsNote.tres",
-"GoddessPanties": "res://Systems/Character/Inventory/Items/GoddessPanties/GoddessPanties.tres",
-"GoddessPendant": "res://Systems/Character/Inventory/Items/GoddessPendant/GoddessPendant.tres",
-"GoddessRoomKey": "res://Systems/Character/Inventory/Items/GoddessRoomKey/GoddessRoomKey.tres",
-"Hairpin": "res://Systems/Character/Inventory/Items/Hairpin/Hairpin.tres",
-"Lockpick": "res://Systems/Character/Inventory/Items/Lockpick/Lockpick.tres",
-"MissingNo": "res://Systems/Character/Inventory/Items/MissingNo/MissingNo.tres"
+"Knife": "res://Content/Items/Knife.tscn",
+"Shield": "res://Content/Items/Shield.tscn"
 }
 karmaitems = {
 "BlessedByTheGoddess": "res://Systems/Character/Karma/Karmaitems/BlessedByTheGoddess/BlessedByTheGoddess.tres",

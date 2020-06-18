@@ -1,0 +1,26 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Content/Items--/GoddessRoomKey/key.jpg" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Inventory--/Item.gd" type="Script" id=2]
+
+
+
+
+[resource]
+script = ExtResource( 2 )
+id = "GoddessRoomKey"
+title = "Key"
+icon = ExtResource( 1 )
+description = "Gifted by the Goddess"
+long_description = "I'm assuming it unlocks a door of some kind. Otheriwse it wouldn't be called a key."
+hint = ""
+category = "Keys"
+countable = false
+actions = {
+"Apply": null
+}
+combat_cards = [  ]
+other_data = {
+
+}
+equipment_slot = "None"

@@ -20,7 +20,6 @@ func room(id:String):
 	else:
 		return room(\"FFFFFDogroom\")
 
-\"\"\"
 
 func item(id:String):
 	if register.items.has(id):
@@ -29,6 +28,7 @@ func item(id:String):
 		return item(\"MissingNo\")
 		
 
+\"\"\"
 func karmaitem(id:String):
 	if register.karmaitems.has(id):
 		return load(register.karmaitems[id])

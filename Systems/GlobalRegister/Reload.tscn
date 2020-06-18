@@ -34,7 +34,7 @@ export(bool) var reload = false
 func _process(delta):
 	if reload:
 		reload = false
-		#load_items()
+		load_items()
 		#load_karma()
 		load_rooms()
 		
@@ -70,6 +70,40 @@ func load_rooms():
 	var dir = Directory.new()
 	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
 	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+
+func load_items():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Content/Items/\")
+	for item in files:
+		if not item.ends_with(\".tscn\"):
+			continue
+		print(item)
+		var x = load(item).instance()
+		if not (x is BaseItem):
+			continue
+		var id = x.name
+		x.free()
+		if res.has(id):
+			printerr(\"Duplicate item id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+		else:
+			res[id] = item
+	files = []
+			
+	print(\"Items loaded in \" + str(OS.get_unix_time() - start))
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.items = res
+	print(saver.items)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
 	
 \"\"\"	
 func load_items():

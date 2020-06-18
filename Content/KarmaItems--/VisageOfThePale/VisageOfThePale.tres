@@ -1,0 +1,23 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://Content/KarmaItems--/VisageOfThePale/slide_251901_1548654_free.png" type="Texture" id=1]
+[ext_resource path="res://Systems/Character/Karma--/KarmaItem.gd" type="Script" id=2]
+
+
+
+
+[resource]
+script = ExtResource( 2 )
+id = "VisageOfThePale"
+title = "Visage of the Pale"
+description = "What is it, even?.."
+icon = ExtResource( 1 )
+category = "Misc"
+xp_curve = "FL"
+actions = {
+
+}
+combat_cards = [  ]
+other_data = {
+
+}
