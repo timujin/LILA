@@ -2,7 +2,7 @@ extends Node
 
 class_name BasePickler
 
-signal unpickled (data)
+signal unpickled
 
 export(Dictionary) var data
 

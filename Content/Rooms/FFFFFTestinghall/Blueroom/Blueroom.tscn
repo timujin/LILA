@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.png" type="Texture" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Blueroom/Lamp.png" type="Texture" id=4]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Blueroom/Halo.png" type="Texture" id=5]
 [ext_resource path="res://Systems/Rooms/BasePickler.gd" type="Script" id=6]
-[ext_resource path="res://Assets/Sprites/Enemies/Suit.png" type="Texture" id=7]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -18,31 +17,28 @@ func activate():
 script/source = "extends Node
 
 func activate():
-	RoomSwitcher.switch_to(\"FFFFFGreenroom\")"
+	RoomSwitcher.switch_to(\"FFFFFGreenroom\")
+"
 
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 func activate():
-	$\"../Halo\".switch()"
+	$\"../Halo\".switch()
+"
 
 [sub_resource type="GDScript" id=4]
 script/source = "extends Sprite
 
 
-func _on_OnOff_unpickled(data):
-	visible = data[\"is_on\"]
-
 func switch():
 	visible = not visible
-	$\"../OnOff\".update(\"is_on\", visible)"
+	$\"../OnOffPickler\".update(\"is_on\", visible)
 
-[sub_resource type="GDScript" id=5]
-script/source = "extends Node
 
-func activate():
-	ModeController.set_mode(ModeController.COMBAT)
-	add_child(preload(\"res://Systems/Combat/BaseCombat.tscn\").instance())"
+func _on_OnOffPickler_unpickled(data):
+	visible = data[\"is_on\"]
+"
 
 [node name="Room" instance=ExtResource( 1 )]
 roomID = "FFFFFBlueroom"
@@ -95,8 +91,8 @@ position = Vector2( 297.802, -34.101 )
 
 [node name="ClickArea" parent="Greenroom" index="1"]
 margin_left = 466.0
-margin_top = -203.0
-margin_right = 747.0
+margin_top = -198.0
+margin_right = 777.0
 margin_bottom = 71.0
 
 [node name="Activator" parent="Greenroom" index="2"]
@@ -127,34 +123,15 @@ scale = Vector2( 0.883643, 0.582174 )
 texture = ExtResource( 5 )
 script = SubResource( 4 )
 
-[node name="OnOff" type="Node" parent="Lamp" index="5"]
+[node name="OnOffPickler" type="Node" parent="Lamp" index="5"]
 script = ExtResource( 6 )
 data = {
-"is_on": false
+"is_on": true
 }
-
-[node name="Suit" parent="." index="6" instance=ExtResource( 3 )]
-position = Vector2( 1036.86, 456.524 )
-
-[node name="ClickArea" parent="Suit" index="1"]
-margin_left = -69.0
-margin_top = -332.0
-margin_right = 169.0
-margin_bottom = -2.0
-
-[node name="Activator" parent="Suit" index="2"]
-script = SubResource( 5 )
-
-[node name="Sprite" type="Sprite" parent="Suit" index="3"]
-position = Vector2( 53.6682, -162.855 )
-scale = Vector2( 0.636484, 0.613898 )
-texture = ExtResource( 7 )
-[connection signal="unpickled" from="Lamp/OnOff" to="Lamp/Halo" method="_on_OnOff_unpickled"]
+[connection signal="unpickled" from="Lamp/OnOffPickler" to="Lamp/Halo" method="_on_OnOffPickler_unpickled"]
 
 [editable path="Redroom"]
 
 [editable path="Greenroom"]
 
 [editable path="Lamp"]
-
-[editable path="Suit"]

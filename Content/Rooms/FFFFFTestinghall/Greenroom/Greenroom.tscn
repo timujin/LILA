@@ -1,8 +1,24 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
 
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+func activate():
+	RoomSwitcher.switch_to(\"FFFFFRedroom\")
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+
+func activate():
+	RoomSwitcher.switch_to(\"FFFFFBlueroom\")
+"
 
 [node name="Room" instance=ExtResource( 1 )]
 roomID = "FFFFFGreenroom"
@@ -26,3 +42,33 @@ position = Vector2( 1934.06, 473.655 )
 
 [node name="FirstPersonCamera" parent="." index="2"]
 position = Vector2( 815.474, 456.717 )
+
+[node name="RedroomDoor" parent="." index="3" instance=ExtResource( 3 )]
+position = Vector2( 575.348, 420.899 )
+
+[node name="ClickArea" parent="RedroomDoor" index="1"]
+margin_left = -507.0
+margin_top = -339.0
+margin_right = -44.0
+margin_bottom = 100.0
+ActivatorName = "Red door"
+
+[node name="Activator" parent="RedroomDoor" index="2"]
+script = SubResource( 1 )
+
+[node name="BaseInteractable" parent="." index="4" instance=ExtResource( 3 )]
+position = Vector2( 934.156, 411.45 )
+
+[node name="ClickArea" parent="BaseInteractable" index="1"]
+margin_left = 310.0
+margin_top = -366.0
+margin_right = 919.0
+margin_bottom = 188.0
+ActivatorName = "Blue door"
+
+[node name="Activator" parent="BaseInteractable" index="2"]
+script = SubResource( 2 )
+
+[editable path="RedroomDoor"]
+
+[editable path="BaseInteractable"]
