@@ -11,10 +11,11 @@ func set_icon(icon:Texture):
 		$\"HBoxContainer/Face\".visible = false
 	else:
 		$\"HBoxContainer/Face\".visible = true
-		$\"HBoxContainer/Face\".texture = icon
+		$\"HBoxContainer/Face/TalkingHead\".texture = icon
 
 func set_text(text:String):
-	$\"HBoxContainer/Text/Panel/TalkingText\".text = text"
+	$\"HBoxContainer/Text/Panel/TalkingText\".text = text
+"
 
 [node name="TalkingItem" type="PanelContainer"]
 margin_right = 1376.0

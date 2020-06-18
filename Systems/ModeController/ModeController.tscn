@@ -20,13 +20,14 @@ func reset():
 EXPLORE - basic mode where you interact with stuff in a Room.
 MENU - A HUD window has been opened, s/a Inventory, Journal, etc.
 CUTSCENE - Self-explanatory. Menus not openable and room is not interactable. Interaction within cutscene is allowed.
+INTERACTION - the West of Loathing style modal interaction window is open
 \"\"\"
 
-enum {EXPLORE, MENU, CUTSCENE}
+enum {EXPLORE, MENU, CUTSCENE, INTERACTION}
 
 var mode = EXPLORE
 func set_mode(value):
-	if [EXPLORE, MENU, CUTSCENE].has(value):
+	if [EXPLORE, MENU, CUTSCENE, INTERACTION].has(value):
 		mode = value
 		emit_signal(\"mode_changed\", mode)
 	else:
@@ -50,6 +51,27 @@ func stop_cutscene():
 	reset()
 	set_hud_hidden(false)
 	set_mode(EXPLORE)
+
+######
+# INTERACTION
+######
+
+var window
+
+func start_interaction():
+	reset()
+	set_hud_hidden(true)
+	set_mode(INTERACTION)
+	window = preload(\"res://Systems/Cutscenes/WOLModal/WOLModal.tscn\").instance()
+	get_node(\"/root\").add_child(window)
+	return window
+	
+func stop_interaction():
+	reset()
+	set_hud_hidden(false)
+	set_mode(EXPLORE)
+	window.queue_free()
+	window = null
 
 #########
 # Helper logical functions.

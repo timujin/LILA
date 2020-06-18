@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/TalkingItem.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Systems/Cutscenes/WOLModal/ChoiceRecord.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
-script/source = "extends Control
+script/source = "extends CanvasLayer
 
 func clear():
 	for child in $Base/ScrollContainer/MarginContainer/ItemsContainer.get_children():
@@ -24,27 +23,27 @@ func _ready():
 func add_talking_head(icon:Texture, text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/TalkingItem.tscn\").instance()
 	$Base/ScrollContainer/MarginContainer/ItemsContainer.add_child(item)
+	item.set_icon(icon)
+	item.set_text(text)
+	$Base/ScrollContainer/MarginContainer/ItemsContainer.move_child(item, 0)
 	return item
 
 func add_choice_record(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/ChoiceRecord.tscn\").instance()
 	$Base/ScrollContainer/MarginContainer/ItemsContainer.add_child(item)
+	item.set_text (text)
+	$Base/ScrollContainer/MarginContainer/ItemsContainer.move_child(item, 0)
 	return item
 
 func add_choice(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/Choice.tscn\").instance()
 	$Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer.add_child(item)
+	$Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer.move_child(item, 0)
 	return item
 "
 
-[node name="WOLModal" type="Control"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme = ExtResource( 1 )
+[node name="WOLModal" type="CanvasLayer"]
 script = SubResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="BackgroundShade" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.34902 )
@@ -61,6 +60,7 @@ margin_left = 65.0
 margin_top = 54.0
 margin_right = -59.0
 margin_bottom = -56.0
+theme = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -86,28 +86,25 @@ margin_right = 1426.0
 margin_bottom = 790.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="TalkingItem" parent="Base/ScrollContainer/MarginContainer/ItemsContainer" instance=ExtResource( 2 )]
-margin_top = 478.0
-margin_bottom = 678.0
-
-[node name="ChoiceRecord" parent="Base/ScrollContainer/MarginContainer/ItemsContainer" instance=ExtResource( 3 )]
-margin_top = 682.0
-margin_bottom = 732.0
 
 [node name="Choices" type="PanelContainer" parent="Base/ScrollContainer/MarginContainer/ItemsContainer"]
-margin_top = 736.0
+margin_top = 204.0
 margin_right = 1376.0
-margin_bottom = 790.0
+margin_bottom = 312.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices"]
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 1374.0
-margin_bottom = 52.0
+margin_bottom = 106.0
 
 [node name="Choice" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer" instance=ExtResource( 4 )]
+
+[node name="Choice2" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer" instance=ExtResource( 4 )]
+margin_top = 54.0
+margin_bottom = 104.0

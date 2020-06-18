@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://Systems/Cutscenes/WOLModal/SimpleRequirement.tscn" type="PackedScene" id=1]
+[gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
@@ -20,6 +18,11 @@ func add_requirement():
 	$Requirements/HBoxContainer.add_child(req)
 	return req
 	
+
+signal pressed 
+
+func _on_Select_pressed():
+	emit_signal(\"pressed\")
 "
 
 [node name="Choice" type="HBoxContainer"]
@@ -32,7 +35,7 @@ __meta__ = {
 }
 
 [node name="Panel" type="Panel" parent="."]
-margin_right = 1284.0
+margin_right = 1354.0
 margin_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
@@ -47,14 +50,13 @@ __meta__ = {
 }
 
 [node name="Requirements" type="PanelContainer" parent="."]
-margin_left = 1288.0
+margin_left = 1358.0
 margin_right = 1372.0
 margin_bottom = 50.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Requirements"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 77.0
+margin_right = 7.0
 margin_bottom = 43.0
-
-[node name="SimpleRequirement" parent="Requirements/HBoxContainer" instance=ExtResource( 1 )]
+[connection signal="pressed" from="Panel/Select" to="." method="_on_Select_pressed"]
