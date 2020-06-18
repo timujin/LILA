@@ -1,0 +1,113 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Panel
+
+
+
+func _on_SimpleRequirement_mouse_entered():
+	$Popup.visible = true
+
+
+func _on_SimpleRequirement_mouse_exited():
+	$Popup.visible = false
+
+
+func set_icon(icon:Texture):
+	assert(icon != null)
+	$Icon.texture = icon
+	$Popup/Icon.texture = icon
+	
+func set_text(short:String, requires:String, youhave:String):
+	$Label.text = short
+	$Popup/Requires.text = requires
+	$Popup/Youhave.text = youhave
+	
+func set_unfulfilled(unfulfilled:bool):
+	if unfulfilled:
+		self.self_modulate = Color.red
+	else:
+		self.self_modulate = Color.white
+	
+func _ready():
+	set_unfulfilled(true)
+"
+
+[node name="SimpleRequirement" type="Panel"]
+margin_right = 70.0
+margin_bottom = 36.0
+rect_min_size = Vector2( 70, 0 )
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 34.0
+margin_bottom = 32.0
+texture = ExtResource( 1 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 35.0
+margin_top = 7.0
+margin_right = 63.0
+margin_bottom = 30.0
+text = "2+"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Popup" type="Panel" parent="."]
+visible = false
+margin_left = -203.0
+margin_top = -83.0
+margin_right = 39.0
+margin_bottom = -5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon" type="TextureRect" parent="Popup"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 13.0
+margin_top = -29.0
+margin_right = 72.0
+margin_bottom = 29.0
+texture = ExtResource( 1 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Requires" type="Label" parent="Popup"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -166.824
+margin_top = 10.0841
+margin_right = -8.82355
+margin_bottom = 38.0841
+text = "Requires 2 Balls of Steel"
+
+[node name="Youhave" type="Label" parent="Popup"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -166.824
+margin_top = -34.9328
+margin_right = -8.82355
+margin_bottom = -6.93279
+text = "You have: None"
+[connection signal="mouse_entered" from="." to="." method="_on_SimpleRequirement_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_SimpleRequirement_mouse_exited"]

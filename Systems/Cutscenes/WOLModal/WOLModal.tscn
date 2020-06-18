@@ -1,0 +1,80 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/TalkingItem.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/ChoiceRecord.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
+
+[node name="WOLModal" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BackgroundShade" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.34902 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Base" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 65.0
+margin_top = 54.0
+margin_right = -59.0
+margin_bottom = -56.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Base"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+follow_focus = true
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="Base/ScrollContainer"]
+margin_right = 1476.0
+margin_bottom = 790.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer"]
+margin_left = 50.0
+margin_right = 1426.0
+margin_bottom = 790.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TalkingItem" parent="Base/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource( 2 )]
+margin_top = 478.0
+margin_bottom = 678.0
+
+[node name="ChoiceRecord" parent="Base/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource( 3 )]
+margin_top = 682.0
+margin_bottom = 732.0
+
+[node name="Choices" type="PanelContainer" parent="Base/ScrollContainer/MarginContainer/VBoxContainer"]
+margin_top = 736.0
+margin_right = 1376.0
+margin_bottom = 790.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/VBoxContainer/Choices"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 1374.0
+margin_bottom = 52.0
+
+[node name="Choice" parent="Base/ScrollContainer/MarginContainer/VBoxContainer/Choices/VBoxContainer" instance=ExtResource( 4 )]
