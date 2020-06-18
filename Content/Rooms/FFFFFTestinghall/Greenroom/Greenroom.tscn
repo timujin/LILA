@@ -52,15 +52,15 @@ func execute():
 	var icon = preload(\"res://Assets/Placeholders/advancedcreatureattack.png\")
 	var text = \\
 	\"\"\"This is the %s time you've visited this shrine.
-	What do you want me to do now?
 	\"\"\" % str(number_of_visits)
 	window.add_talking_head(icon, text)
+	window.add_talking_head(null,\"What do you want me to do now?\")
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 
 	var response1 = window.add_choice(\"Give me 1 point\")
 	response1.connect(\"pressed\", self, \"on_give_me_point\")
-	\"\"\"
+	
 	var response2 = window.add_choice(\"Spend 3 points to hear a joke\")
 	response2.connect(\"pressed\", self, \"on_give_me_joke\")
 	var resp2reqt1 = response2.add_requirement()
@@ -73,9 +73,20 @@ func execute():
 		resp2reqt1.set_unfulfilled(true)
 		response2.set_active(false)
 		
-	var response3 = window.add_choice(\"Spend 3 points to hear a joke\")
-	response3.connect(\"pressed\", self, \"on_give_me_joke\")
-	\"\"\"
+	var response3 = window.add_choice(\"Is the light in the blueroom on?\")
+	response3.connect(\"pressed\", self, \"on_is_the_light_on\")
+	
+	var response4 = window.add_choice(\"Good bye!\")
+	response4.connect(\"pressed\", ModeController, \"stop_interaction\")
+	
+func on_give_me_point():
+	$YouGetPoints.execute()
+	
+func on_give_me_joke():
+	$YouGetJoke.execute()
+	
+func on_is_the_light_on():
+	$YouSeeLantern.execute()
 "
 
 [node name="Room" instance=ExtResource( 1 )]

@@ -7,14 +7,17 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
+onready var events_container = $Base/ScrollContainer/MarginContainer/ItemsContainer
+onready var choices_container = $Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer
+
 func clear():
-	for child in $Base/ScrollContainer/MarginContainer/ItemsContainer.get_children():
+	for child in events_container.get_children():
 		if child.name != \"Choices\":
 			child.queue_free()
 	clear_pc()
 		
 func clear_pc():
-	for child in $Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer.get_children():
+	for child in choices_container.get_children():
 		child.queue_free()
 	
 func _ready():
@@ -22,23 +25,24 @@ func _ready():
 
 func add_talking_head(icon:Texture, text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/TalkingItem.tscn\").instance()
-	$Base/ScrollContainer/MarginContainer/ItemsContainer.add_child(item)
+	events_container.add_child(item)
 	item.set_icon(icon)
 	item.set_text(text)
-	$Base/ScrollContainer/MarginContainer/ItemsContainer.move_child(item, 0)
+	events_container.move_child(item, events_container.get_child_count()-2)
 	return item
 
 func add_choice_record(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/ChoiceRecord.tscn\").instance()
-	$Base/ScrollContainer/MarginContainer/ItemsContainer.add_child(item)
+	events_container.add_child(item)
 	item.set_text (text)
-	$Base/ScrollContainer/MarginContainer/ItemsContainer.move_child(item, 0)
+	events_container.move_child(item, 0)
 	return item
 
 func add_choice(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/Choice.tscn\").instance()
-	$Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer.add_child(item)
-	$Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer.move_child(item, 0)
+	item.set_text(text)
+	choices_container.add_child(item)
+	choices_container.move_child(item,  choices_container.get_child_count()-1)
 	return item
 "
 
