@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
@@ -44,9 +44,11 @@ func open():
 [sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
+var window
 
 func execute():
-	var window = ModeController.window
+	window = ModeController.window
+	window.clear_pc()
 	var number_of_visits = Character.variables.get_value(\"greenroom_visits\", 0)
 	Character.variables.set_value(\"greenroom_visits\", number_of_visits+1)
 	var icon = preload(\"res://Assets/Placeholders/advancedcreatureattack.png\")
@@ -73,20 +75,61 @@ func execute():
 		resp2reqt1.set_unfulfilled(true)
 		response2.set_active(false)
 		
-	var response3 = window.add_choice(\"Is the light in the blueroom on?\")
-	response3.connect(\"pressed\", self, \"on_is_the_light_on\")
-	
 	var response4 = window.add_choice(\"Good bye!\")
 	response4.connect(\"pressed\", ModeController, \"stop_interaction\")
 	
 func on_give_me_point():
+	window.add_choice_record(\"Give me 1 point\")
 	$YouGetPoints.execute()
 	
 func on_give_me_joke():
+	window.add_choice_record(\"Spend 3 points to hear a joke\")
 	$YouGetJoke.execute()
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+var window
+
+func execute():
+	window = ModeController.window
+	window.clear_pc()
 	
-func on_is_the_light_on():
-	$YouSeeLantern.execute()
+	var points = Character.variables.get_value(\"greenroom_points\", 0)
+	points += 1
+	Character.variables.set_value(\"greenroom_points\", points)
+	window.add_talking_head(null, \"You now have %s points!\" % str(points))
+	
+
+	var response = window.add_choice(\"OK\")
+	response.connect(\"pressed\", self, \"on_ok\")
+
+func on_ok():
+	get_parent().execute()
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends Node
+
+var window
+
+func execute():
+	window = ModeController.window
+	window.clear_pc()
+	
+	var points = Character.variables.get_value(\"greenroom_points\", 0)
+	points -= 3
+	Character.variables.set_value(\"greenroom_points\", points)
+	
+	window.add_talking_head(preload(\"res://Assets/Placeholders/aerialshackles.png\"), \"A man walks into a bar. Ouch.\")
+	
+
+	var response = window.add_choice(\"OK\")
+	response.connect(\"pressed\", self, \"on_ok\")
+
+func on_ok():
+	get_parent().execute()
 "
 
 [node name="Room" instance=ExtResource( 1 )]
@@ -162,12 +205,10 @@ script = SubResource( 4 )
 script = SubResource( 5 )
 
 [node name="YouGetPoints" type="Node" parent="BaseInteractable/Interaction/Hello" index="0"]
+script = SubResource( 6 )
 
 [node name="YouGetJoke" type="Node" parent="BaseInteractable/Interaction/Hello" index="1"]
-
-[node name="YouSeeLantern" type="Node" parent="BaseInteractable/Interaction/Hello" index="2"]
-
-[node name="YouHaveJustSwitchedLantern" type="Node" parent="BaseInteractable/Interaction/Hello/YouSeeLantern" index="0"]
+script = SubResource( 7 )
 
 [editable path="RedroomDoor"]
 

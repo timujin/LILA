@@ -16,7 +16,7 @@ onready var variables = get_node(\"Variables\")
 # Add Journal entities: quests, map, notes, etc...
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 \"\"\"
@@ -48,7 +48,7 @@ func get_value(key:String, default=null):
 		
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 var pickled_rooms:Dictionary = {}
@@ -70,7 +70,7 @@ func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
 
 "
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
 # adding item
@@ -83,10 +83,10 @@ script/source = "extends Node
 script = SubResource( 1 )
 
 [node name="Variables" type="Node" parent="."]
-script = SubResource( 4 )
+script = SubResource( 2 )
 
 [node name="Pickles" type="Node" parent="."]
-script = SubResource( 5 )
+script = SubResource( 3 )
 
 [node name="Inventory" type="Node" parent="."]
-script = SubResource( 6 )
+script = SubResource( 4 )
