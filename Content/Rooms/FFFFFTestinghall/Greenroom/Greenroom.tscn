@@ -78,6 +78,18 @@ func execute():
 	var response4 = window.add_choice(\"Good bye!\")
 	response4.connect(\"pressed\", ModeController, \"stop_interaction\")
 	
+	var response5 = window.add_choice(\"Use an item...\")
+	response5.connect(\"pressed\", self, \"open_use_item\")
+	
+func open_use_item():
+	window.open_item_popup()
+	window.item_popup.connect(\"item_selected\", self, \"use_item\")
+	
+func use_item(item):
+	window.clear_pc()
+	window.add_talking_head(null,\"This is the 10th time you've showed %s in class!\" % item.display_name)
+	$YouGetPoints.execute()
+	
 func on_give_me_point():
 	window.add_choice_record(\"Give me 1 point\")
 	$YouGetPoints.execute()

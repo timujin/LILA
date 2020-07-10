@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/TalkingItem.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/InventoryUseItemPopup.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
@@ -9,6 +10,7 @@ script/source = "extends CanvasLayer
 
 onready var events_container = $Base/ScrollContainer/MarginContainer/ItemsContainer
 onready var choices_container = $Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer
+onready var item_popup = $Inventory
 
 func clear():
 	for child in events_container.get_children():
@@ -22,6 +24,14 @@ func clear_pc():
 	
 func _ready():
 	clear()
+	close_item_popup()
+	
+func open_item_popup():
+	item_popup.visible = true
+	
+func close_item_popup():
+	item_popup.visible = false
+	
 	
 func scroll_to_bottom():
 	yield(get_tree(), \"idle_frame\")
@@ -58,6 +68,8 @@ func add_choice(text:String):
 [node name="WOLModal" type="CanvasLayer"]
 layer = 10
 script = SubResource( 1 )
+
+[node name="Inventory" parent="." instance=ExtResource( 3 )]
 
 [node name="BackgroundShade" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.34902 )

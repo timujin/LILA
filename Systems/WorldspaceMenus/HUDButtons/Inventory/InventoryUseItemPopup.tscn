@@ -6,6 +6,8 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
+signal item_selected (item)
+
 onready var item_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn\")
 onready var category_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Category.tscn\")
 
@@ -61,20 +63,21 @@ var visible = false setget set_visible, get_visible
 
 func set_visible(value:bool):
 	$\"Modal\".visible = value
+	reload_ui()
 	
 func get_visible():
 	return $\"Modal\".visible
 	
 func on_item_press(item):
-	item.item_object.get_node(\"OnActivate\").activate()
+	emit_signal(\"item_selected\", item.item_object)
+	set_visible( false)
 
 func _on_CloseButton_pressed():
-	ModeController.set_mode(ModeController.EXPLORE)
 	set_visible( false)
 "
 
 [node name="Inventory" type="CanvasLayer"]
-layer = 3
+layer = 15
 script = SubResource( 1 )
 
 [node name="Modal" type="Panel" parent="."]
