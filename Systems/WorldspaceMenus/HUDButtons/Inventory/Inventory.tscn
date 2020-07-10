@@ -23,6 +23,7 @@ func reload_ui():
 		var renderer = item_prefab.instance()
 		item_container.add_child(renderer)
 		renderer.render_item(item)
+		renderer.connect(\"pressed\", self, \"on_item_press\", [renderer])
 		
 	# Loading categories
 	
@@ -52,10 +53,25 @@ func show_category(category:String):
 
 func _ready():
 	reload_ui()
+
+var visible = false setget set_visible, get_visible
+
+func set_visible(value:bool):
+	$\"Modal\".visible = value
+	
+func get_visible():
+	return $\"Modal\".visible
+	
+func on_item_press(item):
+	item.item_object.get_node(\"OnActivate\").activate()
+
+func _on_CloseButton_pressed():
+	ModeController.set_mode(ModeController.EXPLORE)
+	set_visible( false)
 "
 
 [node name="Inventory" type="CanvasLayer"]
-layer = 5
+layer = 3
 script = SubResource( 1 )
 
 [node name="Modal" type="Panel" parent="."]
@@ -150,3 +166,4 @@ margin_right = 308.0
 [node name="Item4" parent="Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer" instance=ExtResource( 2 )]
 margin_left = 312.0
 margin_right = 412.0
+[connection signal="pressed" from="Modal/Window/CloseButton" to="." method="_on_CloseButton_pressed"]

@@ -4,8 +4,6 @@
 [ext_resource path="res://Systems/Cutscenes/WOLModal/TalkingItem.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
 
-
-
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
@@ -58,6 +56,7 @@ func add_choice(text:String):
 "
 
 [node name="WOLModal" type="CanvasLayer"]
+layer = 10
 script = SubResource( 1 )
 
 [node name="BackgroundShade" type="Panel" parent="."]

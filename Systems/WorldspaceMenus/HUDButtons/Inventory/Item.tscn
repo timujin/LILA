@@ -8,8 +8,11 @@
 script/source = "extends Button
 
 var category = \"\"
+var item_object
 
 func render_item(item):
+	item_object = item
+	
 	category = item.category
 	$Label/Count.text = str(item.count)
 	$Label/Count.visible = item.countable
@@ -73,7 +76,7 @@ __meta__ = {
 }
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 7
+layer = 4
 
 [node name="Offset" type="Control" parent="CanvasLayer"]
 margin_right = 40.0

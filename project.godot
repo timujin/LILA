@@ -84,6 +84,7 @@ ModeController="*res://Systems/ModeController/ModeController.tscn"
 GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
 RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 Character="*res://Systems/Character/Character.tscn"
+HudButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
 
 [display]
 

@@ -1,13 +1,10 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/--Inventory/Inventory.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Inventory.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
-func _ready():
-	return #ModeController.connect(\"ui_reset\", self, \"reset\")	
-	
 func hide():
 	#reset()
 	$HBoxContainer.visible = false
@@ -16,10 +13,16 @@ func unhide():
 	#reset()
 	$HBoxContainer.visible = true
 	
+func _ready():
+	$Inventory.visible = false
+
+func _on_Inventory_pressed():
+	ModeController.set_mode(ModeController.MENU)
+	$Inventory.visible = true
 "
 
 [node name="WSHUD" type="CanvasLayer"]
-layer = 20
+layer = 2
 script = SubResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -41,4 +44,4 @@ size_flags_horizontal = 3
 text = "I"
 
 [node name="Inventory" parent="." instance=ExtResource( 1 )]
-[connection signal="pressed" from="HBoxContainer/Inventory" to="Inventory" method="unhide"]
+[connection signal="pressed" from="HBoxContainer/Inventory" to="." method="_on_Inventory_pressed"]
