@@ -83,7 +83,7 @@ func load_items():
 		var x = load(item).instance()
 		if not (x is BaseItem):
 			continue
-		var id = x.name
+		var id = x.id
 		x.free()
 		if res.has(id):
 			printerr(\"Duplicate item id: %s\" % id)

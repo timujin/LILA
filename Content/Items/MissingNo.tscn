@@ -7,7 +7,9 @@ script/source = "extends BaseItem
 
 
 func get_description():
-	return \"Item could not be loaded: \" + self.name"
+	return \"Item could not be loaded: \" + self.name
+"
 
 [node name="MissingNo" instance=ExtResource( 1 )]
 script = SubResource( 1 )
+id = "MissingNo"

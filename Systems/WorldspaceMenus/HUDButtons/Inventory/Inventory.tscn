@@ -1,347 +1,100 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
-[ext_resource path="res://Assets/Fonts/LilitaOne-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://Assets/Placeholders/steelhordearmor.png" type="Texture" id=3]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn" type="PackedScene" id=2]
 
-[sub_resource type="GDScript" id=1]
-script/source = "extends Control
+[node name="Inventory" type="CanvasLayer"]
+layer = 5
 
-var selected_item = null
-
-onready var infocontainer = $\"Modal/Window/HBoxContainer/Left/Description/InfoContainer\"
-onready var item_list = $\"Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/BigItemList\"
-
-func render():
-	infocontainer.render(selected_item)
-	item_list.render()
-
-func unhide():
-	ModeController.set_mode(ModeController.MENU)
-	visible = true
-	render()
-
-func hide():
-	ModeController.set_mode(ModeController.EXPLORE)
-	visible = false
-
-func _ready():
-	#hide()
-	render()
-	item_list.connect(\"item_selected\", self, \"on_item_selected\")
-	
-\"\"\"
-func on_item_selected(item):
-	selected_item = item
-	infocontainer.render(item)
-	
-func on_using_item(action:String):
-	print(selected_item)
-	if selected_item == null:
-		printerr(\"Trying to use an unselected item!\")
-		return
-	InventoryItem.load_by_id(selected_item).iscript.use(action, InventoryItem.load_by_id(selected_item), get_tree())
-\"\"\"
-
-func _on_BigItemList_item_selected(item):
-	selected_item = item
-	infocontainer.render(selected_item)
-	
-
-
-func _on_Equip_pressed():
-	var slot = selected_item.species.equipment_slot
-	if slot == \"None\" or slot == \"\" or slot == null:
-		printerr(\"Not equipable: %s\" % selected_item.species.title)
-		return
-	
-	if selected_item.equipped == false:
-		Character.inventory.equip_in_slot(selected_item.species.id, slot)
-	else:
-		Character.inventory.clear_equipment_slot(slot)
-	item_list.render()
-	infocontainer.render(selected_item)
-"
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends VBoxContainer
-
-signal action_initiated (item, action)
-
-func render(inventoryitem):
-	clear()
-	if inventoryitem == null:
-		return
-		
-	var item = inventoryitem.species
-	var amount = inventoryitem.amount
-	
-	$\"ItemName\".text = item.title
-	$\"ItemDescription\".text = item.description
-	$\"ItemHint\".text = item.hint
-	
-	if inventoryitem.error_message != null:
-		$\"ItemHint\".text = inventoryitem.error_message
-	
-	
-	if item.actions != null:
-		var actions = item.actions.keys()
-		if actions.size() > 0:
-			for action in actions:
-				var btn = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/ActionButton.tscn\").instance()
-				$Buttons.add_child(btn)
-				btn.render(action, inventoryitem)
-				btn.connect(\"activated\", self, \"on_action\")
-	
-	if item.equipment_slot == \"None\" or item.equipment_slot == \"\" or item.equipment_slot == null:
-		$Equip.visible = false
-	else:
-		$Equip.visible = true
-		if inventoryitem.equipped:
-			$Equip.text = \"Unequip: %s\" % item.equipment_slot
-		else:
-			$Equip.text = \"Equip: %s\" % item.equipment_slot
-	
-	
-				
-func on_action(item, action):
-	var script = item.species.actions[action]
-	script.run(item, action)
-	
-		
-func clear():
-	$\"ItemName\".text = \"Select an item\"
-	$\"ItemDescription\".text = \"\"
-	$\"ItemHint\".text = \"\"
-	
-	for child in $Buttons.get_children():
-		child.queue_free()
-	
-	$Equip.visible = false"
-
-[sub_resource type="DynamicFont" id=3]
-size = 21
-font_data = ExtResource( 2 )
-
-[sub_resource type="GDScript" id=4]
-script/source = "extends VBoxContainer
-
-signal item_selected (item)
-
-func render():
-	clear()
-	
-	var item_renderer = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/ItemRenderUI.tscn\")
-	for item in Character.inventory.entries:
-		var renderer = item_renderer.instance()
-		add_child(renderer)
-		renderer.render(item)
-		#renderer.connect_me(self, \"on_item_selected\")
-		renderer.connect(\"selected\", self, \"on_item_selected\")
-		print(\"Connected\")
-	
-func clear():
-	for child in get_children():
-		child.queue_free()
-		
-func on_item_selected(item):
-	print(\"item selecred\")
-	emit_signal(\"item_selected\", item)"
-
-[node name="Inventory" type="Control"]
+[node name="Modal" type="Panel" parent="."]
+self_modulate = Color( 1, 1, 1, 0.258824 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 1 )
-script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Modal" type="Panel" parent="."]
-self_modulate = Color( 1, 1, 1, 0.439216 )
+[node name="Window" type="Panel" parent="Modal"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 100.0
+margin_top = 68.0
+margin_right = -70.0
+margin_bottom = -83.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Window" type="PanelContainer" parent="Modal"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -722.5
-margin_top = -389.5
-margin_right = 722.5
-margin_bottom = 389.5
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Modal/Window"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 1443.0
-margin_bottom = 777.0
-alignment = 1
-
-[node name="Left" type="VBoxContainer" parent="Modal/Window/HBoxContainer"]
-margin_right = 398.0
-margin_bottom = 775.0
-size_flags_horizontal = 3
-
-[node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
-margin_right = 398.0
-margin_bottom = 385.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Left/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="EquippedItems" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Panel/ScrollContainer"]
-
-[node name="Description" type="Panel" parent="Modal/Window/HBoxContainer/Left"]
-margin_top = 389.0
-margin_right = 398.0
-margin_bottom = 775.0
-size_flags_vertical = 3
-
-[node name="InfoContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 15.0
-margin_top = 15.0
-margin_right = -15.0
-margin_bottom = -15.0
-script = SubResource( 2 )
-
-[node name="Panel" type="Panel" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_right = 368.0
-margin_bottom = 36.61
-rect_min_size = Vector2( 0, 36.61 )
-
-[node name="INFO" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_fonts/font = SubResource( 3 )
-text = "INFO"
-align = 1
-valign = 1
-
-[node name="ItemName" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 40.0
-margin_right = 368.0
-margin_bottom = 59.0
-text = "<ITEM NAME>"
-align = 1
-valign = 1
-autowrap = true
-
-[node name="ItemDescription" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 63.0
-margin_right = 368.0
-margin_bottom = 104.0
-text = "Item description.
-May be multiline"
-align = 1
-autowrap = true
-
-[node name="ItemHint" type="Label" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 108.0
-margin_right = 368.0
-margin_bottom = 149.0
-text = "Item hint
-Increases your nothing by zero"
-align = 1
-autowrap = true
-
-[node name="Equip" type="Button" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 153.0
-margin_right = 102.0
-margin_bottom = 172.0
-size_flags_horizontal = 0
-text = "Equip: head"
-
-[node name="Buttons" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Left/Description/InfoContainer"]
-margin_top = 176.0
-margin_right = 368.0
-margin_bottom = 176.0
-alignment = 1
-
-[node name="Right" type="PanelContainer" parent="Modal/Window/HBoxContainer"]
-margin_left = 402.0
-margin_right = 1441.0
-margin_bottom = 775.0
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.61
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 1037.0
-margin_bottom = 773.0
-
-[node name="Title" type="HBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-editor/display_folded = true
-visible = false
-margin_right = 1035.0
-margin_bottom = 60.0
-size_flags_vertical = 3
-
-[node name="Equipment" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_right = 38.0
-margin_bottom = 60.0
-text = "This"
-
-[node name="Consumables" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 42.0
-margin_right = 85.0
-margin_bottom = 60.0
-text = "Does"
-
-[node name="Tools" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 89.0
-margin_right = 120.0
-margin_bottom = 60.0
-text = "Not"
-
-[node name="Misc" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 124.0
-margin_right = 170.0
-margin_bottom = 60.0
-text = "Work"
-
-[node name="All" type="Button" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/Title"]
-margin_left = 174.0
-margin_right = 203.0
-margin_bottom = 60.0
-text = "Yet"
-
-[node name="Delimeter" type="Panel" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-visible = false
-margin_right = 1035.0
-margin_bottom = 6.0
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer"]
-margin_right = 1035.0
-margin_bottom = 771.0
-size_flags_vertical = 3
-size_flags_stretch_ratio = 11.6
-
-[node name="BigItemList" type="VBoxContainer" parent="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer"]
-margin_right = 1035.0
-size_flags_horizontal = 3
-script = SubResource( 4 )
-
-[node name="Button" type="Button" parent="Modal"]
+[node name="CloseButton" type="Button" parent="Modal/Window"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -114.476
-margin_top = 45.4262
-margin_right = -56.4758
-margin_bottom = 100.426
-icon = ExtResource( 3 )
-[connection signal="visibility_changed" from="." to="." method="_on_Inventory_visibility_changed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Left/Description/InfoContainer/Equip" to="." method="_on_Equip_pressed"]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Equipment" to="." method="filter" binds= [ "Equipment" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Consumables" to="." method="filter" binds= [ "Consumable" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Tools" to="." method="filter" binds= [ "Tool" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/Misc" to="." method="filter" binds= [ "Misc" ]]
-[connection signal="pressed" from="Modal/Window/HBoxContainer/Right/VBoxContainer/Title/All" to="." method="filter" binds= [ "All" ]]
-[connection signal="item_selected" from="Modal/Window/HBoxContainer/Right/VBoxContainer/ScrollContainer/BigItemList" to="." method="_on_BigItemList_item_selected"]
-[connection signal="pressed" from="Modal/Button" to="." method="hide"]
+margin_left = -31.0
+margin_top = -13.0
+margin_right = 11.0
+margin_bottom = 29.0
+text = "X"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CategoriesPanel" type="Panel" parent="Modal/Window"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 26.0
+margin_top = -349.5
+margin_right = 383.0
+margin_bottom = 352.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/CategoriesPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CategoriesContainer" type="VBoxContainer" parent="Modal/Window/CategoriesPanel/ScrollContainer"]
+
+[node name="ItemsPanel" type="Panel" parent="Modal/Window"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -1035.14
+margin_top = 25.704
+margin_right = -24.136
+margin_bottom = -21.296
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/ItemsPanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemsContainer" type="GridContainer" parent="Modal/Window/ItemsPanel/ScrollContainer"]
+margin_right = 412.0
+margin_bottom = 100.0
+columns = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Item" parent="Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer" instance=ExtResource( 2 )]
+
+[node name="Item2" parent="Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer" instance=ExtResource( 2 )]
+margin_left = 104.0
+margin_right = 204.0
+
+[node name="Item3" parent="Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer" instance=ExtResource( 2 )]
+margin_left = 208.0
+margin_right = 308.0
+
+[node name="Item4" parent="Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer" instance=ExtResource( 2 )]
+margin_left = 312.0
+margin_right = 412.0

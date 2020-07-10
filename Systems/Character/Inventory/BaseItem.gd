@@ -1,12 +1,24 @@
 extends Node
 
+# Status: works; but not feature-complete
+
 class_name BaseItem
 
+signal item_updated (item)
+
+export(String) var id = "" # intended to uniquely point to an item's species
 export(String) var display_name = "" setget , get_display_name
-export(Texture)var icon = preload("res://Systems/Character/Inventory/Assets/ios-application-placeholder.png")
-export(String) var description = "", setget , get_description
+export(Texture)var icon = \
+	preload("res://Systems/Character/Inventory/Assets/ios-application-placeholder.png")\
+	setget, get_icon
+export(String) var description = "" setget , get_description
 export(String) var category = "Miscellaneous"
 export(bool)   var countable = true
+export(bool)   var usable_in_dialogues = true
+export(int)	   var count = 0
+export(Dictionary) var payload = {} # runtime properties. Must be serializable.
+
+# Override those getters for items with dynamic presentations
 
 func get_display_name():
 	if display_name == "":
@@ -20,7 +32,35 @@ func get_description():
 	else:
 		return description
 		
-static func load_by_id(id:String):
+func get_icon():
+	return icon
+	
+
+func add_count(number:int):
+	assert(number >= 0)
+	assert(self.countable)
+	self.count += number
+	emit_signal("item_updated", self)
+	
+func remove_count(number:int, cleanup=true):
+	assert(number >= 0)
+	assert(self.countable)
+	self.count -= number
+	if cleanup and self.count == 0:
+		selfdestruct()
+	emit_signal("item_updated", self)
+	
+func is_enough(number:int):
+	assert(number >= 0)
+	assert(self.countable)
+	return self.count >= number
+	
+		
+func selfdestruct():
+	queue_free()
+
+		
+static func load_by_id(id:String)->BaseItem:
 	var res = GlobalRegister.item(id)
 	if res == null:
 		res = GlobalRegister.item("MissingNo")

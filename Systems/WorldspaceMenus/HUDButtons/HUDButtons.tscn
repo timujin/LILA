@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Inventory.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/--Inventory/Inventory.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
@@ -16,19 +16,7 @@ func unhide():
 	#reset()
 	$HBoxContainer.visible = true
 	
-\"\"\"
-func itemget(item):
-	var prototype = preload(\"res://Autoload/WorldspaceHUD/ItemGet.tscn\")
-	var get = prototype.instance()
-	add_child(get)
-	get.render(item)
-	
-func karmaget(item):
-	var prototype = preload(\"res://Autoload/WorldspaceHUD/KarmaGet.tscn\")
-	var get = prototype.instance()
-	add_child(get)
-	get.render(item)
-\"\"\""
+"
 
 [node name="WSHUD" type="CanvasLayer"]
 layer = 20
@@ -37,25 +25,20 @@ script = SubResource( 1 )
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -338.0
+margin_left = -101.0
 margin_top = 27.0
 margin_right = -23.0
 margin_bottom = 103.0
 custom_constants/separation = 13
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Inventory" type="Button" parent="HBoxContainer"]
-margin_right = 151.0
+margin_right = 78.0
 margin_bottom = 76.0
 size_flags_horizontal = 3
 text = "I"
 
-[node name="Character" type="Button" parent="HBoxContainer"]
-margin_left = 164.0
-margin_right = 315.0
-margin_bottom = 76.0
-size_flags_horizontal = 3
-text = "C"
-
 [node name="Inventory" parent="." instance=ExtResource( 1 )]
-visible = false
 [connection signal="pressed" from="HBoxContainer/Inventory" to="Inventory" method="unhide"]

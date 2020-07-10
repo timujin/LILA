@@ -2,5 +2,5 @@
 
 [ext_resource path="res://Systems/Character/Inventory/BaseItem.gd" type="Script" id=1]
 
-[node name="ItemID" type="Node"]
+[node name="Item" type="Node"]
 script = ExtResource( 1 )

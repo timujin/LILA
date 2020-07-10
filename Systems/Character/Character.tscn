@@ -9,14 +9,85 @@ This is intended to be deserialized into a save file *in entirety*.
 \"\"\"
 
 onready var inventory = get_node(\"Inventory\")
-#onready var karma = get_node(\"Karma\")
 onready var pickles = get_node(\"Pickles\")
 onready var variables = get_node(\"Variables\")
-
-# Add Journal entities: quests, map, notes, etc...
 "
 
 [sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+# adding item
+# checking item
+# removing item
+# getting all items by predicate ???
+# TODO
+
+signal item_added (item)
+signal inventory_updated
+
+func search_all_items_by_id(id:String):
+	var res = []
+	for item in get_children():
+		if item.id == id:
+			res.append(item)
+	return res
+	
+func search_item_by_id(id:String):
+	var res = search_all_items_by_id(id)
+	if res.size() == 0:
+		return null
+	elif res.size() == 1:
+		return res[0]
+	else:
+		printerr(\"More than 1 candidate for item: %s\" % id)
+		return res[0]
+
+func add_item_by_id(id:String, allow_duplicate=false):
+	if (not allow_duplicate) and has_item_by_id(id):
+		return
+	var prototype = BaseItem.load_by_id(id)
+	prototype.connect(\"item_updated\", self, \"emit_signal\", [\"inventory_updated\"])
+	return add_item(prototype)
+	
+func add_item(scene):
+	var res = scene.instance()
+	self.add_child(res)
+	emit_signal(\"item_added\", res)
+	emit_signal(\"inventory_updated\")
+	return res
+	
+func has_item_by_id(id:String):
+	return search_item_by_id(id) != null
+
+func add_number_items(id:String, number:int):
+	assert(number >= 0)
+	var candidate = search_item_by_id(id)
+	if candidate == null:
+		candidate = add_item_by_id(id)
+	candidate.add_count(number)
+	
+func is_enough_items(id:String, number:int):
+	assert(number >= 0)
+	var candidate = search_item_by_id(id)
+	if candidate == null:
+		return false
+	return candidate.is_enough(number)
+	
+func lose_items(id:String, number, cleanup=true):
+	assert(number >= 0)
+	var candidate = search_item_by_id(id)
+	if candidate == null:
+		printerr(\"Not enough items to remove: %s\" % id)
+		return
+	candidate.remove_count(number, cleanup)
+	
+	
+func _ready():
+	add_item_by_id(\"MissingNo\")
+	
+"
+
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 \"\"\"
@@ -24,6 +95,8 @@ Stores generic global variables.
 Used for event flags, storyline control, etc.
 All the things that can't be represented elsewhere.
 Should use serializable types - preferably Strings, Ints, Bools, etc.
+These are invisible to the player. If you want to control items that are
+visible to the player, use Inventory.
 \"\"\"
 
 signal value_changed(key, old_value, new_value)
@@ -48,8 +121,14 @@ func get_value(key:String, default=null):
 		
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node
+
+# Status: works normally
+
+\"\"\"
+Stores the state of objects in rooms. 
+\"\"\"
 
 var pickled_rooms:Dictionary = {}
 
@@ -70,23 +149,14 @@ func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
 
 "
 
-[sub_resource type="GDScript" id=4]
-script/source = "extends Node
-
-# adding item
-# checking item
-# removing item
-# getting all items by predicate ???
-"
-
 [node name="Character" type="Node"]
 script = SubResource( 1 )
 
-[node name="Variables" type="Node" parent="."]
+[node name="Inventory" type="Node" parent="."]
 script = SubResource( 2 )
 
-[node name="Pickles" type="Node" parent="."]
+[node name="Variables" type="Node" parent="."]
 script = SubResource( 3 )
 
-[node name="Inventory" type="Node" parent="."]
+[node name="Pickles" type="Node" parent="."]
 script = SubResource( 4 )
