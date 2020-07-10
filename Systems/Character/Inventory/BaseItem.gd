@@ -16,6 +16,7 @@ export(String) var category = "Miscellaneous"
 export(bool)   var countable = true
 export(bool)   var usable_in_dialogues = true
 export(int)	   var count = 0
+export(Dictionary) var tags = {}
 export(Dictionary) var payload = {} # runtime properties. Must be serializable.
 
 # Override those getters for items with dynamic presentations

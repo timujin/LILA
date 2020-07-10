@@ -83,7 +83,11 @@ func execute():
 	
 func open_use_item():
 	window.open_item_popup()
+	window.item_popup.set_filter(self, \"only_knife_allowed\")
 	window.item_popup.connect(\"item_selected\", self, \"use_item\")
+	
+func only_knife_allowed(items):
+	return items[0].display_name == \"Knife\"
 	
 func use_item(item):
 	window.clear_pc()
