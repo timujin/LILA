@@ -7,8 +7,10 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Button
 
+var category = \"\"
 
 func render_item(item):
+	category = item.category
 	$Label/Count.text = str(item.count)
 	$Label/Count.visible = item.countable
 	$CanvasLayer/Offset/Popup/Count.text = str(item.count)
@@ -21,8 +23,9 @@ func render_item(item):
 	$CanvasLayer/Offset/Popup/Description.text = item.description
 
 func _ready():
-	var item = Character.inventory.add_item_by_id(\"MissingNo\",true)
-	render_item(item)
+	pass
+	#var item = Character.inventory.add_item_by_id(\"MissingNo\",true)
+	#render_item(item)
 
 
 func _on_Item_mouse_entered():

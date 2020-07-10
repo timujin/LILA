@@ -61,7 +61,9 @@ func selfdestruct():
 
 		
 static func load_by_id(id:String)->BaseItem:
+	print("ID: %s" % id)
 	var res = GlobalRegister.item(id)
+	print("Result: %s" % res)
 	if res == null:
 		res = GlobalRegister.item("MissingNo")
 	return res

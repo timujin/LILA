@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource( 1 )
 items = {
-"": "res://Content/Items/Knife.tscn",
+"Knife": "res://Content/Items/Knife.tscn",
 "MissingNo": "res://Content/Items/MissingNo.tscn",
 "Shield": "res://Content/Items/Shield.tscn"
 }

@@ -1,10 +1,62 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn" type="PackedScene" id=2]
 
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+onready var item_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn\")
+onready var category_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Category.tscn\")
+
+onready var item_container = $\"Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer\"
+onready var category_container = $\"Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer\"
+
+func reload_ui():
+	# Loading items
+	
+	var items = Character.inventory.get_all_items()
+	items.sort_custom(self,\"sort_items_alphabetically\")
+	for child in item_container.get_children():
+		child.queue_free()
+	for item in items:
+		var renderer = item_prefab.instance()
+		item_container.add_child(renderer)
+		renderer.render_item(item)
+		
+	# Loading categories
+	
+	var categories = []
+	for item in items:
+		if not categories.has(item.category):
+			categories.append(item.category)
+			
+	categories.sort()
+	categories.push_front(\"All\")
+	
+	for category in categories:
+		var renderer = category_prefab.instance()
+		category_container.add_child(renderer)
+		renderer.text = category
+		renderer.connect(\"pressed\", self, \"show_category\", [category])
+	
+static func sort_items_alphabetically(a,b):
+	return a.display_name < b.display_name
+	
+func show_category(category:String):
+	for item in item_container.get_children():
+		if (category == \"All\") or (category == item.category):
+			item.visible = true
+		else:
+			item.visible = false
+
+func _ready():
+	reload_ui()
+"
+
 [node name="Inventory" type="CanvasLayer"]
 layer = 5
+script = SubResource( 1 )
 
 [node name="Modal" type="Panel" parent="."]
 self_modulate = Color( 1, 1, 1, 0.258824 )

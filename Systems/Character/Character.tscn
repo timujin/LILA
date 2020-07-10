@@ -25,6 +25,9 @@ script/source = "extends Node
 signal item_added (item)
 signal inventory_updated
 
+func get_all_items():
+	return self.get_children()
+
 func search_all_items_by_id(id:String):
 	var res = []
 	for item in get_children():
@@ -83,7 +86,8 @@ func lose_items(id:String, number, cleanup=true):
 	
 	
 func _ready():
-	add_item_by_id(\"MissingNo\")
+	add_item_by_id(\"Knife\")
+	add_item_by_id(\"Shield\")
 	
 "
 
