@@ -18,6 +18,11 @@ func add_requirement():
 	$Requirements/HBoxContainer.add_child(req)
 	return req
 	
+func add_req(icon, amount, text, youhave, fulfilled):
+	var req = add_requirement()
+	req.set_icon(icon)
+	req.set_text(amount, text, youhave)
+	req.set_unfulfilled(not fulfilled)
 
 signal pressed 
 

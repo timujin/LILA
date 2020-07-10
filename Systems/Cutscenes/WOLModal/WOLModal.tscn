@@ -35,7 +35,7 @@ func close_item_popup():
 	
 func scroll_to_bottom():
 	yield(get_tree(), \"idle_frame\")
-	yield(get_tree(), \"idle_frame\")
+	yield(get_tree(), \"idle_frame\") # This has to be here for some reason
 	yield(get_tree(), \"idle_frame\")
 	$\"Base/ScrollContainer\".scroll_vertical = $\"Base/ScrollContainer\".get_v_scrollbar().max_value
 

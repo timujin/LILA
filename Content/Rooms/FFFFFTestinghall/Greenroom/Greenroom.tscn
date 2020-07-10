@@ -4,8 +4,9 @@
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Placeholders/adeptmastersorc.png" type="Texture" id=4]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/CutsceneStarter.gd" type="Script" id=5]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
 
@@ -13,7 +14,7 @@ func activate():
 	RoomSwitcher.switch_to(\"FFFFFRedroom\")
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 
@@ -27,122 +28,89 @@ script/source = "extends Node
 
 func activate():
 	print(\"activated\")
-	get_node(\"../Interaction\").open()
+	get_node(\"../Interaction\").open(\"Hello\")
 "
 
-[sub_resource type="GDScript" id=4]
-script/source = "extends Node
-
-var current_dialogue = null
-
-func open():
-	ModeController.start_interaction()
-	current_dialogue = $Hello
-	current_dialogue.execute()
-"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Node
-
-var window
+[sub_resource type="GDScript" id=6]
+script/source = "extends CutsceneEngine
 
 func execute():
-	window = ModeController.window
-	window.clear_pc()
+	clear_player_choices()
 	var number_of_visits = Character.variables.get_value(\"greenroom_visits\", 0)
 	Character.variables.set_value(\"greenroom_visits\", number_of_visits+1)
 	var icon = preload(\"res://Assets/Placeholders/advancedcreatureattack.png\")
 	var text = \\
 	\"\"\"This is the %s time you've visited this shrine.
 	\"\"\" % str(number_of_visits)
-	window.add_talking_head(icon, text)
-	window.add_talking_head(null,\"What do you want me to do now?\")
+	
+	say_head(icon, text)
+	say_headless(\"What do you want me to do now?\")
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 
-	var response1 = window.add_choice(\"Give me 1 point\")
-	response1.connect(\"pressed\", self, \"on_give_me_point\")
+	choice_call(\"Give me 1 point\", \"on_give_me_point\")
 	
-	var response2 = window.add_choice(\"Spend 3 points to hear a joke\")
-	response2.connect(\"pressed\", self, \"on_give_me_joke\")
-	var resp2reqt1 = response2.add_requirement()
-	resp2reqt1.set_icon(preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"))
-	resp2reqt1.set_text(\"-3\", \"Costs 3 points.\", \"You have: %s\" % str(points))
-	if points >= 3:
-		resp2reqt1.set_unfulfilled(false)
-		response2.set_active(true)
-	else:
-		resp2reqt1.set_unfulfilled(true)
-		response2.set_active(false)
-		
-	var response4 = window.add_choice(\"Good bye!\")
-	response4.connect(\"pressed\", ModeController, \"stop_interaction\")
-	
-	var response5 = window.add_choice(\"Use an item...\")
-	response5.connect(\"pressed\", self, \"open_use_item\")
+	var spend_points = choice_call(\"Spend 3 points to hear a joke\", \"on_give_me_joke\")
+	spend_points.add_req(\\
+		preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"),\\
+		\"-3\", \"Costs 3 points.\", \"You have: %s\" % str(points),\\
+		points >= 3
+	)
+	spend_points.set_active(points >= 3)
+
+	choice_call(\"Use an item...\", \"open_use_item\")
+	choice_call(\"Good bye!\", \"end_cutscene\")	
 	
 func open_use_item():
-	window.open_item_popup()
-	window.item_popup.set_filter(self, \"only_knife_allowed\")
-	window.item_popup.connect(\"item_selected\", self, \"use_item\")
+	open_item_popup(\"only_knife_allowed\", \"use_item\")
 	
 func only_knife_allowed(items):
 	return items[0].display_name == \"Knife\"
 	
 func use_item(item):
-	window.clear_pc()
-	window.add_talking_head(null,\"This is the 10th time you've showed %s in class!\" % item.display_name)
+	clear_player_choices()
+	ModeController.window.add_talking_head(null,\"This is the 10th time you've showed %s in class!\" % item.display_name)
 	$YouGetPoints.execute()
 	
 func on_give_me_point():
-	window.add_choice_record(\"Give me 1 point\")
+	add_choice_record(\"Give me 1 point\")
 	$YouGetPoints.execute()
 	
 func on_give_me_joke():
-	window.add_choice_record(\"Spend 3 points to hear a joke\")
+	add_choice_record(\"Spend 3 points to hear a joke\")
 	$YouGetJoke.execute()
 "
 
-[sub_resource type="GDScript" id=6]
-script/source = "extends Node
-
-var window
+[sub_resource type="GDScript" id=7]
+script/source = "extends CutsceneEngine
 
 func execute():
-	window = ModeController.window
-	window.clear_pc()
+	clear_player_choices()
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 	points += 1
 	Character.variables.set_value(\"greenroom_points\", points)
-	window.add_talking_head(null, \"You now have %s points!\" % str(points))
 	
-
-	var response = window.add_choice(\"OK\")
-	response.connect(\"pressed\", self, \"on_ok\")
+	say_headless(\"You now have %s points!\" % str(points))
+	
+	choice_call(\"OK\", \"on_ok\")
 
 func on_ok():
 	get_parent().execute()
 "
 
-[sub_resource type="GDScript" id=7]
-script/source = "extends Node
-
-var window
+[sub_resource type="GDScript" id=8]
+script/source = "extends CutsceneEngine
 
 func execute():
-	window = ModeController.window
-	window.clear_pc()
+	clear_player_choices()
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 	points -= 3
 	Character.variables.set_value(\"greenroom_points\", points)
 	
-	window.add_talking_head(preload(\"res://Assets/Placeholders/aerialshackles.png\"), \"A man walks into a bar. Ouch.\")
-	
-
-	var response = window.add_choice(\"OK\")
-	response.connect(\"pressed\", self, \"on_ok\")
+	say_head(preload(\"res://Assets/Placeholders/aerialshackles.png\"), \"A man walks into a bar. Ouch.\")
+	choice_call(\"OK\", \"on_ok\")
 
 func on_ok():
 	get_parent().execute()
@@ -182,7 +150,7 @@ margin_bottom = 100.0
 ActivatorName = "Red door"
 
 [node name="Activator" parent="RedroomDoor" index="2"]
-script = SubResource( 1 )
+script = SubResource( 4 )
 
 [node name="BlueDoor" parent="." index="4" instance=ExtResource( 3 )]
 position = Vector2( 934.156, 411.45 )
@@ -195,7 +163,7 @@ margin_bottom = 188.0
 ActivatorName = "Blue door"
 
 [node name="Activator" parent="BlueDoor" index="2"]
-script = SubResource( 2 )
+script = SubResource( 5 )
 
 [node name="BaseInteractable" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 779.192, 178.047 )
@@ -215,16 +183,16 @@ scale = Vector2( 5.70774, 4.47399 )
 texture = ExtResource( 4 )
 
 [node name="Interaction" type="Node" parent="BaseInteractable" index="4"]
-script = SubResource( 4 )
+script = ExtResource( 5 )
 
 [node name="Hello" type="Node" parent="BaseInteractable/Interaction" index="0"]
-script = SubResource( 5 )
-
-[node name="YouGetPoints" type="Node" parent="BaseInteractable/Interaction/Hello" index="0"]
 script = SubResource( 6 )
 
-[node name="YouGetJoke" type="Node" parent="BaseInteractable/Interaction/Hello" index="1"]
+[node name="YouGetPoints" type="Node" parent="BaseInteractable/Interaction/Hello" index="0"]
 script = SubResource( 7 )
+
+[node name="YouGetJoke" type="Node" parent="BaseInteractable/Interaction/Hello" index="1"]
+script = SubResource( 8 )
 
 [editable path="RedroomDoor"]
 

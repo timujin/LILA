@@ -4,7 +4,6 @@
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Redroom/Redroom.png" type="Texture" id=2]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
 
-
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
@@ -24,9 +23,6 @@ roomID = "FFFFFRedroom"
 position = Vector2( 897.96, 435.697 )
 scale = Vector2( 2.11991, 1.80825 )
 texture = ExtResource( 2 )
-
-[node name="Geometry" parent="." index="1"]
-editor/display_folded = true
 
 [node name="CameraLimitLeft" parent="Geometry" index="0"]
 position = Vector2( -141.468, 456.359 )
