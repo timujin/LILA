@@ -1,63 +1,126 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Placeholders/advancedstrengthofthemoon.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Fonts/times-new-roman.ttf" type="DynamicFontData" id=2]
 
-[node name="HeadSayItem" type="PanelContainer"]
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+signal finished
+
+onready var face = $\"HeadPanel/RichTextLabel\"
+onready var textbox = $\"RichTextLabel\"
+
+func set_icon(icon:Texture):
+	if icon == null:
+		face.visible = false
+	else:
+		face.visible = true
+		face.texture = icon
+
+func set_text(text:String):
+	print(textbox.set_text(text))
+
+
+func _on_RichTextLabel_finished():
+	emit_signal(\"finished\")
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+outline_color = Color( 1, 1, 1, 0 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends RichTextLabel
+
+signal finished
+
+func set_text(text):
+	self.bbcode_text = \"[color=black]%s[/color]\"%text
+	yield(get_tree(), \"idle_frame\")
+	yield(get_tree(), \"idle_frame\")
+	yield(get_tree(), \"idle_frame\")
+	#print(text)
+	#print(self.rect_size)
+	#print(self.get_content_height())
+	if self.rect_size.y < self.get_content_height():
+		self.rect_size = Vector2(self.rect_size.x, self.get_content_height())
+		#print(text)
+		print(self.get_content_height())
+		#print(self.rect_size)
+		yield(get_tree(), \"idle_frame\")
+		get_parent().rect_min_size = self.rect_size + Vector2(0, 50)
+		#print(get_parent().rect_min_size)
+		#get_parent().get_parent().hide()
+		#get_parent().get_parent().show()
+	emit_signal(\"finished\")
+"
+
+[node name="HeadSayItem" type="Control"]
 self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -578.0
-margin_bottom = -805.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+script = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 1015.0
-margin_bottom = 154.0
+[node name="HeadPanel" type="Panel" parent="."]
+margin_right = 95.0
+margin_bottom = 95.0
+rect_min_size = Vector2( 95, 95 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="HeadContainer" type="PanelContainer" parent="HBoxContainer"]
-self_modulate = Color( 1, 1, 1, 0 )
-margin_right = 70.0
-margin_bottom = 147.0
-size_flags_horizontal = 3
-
-[node name="Control" type="Control" parent="HBoxContainer/HeadContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 63.0
-margin_bottom = 140.0
-
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer/HeadContainer/Control"]
-margin_right = 60.0
-margin_bottom = 60.0
-rect_min_size = Vector2( 57, 57 )
+[node name="RichTextLabel" type="TextureRect" parent="HeadPanel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -40.0
+margin_top = -40.0
+margin_right = 40.0
+margin_bottom = 40.0
 texture = ExtResource( 1 )
-stretch_mode = 1
+expand = true
+stretch_mode = 6
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TextContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="TextPanel" type="PanelContainer" parent="."]
+visible = false
 self_modulate = Color( 1, 1, 1, 0 )
-margin_left = 74.0
-margin_right = 1008.0
-margin_bottom = 147.0
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 13.19
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -839.0
+rect_min_size = Vector2( 0, 100 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Label" type="Label" parent="HBoxContainer/TextContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 927.0
-margin_bottom = 140.0
-text = "d
-sfdsfdsfdsf
-dsfdsfdsfdsf
-dsfdsfdsfdsf
-dsfdsfdsfdsf
-dsfdsfdsfdsf
-dsfdsfdsfdsf
-dsfdsfdsfdsf"
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 103.0
+margin_top = 11.0
+margin_right = -9.0
+margin_bottom = -10.0
+theme = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[color=black]Blah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blah[/color]"
+text = "Blah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blahlah blah blah"
+override_selected_font_color = true
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="finished" from="RichTextLabel" to="." method="_on_RichTextLabel_finished"]
+[connection signal="item_rect_changed" from="RichTextLabel" to="TextPanel" method="_on_RichTextLabel_item_rect_changed"]

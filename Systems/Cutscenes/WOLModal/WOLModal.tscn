@@ -9,14 +9,13 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
-onready var events_container = $Base/ScrollContainer/MarginContainer/ItemsContainer
-onready var choices_container = $Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer
+onready var events_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says\"
+onready var choices_container = $\"Base/ScrollContainer/MarginContainer/Control/Responses\"
 onready var item_popup = $Inventory
 
 func clear():
 	for child in events_container.get_children():
-		if child.name != \"Choices\":
-			child.queue_free()
+		child.queue_free()
 	clear_pc()
 		
 func clear_pc():
@@ -38,15 +37,20 @@ func scroll_to_bottom():
 	yield(get_tree(), \"idle_frame\")
 	yield(get_tree(), \"idle_frame\") # This has to be here for some reason
 	yield(get_tree(), \"idle_frame\")
-	$\"Base/ScrollContainer\".scroll_vertical = $\"Base/ScrollContainer\".get_v_scrollbar().max_value
+	$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".scroll_vertical = \\
+		$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".get_v_scrollbar().max_value
 
 func add_talking_head(icon:Texture, text:String):
-	var item = preload(\"res://Systems/Cutscenes/WOLModal/TalkingItem.tscn\").instance()
-	events_container.add_child(item)
+	var item = preload(\"res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn\").instance()
+	self.add_child(item)
 	item.set_icon(icon)
 	item.set_text(text)
-	events_container.move_child(item, events_container.get_child_count()-2)
-	scroll_to_bottom()
+	self.remove_child(item)
+	events_container.add_child(item)
+	events_container.move_child(item, events_container.get_child_count()-1)
+	#yield(item, \"finished\")
+	#scroll_to_bottom()
+	item.connect(\"finished\", self, \"scroll_to_bottom\")
 	return item
 
 func add_choice_record(text:String):
@@ -88,10 +92,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -534.0
-margin_top = -407.0
-margin_right = 534.0
-margin_bottom = 426.0
+margin_left = -529.0
+margin_top = -418.5
+margin_right = 529.0
+margin_bottom = 418.5
 theme = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -107,15 +111,15 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Base/ScrollContainer"]
-margin_right = 1068.0
-margin_bottom = 833.0
+margin_right = 1058.0
+margin_bottom = 837.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Control" type="Control" parent="Base/ScrollContainer/MarginContainer"]
 margin_left = 50.0
-margin_right = 1018.0
-margin_bottom = 833.0
+margin_right = 1008.0
+margin_bottom = 837.0
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_right = 1.0
@@ -126,8 +130,8 @@ __meta__ = {
 }
 
 [node name="Says" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer"]
-margin_right = 968.0
-margin_bottom = 547.0
+margin_right = 958.0
+margin_bottom = 551.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 2
@@ -137,17 +141,15 @@ __meta__ = {
 
 [node name="Control5" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
 anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 37.0
-margin_right = 968.0
-margin_bottom = 290.0
+margin_top = 347.0
+margin_right = 958.0
+margin_bottom = 447.0
 
 [node name="Control4" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
 anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 294.0
-margin_right = 968.0
-margin_bottom = 547.0
+margin_top = 451.0
+margin_right = 958.0
+margin_bottom = 551.0
 
 [node name="Responses" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_top = 1.0
@@ -159,21 +161,21 @@ __meta__ = {
 }
 
 [node name="Choice" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
-margin_right = 968.0
+margin_right = 958.0
 
 [node name="Choice3" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 margin_top = 54.0
-margin_right = 968.0
+margin_right = 958.0
 margin_bottom = 104.0
 
 [node name="Choice2" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 margin_top = 108.0
-margin_right = 968.0
+margin_right = 958.0
 margin_bottom = 158.0
 
 [node name="Capture" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.184314 )
-position = Vector2( 2410, 452.112 )
+position = Vector2( 2586.35, 464.416 )
 scale = Vector2( 1.18049, 1.12171 )
 texture = ExtResource( 5 )
 

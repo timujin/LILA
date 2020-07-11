@@ -6,7 +6,7 @@
 [ext_resource path="res://Assets/Placeholders/adeptmastersorc.png" type="Texture" id=4]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/CutsceneStarter.gd" type="Script" id=5]
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 
@@ -14,7 +14,7 @@ func activate():
 	RoomSwitcher.switch_to(\"FFFFFRedroom\")
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 
@@ -31,7 +31,7 @@ func activate():
 	get_node(\"../Interaction\").open(\"Hello\")
 "
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=4]
 script/source = "extends CutsceneEngine
 
 func execute():
@@ -44,7 +44,7 @@ func execute():
 	\"\"\" % str(number_of_visits)
 	
 	say_head(icon, text)
-	say_headless(\"What do you want me to do now?\")
+	say_headless(\"What do you want me t you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?\")
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 
@@ -81,7 +81,7 @@ func on_give_me_joke():
 	$YouGetJoke.execute()
 "
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=5]
 script/source = "extends CutsceneEngine
 
 func execute():
@@ -99,7 +99,7 @@ func on_ok():
 	get_parent().execute()
 "
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=6]
 script/source = "extends CutsceneEngine
 
 func execute():
@@ -150,7 +150,7 @@ margin_bottom = 100.0
 ActivatorName = "Red door"
 
 [node name="Activator" parent="RedroomDoor" index="2"]
-script = SubResource( 4 )
+script = SubResource( 1 )
 
 [node name="BlueDoor" parent="." index="4" instance=ExtResource( 3 )]
 position = Vector2( 934.156, 411.45 )
@@ -163,7 +163,7 @@ margin_bottom = 188.0
 ActivatorName = "Blue door"
 
 [node name="Activator" parent="BlueDoor" index="2"]
-script = SubResource( 5 )
+script = SubResource( 2 )
 
 [node name="BaseInteractable" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 779.192, 178.047 )
@@ -186,13 +186,13 @@ texture = ExtResource( 4 )
 script = ExtResource( 5 )
 
 [node name="Hello" type="Node" parent="BaseInteractable/Interaction" index="0"]
-script = SubResource( 6 )
+script = SubResource( 4 )
 
 [node name="YouGetPoints" type="Node" parent="BaseInteractable/Interaction/Hello" index="0"]
-script = SubResource( 7 )
+script = SubResource( 5 )
 
 [node name="YouGetJoke" type="Node" parent="BaseInteractable/Interaction/Hello" index="1"]
-script = SubResource( 8 )
+script = SubResource( 6 )
 
 [editable path="RedroomDoor"]
 
