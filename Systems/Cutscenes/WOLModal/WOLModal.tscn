@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
-[ext_resource path="res://Systems/Cutscenes/WOLModal/TalkingItem.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/InventoryUseItemPopup.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Themes/Capture.PNG" type="Texture" id=5]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
@@ -71,6 +72,9 @@ script = SubResource( 1 )
 
 [node name="Inventory" parent="." instance=ExtResource( 3 )]
 
+[node name="Modal" parent="Inventory" index="0"]
+visible = false
+
 [node name="BackgroundShade" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.34902 )
 anchor_right = 1.0
@@ -80,12 +84,14 @@ __meta__ = {
 }
 
 [node name="Base" type="Panel" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 65.0
-margin_top = 54.0
-margin_right = -59.0
-margin_bottom = -56.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -534.0
+margin_top = -407.0
+margin_right = 534.0
+margin_bottom = 426.0
 theme = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -101,36 +107,74 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Base/ScrollContainer"]
-margin_right = 1476.0
-margin_bottom = 790.0
+margin_right = 1068.0
+margin_bottom = 833.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ItemsContainer" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer"]
+[node name="Control" type="Control" parent="Base/ScrollContainer/MarginContainer"]
 margin_left = 50.0
-margin_right = 1426.0
-margin_bottom = 790.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
+margin_right = 1018.0
+margin_bottom = 833.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -286.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TalkingItem" parent="Base/ScrollContainer/MarginContainer/ItemsContainer" instance=ExtResource( 2 )]
+[node name="Says" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer"]
+margin_right = 968.0
+margin_bottom = 547.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Choices" type="PanelContainer" parent="Base/ScrollContainer/MarginContainer/ItemsContainer"]
-margin_top = 204.0
-margin_right = 1376.0
-margin_bottom = 312.0
+[node name="Control5" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 37.0
+margin_right = 968.0
+margin_bottom = 290.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 1374.0
-margin_bottom = 106.0
+[node name="Control4" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 294.0
+margin_right = 968.0
+margin_bottom = 547.0
 
-[node name="Choice" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer" instance=ExtResource( 4 )]
+[node name="Responses" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -269.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Choice2" parent="Base/ScrollContainer/MarginContainer/ItemsContainer/Choices/VBoxContainer" instance=ExtResource( 4 )]
+[node name="Choice" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+margin_right = 968.0
+
+[node name="Choice3" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 margin_top = 54.0
+margin_right = 968.0
 margin_bottom = 104.0
+
+[node name="Choice2" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+margin_top = 108.0
+margin_right = 968.0
+margin_bottom = 158.0
+
+[node name="Capture" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.184314 )
+position = Vector2( 2410, 452.112 )
+scale = Vector2( 1.18049, 1.12171 )
+texture = ExtResource( 5 )
+
+[editable path="Inventory"]

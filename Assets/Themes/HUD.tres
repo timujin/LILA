@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=6 format=2]
 
-[ext_resource path="res://Assets/Fonts/Days.otf" type="DynamicFontData" id=1]
+[ext_resource path="res://Assets/Fonts/times-new-roman.ttf" type="DynamicFontData" id=1]
 
 [sub_resource type="StyleBoxFlat" id=1]
 
@@ -30,6 +30,7 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="DynamicFont" id=4]
+size = 24
 font_data = ExtResource( 1 )
 
 [resource]
@@ -54,8 +55,10 @@ Label/constants/shadow_offset_x = 1
 Label/constants/shadow_offset_y = 1
 Label/fonts/font = null
 Label/styles/normal = null
+MarginContainer/constants/margin_bottom = 0
 MarginContainer/constants/margin_left = 50
 MarginContainer/constants/margin_right = 50
+MarginContainer/constants/margin_top = 0
 Panel/styles/panel = SubResource( 2 )
 Panel/styles/panelf = null
 Panel/styles/panelnc = null
