@@ -63,9 +63,9 @@ func add_choice_record(text:String):
 
 func add_choice(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/Choice.tscn\").instance()
-	item.set_text(text)
 	choices_container.add_child(item)
 	choices_container.move_child(item,  choices_container.get_child_count()-1)
+	item.set_text(text)
 	scroll_to_bottom()
 	return item
 "
@@ -151,6 +151,16 @@ margin_top = 451.0
 margin_right = 958.0
 margin_bottom = 551.0
 
+[node name="HSeparator" type="HSeparator" parent="Base/ScrollContainer/MarginContainer/Control"]
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_top = 136.5
+margin_bottom = 146.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Responses" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_top = 1.0
 anchor_right = 1.0
@@ -161,17 +171,32 @@ __meta__ = {
 }
 
 [node name="Choice" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+anchor_right = 0.0
 margin_right = 958.0
 
 [node name="Choice3" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
-margin_top = 54.0
+anchor_right = 0.0
+margin_top = 49.0
 margin_right = 958.0
-margin_bottom = 104.0
+margin_bottom = 94.0
+
+[node name="Choice4" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_top = 98.0
+margin_right = 958.0
+margin_bottom = 143.0
+
+[node name="Choice5" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_top = 147.0
+margin_right = 958.0
+margin_bottom = 192.0
 
 [node name="Choice2" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
-margin_top = 108.0
+anchor_right = 0.0
+margin_top = 196.0
 margin_right = 958.0
-margin_bottom = 158.0
+margin_bottom = 241.0
 
 [node name="Capture" type="Sprite" parent="."]
 modulate = Color( 1, 1, 1, 0.184314 )

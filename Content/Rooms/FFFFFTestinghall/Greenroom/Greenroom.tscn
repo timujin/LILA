@@ -44,19 +44,21 @@ func execute():
 	\"\"\" % str(number_of_visits)
 	
 	say_head(icon, text)
-	say_headless(\"What do you want me t you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?What do you want me to do now?\")
+	say_headless(\"What do you want me t you want me to do now?\")
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 
 	choice_call(\"Give me 1 point\", \"on_give_me_point\")
 	
 	var spend_points = choice_call(\"Spend 3 points to hear a joke\", \"on_give_me_joke\")
-	spend_points.add_req(\\
-		preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"),\\
-		\"-3\", \"Costs 3 points.\", \"You have: %s\" % str(points),\\
-		points >= 3
-	)
-	spend_points.set_active(points >= 3)
+	#spend_points.add_req(\\
+	#	preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"),\\
+	#	\"-3\", \"Costs 3 points.\", \"You have: %s\" % str(points),\\
+	#	points >= 3
+	#)
+	spend_points.add_req_icon(preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"), points>=3)
+	spend_points.set_req_text(\"Costs 3 points.\\nYou have: %s\"%str(points))
+	spend_points.set_enabled(points >= 3)
 
 	choice_call(\"Use an item...\", \"open_use_item\")
 	choice_call(\"Good bye!\", \"end_cutscene\")	

@@ -8,7 +8,7 @@ script/source = "extends Control
 
 signal finished
 
-onready var face = $\"HeadPanel/RichTextLabel\"
+onready var face = $\"HeadPanel\"
 onready var textbox = $\"RichTextLabel\"
 
 func set_icon(icon:Texture):
@@ -16,7 +16,7 @@ func set_icon(icon:Texture):
 		face.visible = false
 	else:
 		face.visible = true
-		face.texture = icon
+		face.get_child(0).texture = icon
 
 func set_text(text:String):
 	print(textbox.set_text(text))
