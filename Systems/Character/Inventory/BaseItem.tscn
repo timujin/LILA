@@ -27,19 +27,14 @@ func open():
 "
 
 [sub_resource type="GDScript" id=3]
-script/source = "extends Node
+script/source = "extends CutsceneEngine
 
 var window
 
 func execute():
-	window = ModeController.window
-	window.clear_pc()
 	
-	var text = \"THIS INTERACTION NOT IMPLEMENTED YET!\"
-	window.add_talking_head(null,text)
-		
-	var response = window.add_choice(\"Good bye!\")
-	response.connect(\"pressed\", ModeController, \"stop_interaction\")
+	say_headless( \"THIS INTERACTION NOT IMPLEMENTED YET!\")
+	choice_call(\"Good bye!\", \"end_cutscene\")	
 	
 "
 

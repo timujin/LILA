@@ -153,6 +153,7 @@ __meta__ = {
 }
 
 [node name="Popup" type="Panel" parent="CanvasLayer/Offset"]
+visible = false
 margin_left = -129.886
 margin_top = 120.7
 margin_right = 245.114
