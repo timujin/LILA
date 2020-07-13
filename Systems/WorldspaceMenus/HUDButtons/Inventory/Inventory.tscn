@@ -54,8 +54,21 @@ func reload_ui():
 	for category in categories:
 		var renderer = category_prefab.instance()
 		category_container.add_child(renderer)
-		renderer.text = category
+		renderer.render(category, false)
 		renderer.connect(\"pressed\", self, \"show_category\", [category])
+	update_category_notifications()
+		
+func update_category_notifications():
+	var items = Character.inventory.get_all_items()	
+	var categories = category_container.get_children()
+	for category in categories:
+		category.render(category.text, false)
+	for item in items:
+		if item.notification_up:
+			for category in categories:
+				if category.text == item.category or category.text == \"All\":
+					print(category.text)
+					category.render(category.text, true)
 		
 func press_category(category:String):
 	for cat in category_container.get_children():
@@ -84,6 +97,9 @@ func get_visible():
 	return $\"Modal\".visible
 	
 func on_item_press(item):
+	item.item_object.notification_up = false
+	item.redraw()
+	update_category_notifications()
 	item.item_object.get_node(\"OnActivate\").activate()
 
 func _on_CloseButton_pressed():

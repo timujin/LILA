@@ -16,8 +16,9 @@ export(String) var category = "Miscellaneous"
 export(bool)   var countable = true
 export(bool)   var usable_in_dialogues = true
 export(int)	   var count = 0
-export(Dictionary) var tags = {}
+export(Array) var tags = []
 export(Dictionary) var payload = {} # runtime properties. Must be serializable.
+var notification_up:bool = false # runtime property
 
 # Override those getters for items with dynamic presentations
 
@@ -60,6 +61,8 @@ func is_enough(number:int):
 func selfdestruct():
 	queue_free()
 
+func notify():
+	notification_up = true
 		
 static func load_by_id(id:String)->BaseItem:
 	print("ID: %s" % id)
