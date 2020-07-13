@@ -25,6 +25,7 @@ func reset():
 func update_notification():
 	$HBoxContainer/Inventory/Notification.visible = false
 	for item in Character.inventory.get_all_items():
+		if item.hidden: continue
 		if item.notification_up:
 			$HBoxContainer/Inventory/Notification.visible = true
 			return

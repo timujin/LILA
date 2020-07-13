@@ -33,6 +33,7 @@ func reload_ui():
 	for child in item_container.get_children():
 		child.queue_free()
 	for item in items:
+		if item.hidden: continue
 		var renderer = item_prefab.instance()
 		item_container.add_child(renderer)
 		renderer.render_item(item)
@@ -45,6 +46,7 @@ func reload_ui():
 		
 	var categories = []
 	for item in items:
+		if item.hidden: continue
 		if not categories.has(item.category):
 			categories.append(item.category)
 			
@@ -64,6 +66,7 @@ func update_category_notifications():
 	for category in categories:
 		category.render(category.text, false)
 	for item in items:
+		if item.hidden: continue
 		if item.notification_up:
 			for category in categories:
 				if category.text == item.category or category.text == \"All\":

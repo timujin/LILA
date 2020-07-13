@@ -15,10 +15,15 @@ export(String) var description = "" setget , get_description
 export(String) var category = "Miscellaneous"
 export(bool)   var countable = true
 export(bool)   var usable_in_dialogues = true
-export(int)	   var count = 0
 export(Array) var tags = []
-export(Dictionary) var payload = {} # runtime properties. Must be serializable.
-var notification_up:bool = false # runtime property
+export(bool) var hidden = false
+
+
+# Runtime properties to be serialized
+
+var count:int = 0 
+export(Dictionary) var payload = {}
+var notification_up:bool = false
 
 # Override those getters for items with dynamic presentations
 
