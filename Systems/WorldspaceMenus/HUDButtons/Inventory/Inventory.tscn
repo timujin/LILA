@@ -1,16 +1,29 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/Sprites/Icons/close+icon-1320184117228553763_256.png" type="Texture" id=3]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Category.tscn" type="PackedScene" id=4]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
+
+signal opened
+signal closed
 
 onready var item_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn\")
 onready var category_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Category.tscn\")
 
 onready var item_container = $\"Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer\"
 onready var category_container = $\"Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer\"
+
+func open():
+	set_visible(true)
+	emit_signal(\"opened\")
+	
+func close():
+	set_visible(false)
+	emit_signal(\"closed\")
 
 func reload_ui():
 	# Loading items
@@ -43,11 +56,16 @@ func reload_ui():
 		category_container.add_child(renderer)
 		renderer.text = category
 		renderer.connect(\"pressed\", self, \"show_category\", [category])
+		
+func press_category(category:String):
+	for cat in category_container.get_children():
+		cat.pressed = category == cat.text
 	
 static func sort_items_alphabetically(a,b):
 	return a.display_name < b.display_name
 	
 func show_category(category:String):
+	press_category(category)
 	for item in item_container.get_children():
 		if (category == \"All\") or (category == item.category):
 			item.visible = true
@@ -70,7 +88,7 @@ func on_item_press(item):
 
 func _on_CloseButton_pressed():
 	ModeController.set_mode(ModeController.EXPLORE)
-	set_visible( false)
+	close()
 "
 
 [node name="Inventory" type="CanvasLayer"]
@@ -100,11 +118,13 @@ __meta__ = {
 [node name="CloseButton" type="Button" parent="Modal/Window"]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -31.0
-margin_top = -13.0
-margin_right = 11.0
-margin_bottom = 29.0
-text = "X"
+margin_left = -30.3774
+margin_top = -33.962
+margin_right = 39.6226
+margin_bottom = 33.038
+icon = ExtResource( 3 )
+flat = true
+expand_icon = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -123,11 +143,30 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/CategoriesPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 6.0
+margin_right = -14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="CategoriesContainer" type="VBoxContainer" parent="Modal/Window/CategoriesPanel/ScrollContainer"]
+margin_right = 323.0
+margin_bottom = 60.0
+size_flags_horizontal = 3
+
+[node name="Category" parent="Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_right = 323.0
+margin_bottom = 28.0
+
+[node name="Category2" parent="Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_top = 32.0
+margin_right = 323.0
+margin_bottom = 60.0
+text = "Category namedsasad"
+clip_text = true
 
 [node name="ItemsPanel" type="Panel" parent="Modal/Window"]
 anchor_left = 1.0
@@ -144,6 +183,10 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="Modal/Window/ItemsPanel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 14.0
+margin_right = -17.004
+margin_bottom = -17.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -1,24 +1,36 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/Inventory.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=2]
+[ext_resource path="res://Assets/Sprites/Icons/knapsack.png" type="Texture" id=3]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
 func hide():
-	#reset()
+	reset()
 	$HBoxContainer.visible = false
 	
 func unhide():
-	#reset()
+	reset()
 	$HBoxContainer.visible = true
+	
+func reset():
+	$HBoxContainer.visible = true
+	$Inventory.close()
+	$HBoxContainer/Inventory.visible = true
 	
 func _ready():
 	$Inventory.visible = false
 
 func _on_Inventory_pressed():
 	ModeController.set_mode(ModeController.MENU)
-	$Inventory.visible = true
+	$Inventory.open()
+	$HBoxContainer/Inventory.visible = false
+
+
+func _on_Inventory_closed():
+	$HBoxContainer/Inventory.visible = true
 "
 
 [node name="WSHUD" type="CanvasLayer"]
@@ -28,20 +40,24 @@ script = SubResource( 1 )
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -101.0
-margin_top = 27.0
-margin_right = -23.0
-margin_bottom = 103.0
+margin_left = -110.893
+margin_top = 11.9417
+margin_right = -21.8931
+margin_bottom = 109.942
+theme = ExtResource( 2 )
 custom_constants/separation = 13
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Inventory" type="Button" parent="HBoxContainer"]
-margin_right = 78.0
-margin_bottom = 76.0
+margin_right = 89.0
+margin_bottom = 98.0
 size_flags_horizontal = 3
-text = "I"
+icon = ExtResource( 3 )
+flat = true
+expand_icon = true
 
 [node name="Inventory" parent="." instance=ExtResource( 1 )]
 [connection signal="pressed" from="HBoxContainer/Inventory" to="." method="_on_Inventory_pressed"]
+[connection signal="closed" from="Inventory" to="." method="_on_Inventory_closed"]

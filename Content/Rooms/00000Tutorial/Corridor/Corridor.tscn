@@ -1,9 +1,10 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Content/Rooms/00000Tutorial/Corridor/9.jpg" type="Texture" id=1]
-[ext_resource path="res://Systems/Cutscenes/VNgine/Base.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Cutscenes/VNgine(obsolete)/Base.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=4]
+
 
 [sub_resource type="Gradient" id=1]
 offsets = PoolRealArray( 0.996409, 1 )
