@@ -1,0 +1,93 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+onready var popup = $Pivot
+onready var button = $Pivot/Popup/Button
+
+func _ready():
+	hide()
+	
+func hide():
+	popup.visible = false
+
+func display(text, at):
+	popup.visible = true
+	print(\"Position\", at.global_position)
+	popup.rect_global_position = at.global_position
+
+func _input(event):
+	if popup.visible and Input.is_action_pressed(\"dismiss\") and not button.mouse_overed:
+		hide()
+
+
+func _on_Button_pressed():
+	print(\"Activated\")
+	hide()
+
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Button
+
+var mouse_overed = false
+
+func _on_Button_mouse_entered():
+	mouse_overed = true
+
+
+func _on_Button_mouse_exited():
+	mouse_overed = false
+"
+
+[node name="Popup" type="CanvasLayer"]
+layer = 70
+script = SubResource( 1 )
+
+[node name="Pivot" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Popup" type="Panel" parent="Pivot"]
+margin_left = -193.427
+margin_top = -178.966
+margin_right = 198.573
+margin_bottom = -3.96637
+rect_pivot_offset = Vector2( 192.046, 172.887 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="Pivot/Popup"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 56.0
+margin_top = -38.0
+margin_right = -62.0
+margin_bottom = -8.0
+text = "Interact"
+script = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Pivot/Popup"]
+anchor_right = 1.0
+margin_left = 11.0
+margin_top = 10.0
+margin_right = -14.0
+margin_bottom = 124.0
+bbcode_enabled = true
+bbcode_text = "[color=black]This is an interactable[/color]"
+text = "This is an interactable"
+[connection signal="mouse_entered" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_exited"]
+[connection signal="pressed" from="Pivot/Popup/Button" to="." method="_on_Button_pressed"]
