@@ -27,44 +27,6 @@ func item(id:String):
 	else:
 		return item(\"MissingNo\")
 		
-
-\"\"\"
-func karmaitem(id:String):
-	if register.karmaitems.has(id):
-		return load(register.karmaitems[id])
-	else:
-		return karmaitem(\"MissingNo\")
-
-func combatcard(id:String):
-	if register.combatcards.has(id):
-		return load(register.combatcards[id])
-	else:
-		return karmaitem(\"MissingNo\")
-	
-	
-\"\"\"
-\"\"\"
-
-func item(id:String):
-	if $Items.items.has(id):
-		return load($Items.items[id])
-	else:
-		return item(\"MissingNo\")
-		
-
-func karmaitem(id:String):
-	if $KarmaItems.karmaitems.has(id):
-		return load($KarmaItems.karmaitems[id])
-	else:
-		return karmaitem(\"MissingNo\")
-	
-func room(id:String):
-	if $Rooms.rooms.has(id):
-		return load($Rooms.rooms[id])
-	else:
-		return room(\"FFFFFDogroom\")
-
-\"\"\"
 "
 
 [node name="GlobalRegister" type="Node"]

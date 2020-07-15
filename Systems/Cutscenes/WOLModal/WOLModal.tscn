@@ -4,7 +4,6 @@
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/ItemGetLost.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Assets/Themes/Capture.PNG" type="Texture" id=5]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
@@ -77,6 +76,10 @@ func add_choice(text:String):
 	scroll_to_bottom()
 	return item
 "
+
+[sub_resource type="StreamTexture" id=2]
+flags = 4
+load_path = "res://.import/Capture.PNG-4f562b4c279bca92edcd3784349ffa11.stex"
 
 [node name="WOLModal" type="CanvasLayer"]
 layer = 10
@@ -217,7 +220,7 @@ margin_bottom = 241.0
 modulate = Color( 1, 1, 1, 0.184314 )
 position = Vector2( 2586.35, 464.416 )
 scale = Vector2( 1.18049, 1.12171 )
-texture = ExtResource( 5 )
+texture = SubResource( 2 )
 
 [editable path="Inventory"]
 

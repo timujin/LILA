@@ -3,6 +3,11 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+\"\"\"
+This module is sort of obsolete\\redundant.
+Its main purpose is to tell if the player can scroll the room.
+\"\"\"
+
 signal reset
 signal mode_changed (mode)
 signal hide_hud
@@ -84,50 +89,6 @@ func is_room_scrollable():
 
 func is_menu_openable():
 	return mode == EXPLORE and hud_hidden == false
-
-############
-# Item holding
-############
-\"\"\"
-var holding_item = null
-var holding_action = null
-var holding_callback = null
-
-func get_is_player_holding_item():
-	return (holding_item != null)
-	
-func hold(item, script, callback_str):
-	#reset()
-	holding_item = item
-	holding_action = script
-	holding_callback = callback_str
-	var icon = item.species.icon
-	$HeldItemCursor.unhide(icon)
-	
-	
-func apply_item(obj):
-	if get_is_player_holding_item():
-		holding_action.call(holding_callback, obj)
-	else:
-		printerr(\"No item held!\")
-
-func drop_held_item():
-	holding_item = null
-	holding_action = null
-	holding_callback = null
-	$HeldItemCursor.hide()
-	
-func _input (  event:InputEvent ) :
-	if !(self.get_is_player_holding_item()):
-		return
-	if not event is InputEventMouseButton:
-		return
-	if event.button_index != BUTTON_RIGHT or not event.pressed:
-		return
-	
-	get_tree().set_input_as_handled()
-	drop_held_item()
-\"\"\"
 "
 
 [node name="ModeController" type="Node"]

@@ -9,18 +9,6 @@ items = {
 "MissingNo": "res://Content/Items/MissingNo.tscn",
 "Shield": "res://Content/Items/Shield.tscn"
 }
-karmaitems = {
-"BlessedByTheGoddess": "res://Systems/Character/Karma/Karmaitems/BlessedByTheGoddess/BlessedByTheGoddess.tres",
-"Brutality": "res://Systems/Character/Karma/Karmaitems/Brutality/Brutality.tres",
-"Delinquency": "res://Systems/Character/Karma/Karmaitems/Delinquency/Delinquency.tres",
-"MissingNo": "res://Systems/Character/Karma/Karmaitems/MissingNo/MissingNo.tres",
-"Superstimulus": "res://Systems/Character/Karma/Karmaitems/Superstimulus/Superstimulus.tres",
-"Trickery": "res://Systems/Character/Karma/Karmaitems/Trickery/Trickery.tres",
-"VisageOfThePale": "res://Systems/Character/Karma/Karmaitems/VisageOfThePale/VisageOfThePale.tres"
-}
-combatcards = {
-
-}
 rooms = {
 "00000Corridor": "res://Content/Rooms/00000Tutorial/Corridor/Corridor.tscn",
 "Dogroom": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",

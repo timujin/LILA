@@ -7,7 +7,7 @@
 script/source = "extends CanvasLayer
 
 onready var popup = $Pivot
-onready var button = $Pivot/Popup/Button
+onready var button = $Pivot/Popup/Panel/Button
 onready var textbox = $Pivot/Popup/HBoxContainer/RichTextLabel
 onready var icon_padding = $Pivot/Popup/HBoxContainer/Control
 onready var icon = $Pivot/Popup/HBoxContainer/Control/TextureRect
@@ -80,15 +80,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="Pivot/Popup"]
+[node name="Panel" type="Panel" parent="Pivot/Popup"]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 56.0
-margin_top = -38.0
-margin_right = -62.0
-margin_bottom = -8.0
+margin_left = 58.0
+margin_top = -42.0
+margin_right = -53.0
+margin_bottom = -7.0
+
+[node name="Button" type="Button" parent="Pivot/Popup/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
 text = "Interact"
+flat = true
 script = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -137,6 +142,6 @@ text = "This is an interactable"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="mouse_entered" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_entered"]
-[connection signal="mouse_exited" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_exited"]
-[connection signal="pressed" from="Pivot/Popup/Button" to="." method="_on_Button_pressed"]
+[connection signal="mouse_entered" from="Pivot/Popup/Panel/Button" to="Pivot/Popup/Panel/Button" method="_on_Button_mouse_entered"]
+[connection signal="mouse_exited" from="Pivot/Popup/Panel/Button" to="Pivot/Popup/Panel/Button" method="_on_Button_mouse_exited"]
+[connection signal="pressed" from="Pivot/Popup/Panel/Button" to="." method="_on_Button_pressed"]
