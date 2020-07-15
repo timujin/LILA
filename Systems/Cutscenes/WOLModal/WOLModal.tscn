@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
@@ -33,12 +33,55 @@ func close_item_popup():
 	item_popup.close()
 	
 	
+# Scrolling anim
+var is_scrolling:bool = false
+var starting_point = 0
+var ending_point = 0
+
 func scroll_to_bottom():
 	yield(get_tree(), \"idle_frame\")
 	yield(get_tree(), \"idle_frame\") # This has to be here for some reason
 	yield(get_tree(), \"idle_frame\")
-	$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".scroll_vertical = \\
-		$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".get_v_scrollbar().max_value
+	var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
+	is_scrolling = true
+	starting_point = scroll_container.scroll_vertical
+	ending_point = scroll_container.get_v_scrollbar().max_value
+	
+func _physics_process (delta):
+	if is_scrolling:
+		#print(delta, \" \", ending_point, \" \", starting_point, \" \", delta * (ending_point - starting_point))
+		var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
+		scroll_container.scroll_vertical += delta * (ending_point - starting_point) / 0.5
+		if scroll_container.scroll_vertical >= ending_point:
+			is_scrolling = false
+
+\"\"\"
+func scroll_to_bottom():
+	yield(get_tree(), \"idle_frame\")
+	yield(get_tree(), \"idle_frame\") # This has to be here for some reason
+	yield(get_tree(), \"idle_frame\")
+	var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
+	var scroller_anim = $\"Base/ScrollContainer/MarginContainer/Control/SmoothScroller\"
+	scroller_anim.stop(true)
+	#scroller_anim.remove_animation(\"scroll_to_bottom\")
+	#var animation = Animation.new()
+	#var track_index = animation.add_track(Animation.TYPE_VALUE)
+	#animation.track_set_path(track_index, \"ScrollContainer:scroll_vertical\")
+	#print(scroll_container.scroll_vertical)
+	#animation.track_insert_key(track_index, 0.0, scroll_container.scroll_vertical)
+	#animation.track_insert_key(track_index, 5, scroll_container.get_v_scrollbar().max_value)
+	scroller_anim.get_animation(\"scroll_to_bottom\").clear()
+	var track_key = scroller_anim.get_animation(\"scroll_to_bottom\").add_track(Animation.TYPE_VALUE)
+	scroller_anim.get_animation(\"scroll_to_bottom\").track_insert_key(track_key, 0.0, scroll_container.scroll_vertical)
+	scroller_anim.get_animation(\"scroll_to_bottom\").track_insert_key(track_key, 1.0, scroll_container.get_v_scrollbar().max_value)
+	print(scroller_anim.get_animation(\"scroll_to_bottom\").get_track_count(),scroll_container.scroll_vertical, \" \", scroll_container.get_v_scrollbar().max_value)
+	#scroller_anim.add_animation(\"scroll_to_bottom\", animation)
+	scroller_anim.play(\"scroll_to_bottom\")
+	
+	#$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".scroll_vertical = 
+	#	$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".get_v_scrollbar().max_value
+\"\"\"
+
 
 func add_talking_head(icon:Texture, text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn\").instance()
@@ -77,9 +120,24 @@ func add_choice(text:String):
 	return item
 "
 
-[sub_resource type="StreamTexture" id=2]
+[sub_resource type="Animation" id=2]
+resource_name = "scroll_to_bottom"
+length = 10.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ScrollContainer:scroll_vertical")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray(  ),
+"transitions": PoolRealArray(  ),
+"update": 1,
+"values": [  ]
+}
+
+[sub_resource type="StreamTexture" id=3]
 flags = 4
-load_path = "res://.import/Capture.PNG-4f562b4c279bca92edcd3784349ffa11.stex"
 
 [node name="WOLModal" type="CanvasLayer"]
 layer = 10
@@ -132,6 +190,9 @@ size_flags_vertical = 3
 margin_left = 50.0
 margin_right = 1008.0
 margin_bottom = 837.0
+
+[node name="SmoothScroller" type="AnimationPlayer" parent="Base/ScrollContainer/MarginContainer/Control"]
+anims/scroll_to_bottom = SubResource( 2 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_right = 1.0
@@ -220,7 +281,7 @@ margin_bottom = 241.0
 modulate = Color( 1, 1, 1, 0.184314 )
 position = Vector2( 2586.35, 464.416 )
 scale = Vector2( 1.18049, 1.12171 )
-texture = SubResource( 2 )
+texture = SubResource( 3 )
 
 [editable path="Inventory"]
 
