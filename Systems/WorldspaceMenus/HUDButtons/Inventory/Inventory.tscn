@@ -10,6 +10,7 @@ script/source = "extends CanvasLayer
 
 signal opened
 signal closed
+signal item_selected
 
 onready var item_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Item.tscn\")
 onready var category_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons/Inventory/Category.tscn\")
@@ -17,8 +18,15 @@ onready var category_prefab = preload(\"res://Systems/WorldspaceMenus/HUDButtons
 onready var item_container = $\"Modal/Window/ItemsPanel/ScrollContainer/ItemsContainer\"
 onready var category_container = $\"Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer\"
 
-func open():
+var use_item_popup:bool = false
+var condition_object = null
+var condition_function = null
+
+func open(use_item_popup:bool = false):
 	set_visible(true)
+	self.use_item_popup = use_item_popup
+	print(\"Item popup\", self.use_item_popup)
+	reload_ui()
 	emit_signal(\"opened\")
 	
 func close():
@@ -33,10 +41,11 @@ func reload_ui():
 	for child in item_container.get_children():
 		child.queue_free()
 	for item in items:
-		if item.hidden: continue
+		if item.hidden or (use_item_popup and not item.usable_in_dialogues): continue
 		var renderer = item_prefab.instance()
 		item_container.add_child(renderer)
-		renderer.render_item(item)
+		print(item.display_name,self.use_item_popup)
+		renderer.render_item(item, self.use_item_popup)
 		renderer.connect(\"pressed\", self, \"on_item_press\", [renderer])
 		
 	# Loading categories
@@ -46,7 +55,7 @@ func reload_ui():
 		
 	var categories = []
 	for item in items:
-		if item.hidden: continue
+		if item.hidden or (use_item_popup and not item.usable_in_dialogues): continue
 		if not categories.has(item.category):
 			categories.append(item.category)
 			
@@ -65,6 +74,8 @@ func update_category_notifications():
 	var categories = category_container.get_children()
 	for category in categories:
 		category.render(category.text, false)
+	if use_item_popup: return
+	print(\"error\")
 	for item in items:
 		if item.hidden: continue
 		if item.notification_up:
@@ -73,20 +84,35 @@ func update_category_notifications():
 					print(category.text)
 					category.render(category.text, true)
 		
+
+func set_filter(object, function):
+	condition_function = function
+	condition_object = object
+	show_category(\"All\")
+	
+func show_category(category:String):
+	if (condition_object == null) or (condition_function == null):
+		for item in item_container.get_children():
+			if (category == \"All\") or (category == item.category):
+				item.visible = true
+			else:
+				item.visible = false
+	else:		
+		for item in item_container.get_children():
+			if ((category == \"All\") or (category == item.category))\\
+			and condition_object.call(condition_function, [item.item_object]):
+				item.visible = true
+			else:
+				item.visible = false
+		
+			
+		
 func press_category(category:String):
 	for cat in category_container.get_children():
 		cat.pressed = category == cat.text
 	
 static func sort_items_alphabetically(a,b):
 	return a.display_name < b.display_name
-	
-func show_category(category:String):
-	press_category(category)
-	for item in item_container.get_children():
-		if (category == \"All\") or (category == item.category):
-			item.visible = true
-		else:
-			item.visible = false
 
 func _ready():
 	reload_ui()
@@ -100,13 +126,18 @@ func get_visible():
 	return $\"Modal\".visible
 	
 func on_item_press(item):
-	item.item_object.notification_up = false
-	item.redraw()
-	update_category_notifications()
-	item.item_object.get_node(\"OnActivate\").activate()
+	if not use_item_popup:
+		item.item_object.notification_up = false
+		item.redraw()
+		update_category_notifications()
+		item.item_object.get_node(\"OnActivate\").activate()
+	else:		
+		emit_signal(\"item_selected\", item.item_object)
+		close()
 
 func _on_CloseButton_pressed():
-	ModeController.set_mode(ModeController.EXPLORE)
+	if not use_item_popup:
+		ModeController.set_mode(ModeController.EXPLORE)
 	close()
 "
 

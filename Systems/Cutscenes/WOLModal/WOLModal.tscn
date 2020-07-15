@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
-[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/InventoryUseItemPopup.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/Themes/Capture.PNG" type="Texture" id=5]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn" type="PackedScene" id=6]
@@ -27,10 +27,10 @@ func _ready():
 	close_item_popup()
 	
 func open_item_popup():
-	item_popup.visible = true
+	item_popup.open(true)
 	
 func close_item_popup():
-	item_popup.visible = false
+	item_popup.close()
 	
 	
 func scroll_to_bottom():
@@ -74,10 +74,8 @@ func add_choice(text:String):
 layer = 10
 script = SubResource( 1 )
 
-[node name="Inventory" parent="." instance=ExtResource( 3 )]
-
-[node name="Modal" parent="Inventory" index="0"]
-visible = false
+[node name="Inventory" parent="." instance=ExtResource( 2 )]
+layer = 30
 
 [node name="BackgroundShade" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.34902 )

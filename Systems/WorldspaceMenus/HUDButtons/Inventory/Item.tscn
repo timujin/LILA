@@ -13,7 +13,7 @@ script/source = "extends Button
 var category = \"\"
 var item_object
 
-func render_item(item):
+func render_item(item, hide_notification:bool = false):
 	item_object = item
 	category = item.category
 	
@@ -28,7 +28,7 @@ func render_item(item):
 	$CanvasLayer/Offset/Popup/Name.text = item.display_name
 	$CanvasLayer/Offset/Popup/Description.text = item.description
 	
-	$Notification.visible = item.notification_up
+	$Notification.visible = item.notification_up and hide_notification == false
 
 func redraw():
 	render_item(item_object)
@@ -48,7 +48,7 @@ func _on_Item_mouse_exited():
 	$CanvasLayer/Offset/Popup.visible = false
 "
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=15]
 bg_color = Color( 1, 1, 1, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -62,10 +62,10 @@ corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 corner_detail = 4
 
-[sub_resource type="Theme" id=5]
-Panel/styles/panel = SubResource( 4 )
+[sub_resource type="Theme" id=16]
+Panel/styles/panel = SubResource( 15 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 300
 border_width_top = 2
@@ -75,36 +75,36 @@ border_color = Color( 0, 0, 0, 1 )
 corner_detail = 2
 expand_margin_left = 1.0
 
-[sub_resource type="Theme" id=3]
+[sub_resource type="Theme" id=5]
 Fonts/fonts/normal = null
-Panel/styles/panel = SubResource( 2 )
+Panel/styles/panel = SubResource( 4 )
 
 [sub_resource type="DynamicFont" id=6]
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=7]
 size = 9
 font_data = ExtResource( 4 )
 
-[sub_resource type="Theme" id=10]
-default_font = SubResource( 9 )
+[sub_resource type="Theme" id=17]
+default_font = SubResource( 7 )
 
-[sub_resource type="DynamicFont" id=13]
+[sub_resource type="DynamicFont" id=9]
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=14]
+[sub_resource type="DynamicFont" id=10]
 font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=11]
 font_data = ExtResource( 5 )
 
-[sub_resource type="DynamicFont" id=15]
+[sub_resource type="DynamicFont" id=18]
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=12]
+[sub_resource type="DynamicFont" id=13]
 font_data = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=14]
 size = 20
 font_data = ExtResource( 4 )
 
@@ -130,7 +130,7 @@ margin_top = -24.1912
 margin_right = -4.1912
 margin_bottom = -4.1912
 mouse_filter = 1
-theme = SubResource( 5 )
+theme = SubResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -138,7 +138,7 @@ __meta__ = {
 [node name="Count" type="Label" parent="Label"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = SubResource( 3 )
+theme = SubResource( 5 )
 custom_fonts/font = SubResource( 6 )
 text = "100"
 align = 1
@@ -210,12 +210,12 @@ margin_left = -55.0097
 margin_top = 166.318
 margin_right = 94.9903
 margin_bottom = 194.318
-theme = SubResource( 10 )
-custom_fonts/mono_font = SubResource( 13 )
-custom_fonts/bold_italics_font = SubResource( 14 )
+theme = SubResource( 17 )
+custom_fonts/mono_font = SubResource( 9 )
+custom_fonts/bold_italics_font = SubResource( 10 )
 custom_fonts/italics_font = SubResource( 11 )
-custom_fonts/bold_font = SubResource( 15 )
-custom_fonts/normal_font = SubResource( 12 )
+custom_fonts/bold_font = SubResource( 18 )
+custom_fonts/normal_font = SubResource( 13 )
 bbcode_enabled = true
 bbcode_text = "[i][color=black]Click to interact[/color][/i]"
 text = "Click to interact"
@@ -230,7 +230,7 @@ margin_left = 100.0
 margin_top = 44.0
 margin_right = -27.0
 margin_bottom = 158.0
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 14 )
 text = "Item extended description"
 autowrap = true
 clip_text = true
@@ -248,7 +248,7 @@ margin_top = -132.488
 margin_right = -284.514
 margin_bottom = -112.488
 mouse_filter = 1
-theme = SubResource( 5 )
+theme = SubResource( 16 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -256,7 +256,7 @@ __meta__ = {
 [node name="Count" type="Label" parent="CanvasLayer/Offset/Popup/Label2"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = SubResource( 3 )
+theme = SubResource( 5 )
 custom_fonts/font = SubResource( 6 )
 text = "100"
 align = 1
