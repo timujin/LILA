@@ -128,7 +128,7 @@ script/source = "extends Node
 
 func activate():
 	print(\"activated\")
-	$\"../BlurbPoint\".blurb(\"Text\")
+	$\"../BlurbPoint\".blurb(\"Text\",preload(\"res://Assets/Placeholders/acidbomb.png\"), \"Use\")
 "
 
 [node name="Room" instance=ExtResource( 1 )]

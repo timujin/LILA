@@ -1,12 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
+[ext_resource path="res://Assets/Placeholders/acidbomb.png" type="Texture" id=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
 
 onready var popup = $Pivot
 onready var button = $Pivot/Popup/Button
+onready var textbox = $Pivot/Popup/HBoxContainer/RichTextLabel
+onready var icon_padding = $Pivot/Popup/HBoxContainer/Control
+onready var icon = $Pivot/Popup/HBoxContainer/Control/TextureRect
 
 func _ready():
 	hide()
@@ -14,10 +18,20 @@ func _ready():
 func hide():
 	popup.visible = false
 
-func display(text, at):
+func display(text:String, icon:Texture, buttontext:String, at):
 	popup.visible = true
-	print(\"Position\", at.global_position)
 	popup.rect_global_position = at.global_position
+	textbox.bbcode_text = \"[color=black]%s[/color]\"%text
+	if icon == null:
+		icon_padding.visible = false
+	else:
+		icon_padding.visible = true
+		self.icon.texture = icon
+	if buttontext == null:
+		button.visible = false
+	else:
+		button.visible = true
+		button.text = buttontext
 
 func _input(event):
 	if popup.visible and Input.is_action_pressed(\"dismiss\") and not button.mouse_overed:
@@ -45,6 +59,7 @@ func _on_Button_mouse_exited():
 
 [node name="Popup" type="CanvasLayer"]
 layer = 70
+follow_viewport_enable = true
 script = SubResource( 1 )
 
 [node name="Pivot" type="Control" parent="."]
@@ -79,15 +94,49 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel" type="RichTextLabel" parent="Pivot/Popup"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Pivot/Popup"]
 anchor_right = 1.0
-margin_left = 11.0
-margin_top = 10.0
-margin_right = -14.0
-margin_bottom = 124.0
+anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 15.0
+margin_right = -21.0
+margin_bottom = -51.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Pivot/Popup/HBoxContainer"]
+margin_right = 88.0
+margin_bottom = 109.0
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="Pivot/Popup/HBoxContainer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.63849
+margin_top = 8.14542
+margin_right = -11.3615
+margin_bottom = -15.8546
+size_flags_horizontal = 3
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Pivot/Popup/HBoxContainer"]
+margin_left = 92.0
+margin_right = 356.0
+margin_bottom = 109.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
 bbcode_enabled = true
 bbcode_text = "[color=black]This is an interactable[/color]"
 text = "This is an interactable"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="mouse_entered" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_entered"]
 [connection signal="mouse_exited" from="Pivot/Popup/Button" to="Pivot/Popup/Button" method="_on_Button_mouse_exited"]
 [connection signal="pressed" from="Pivot/Popup/Button" to="." method="_on_Button_pressed"]

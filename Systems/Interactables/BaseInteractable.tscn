@@ -3,9 +3,9 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Position2D
 
-func blurb(text:String):
+func blurb(text:String,icon:Texture,  buttontext=null):
 	print(text)
-	ItemInteractionPopup.display(text, self)
+	ItemInteractionPopup.display(text, icon, buttontext, self)
 "
 
 [sub_resource type="GDScript" id=2]
