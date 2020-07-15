@@ -45,6 +45,9 @@ func execute():
 	
 	say_head(icon, text)
 	say_headless(\"What do you want me t you want me to do now?\")
+	add_item_get(preload(\"res://Assets/Placeholders/advancedcreatureattack.png\"),\\
+				\"You got an item:\",\\
+				\"This item IDK whatev\")
 	
 	var points = Character.variables.get_value(\"greenroom_points\", 0)
 

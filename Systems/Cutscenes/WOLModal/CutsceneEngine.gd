@@ -22,6 +22,10 @@ func choice_call(text, funcname):
 func add_choice_record(text:String):
 	ModeController.window.add_choice_record(text)
 	
+func add_item_get(icon:Texture, gettext:String, nametext:String):
+	ModeController.window.add_item_get(icon,gettext,nametext)
+	
+	
 func open_item_popup(filter, callback):
 	ModeController.window.open_item_popup()
 	ModeController.window.item_popup.set_filter(self, filter)

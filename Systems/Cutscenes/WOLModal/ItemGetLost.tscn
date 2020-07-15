@@ -1,0 +1,111 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Assets/Placeholders/advancedstrengthofthemoon.png" type="Texture" id=1]
+[ext_resource path="res://Assets/Fonts/times-new-roman.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Control
+
+onready var face = $\"HeadPanel\"
+onready var itemgettextbox = $\"ItemGet\"
+onready var itemnametextbox = $\"ItemName\"
+
+func set_icon(icon:Texture):
+	if icon == null:
+		face.visible = false
+	else:
+		face.visible = true
+		face.get_child(0).texture = icon
+
+func set_get_text(text:String):
+	print(itemgettextbox.set_text(text))
+	
+func set_item_name(text:String):
+	print(itemnametextbox.set_text(text))
+"
+
+[sub_resource type="DynamicFont" id=2]
+size = 25
+outline_color = Color( 1, 1, 1, 0 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="Theme" id=3]
+default_font = SubResource( 2 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends RichTextLabel
+
+func set_text(text):
+	self.bbcode_text = \"[color=black]%s[/color]\"%text
+"
+
+[node name="ItemGetLost" type="Control"]
+self_modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 100 )
+script = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeadPanel" type="Panel" parent="."]
+margin_left = 115.99
+margin_right = 210.99
+margin_bottom = 95.0
+rect_min_size = Vector2( 95, 95 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel" type="TextureRect" parent="HeadPanel"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -40.0
+margin_top = -40.0
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 1 )
+expand = true
+stretch_mode = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemGet" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 229.0
+margin_top = 11.0
+margin_right = -749.0
+margin_bottom = -56.0
+rect_min_size = Vector2( 622, 0 )
+theme = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[color=black]Item get![/color]"
+text = "Item get!"
+override_selected_font_color = true
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemName" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 229.0
+margin_top = 48.2315
+margin_right = -749.0
+margin_bottom = -18.7685
+rect_min_size = Vector2( 622, 0 )
+theme = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[color=black]Item name[/color]"
+text = "Item name"
+override_selected_font_color = true
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

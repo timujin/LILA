@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Cutscenes/WOLModal/ItemGetLost.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/Themes/Capture.PNG" type="Texture" id=5]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn" type="PackedScene" id=6]
@@ -60,6 +61,13 @@ func add_choice_record(text:String):
 	events_container.move_child(item, events_container.get_child_count()-2)
 	scroll_to_bottom()
 	return item
+	
+func add_item_get(icon:Texture, gettext:String, nametext:String):
+	var item = preload(\"res://Systems/Cutscenes/WOLModal/ItemGetLost.tscn\").instance()
+	events_container.add_child(item)
+	item.set_icon(icon)
+	item.set_get_text(gettext)
+	item.set_item_name(nametext)
 
 func add_choice(text:String):
 	var item = preload(\"res://Systems/Cutscenes/WOLModal/Choice.tscn\").instance()
@@ -76,6 +84,9 @@ script = SubResource( 1 )
 
 [node name="Inventory" parent="." instance=ExtResource( 2 )]
 layer = 30
+
+[node name="Modal" parent="Inventory" index="0"]
+visible = false
 
 [node name="BackgroundShade" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.34902 )
@@ -138,6 +149,12 @@ __meta__ = {
 }
 
 [node name="Control5" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
+anchor_right = 0.0
+margin_top = 243.0
+margin_right = 958.0
+margin_bottom = 343.0
+
+[node name="HeadSayItem" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 3 )]
 anchor_right = 0.0
 margin_top = 347.0
 margin_right = 958.0
@@ -203,3 +220,5 @@ scale = Vector2( 1.18049, 1.12171 )
 texture = ExtResource( 5 )
 
 [editable path="Inventory"]
+
+[editable path="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says/HeadSayItem"]
