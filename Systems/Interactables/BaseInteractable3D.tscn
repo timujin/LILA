@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Position3D
+
+
+
+func blurb(text:String,icon:Texture,  buttontext=null):
+	print(text)
+	ItemInteractionPopup.display(text, icon, buttontext, self)
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Area
+
+signal on_activate
+#signal on_apply_item
+
+export var ActivatorName : String = \"Unnamed\"
+export var enabled : bool = true
+export var hidden : bool = false
+
+func _input_event (camera, event, click_position, click_normal, shape_idx ):
+	if event.is_action_pressed(\"select\"):
+		emit_signal(\"on_activate\")
+		var activatable = get_parent().get_node(\"Activator\")
+		if activatable != null and activatable.has_method(\"activate\"):
+			activatable.activate()
+		if activatable != null and activatable.has_method(\"on_activate\"):
+			activatable.on_activate()
+
+func blurb(text:String):
+	if $\"../BlurbPoint\" == null:
+		printerr(\"No blurb point set!\")
+	else:
+		$\"../BlurbPoint\".blurb(text)
+		
+
+
+func _on_ClickArea_mouse_entered():
+	Input. set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+
+
+func _on_ClickArea_mouse_exited():
+	Input. set_default_cursor_shape(Input.CURSOR_ARROW)
+"
+
+[node name="BaseInteractable3D" type="Spatial"]
+
+[node name="BlurbPoint" type="Position3D" parent="."]
+script = SubResource( 1 )
+
+[node name="Activator" type="Node" parent="."]
+
+[node name="ClickArea" type="Area" parent="."]
+script = SubResource( 2 )
+[connection signal="mouse_entered" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_entered"]
+[connection signal="mouse_exited" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_exited"]

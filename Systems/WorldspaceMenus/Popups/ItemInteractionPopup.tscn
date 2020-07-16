@@ -18,9 +18,15 @@ func _ready():
 func hide():
 	popup.visible = false
 
-func display(text:String, icon:Texture, buttontext:String, at):
+func display(text:String, icon:Texture, buttontext, at):
 	popup.visible = true
-	popup.rect_global_position = at.global_position
+	if (at is Node2D):
+		popup.rect_global_position = at.global_position
+	elif (at is Spatial):
+		print(\"origin\", at.global_transform.origin)
+		popup.rect_global_position = get_viewport().get_camera().unproject_position(at.global_transform.origin)
+	else:
+		printerr(\"Can't display popup!\")
 	textbox.bbcode_text = \"[color=black]%s[/color]\"%text
 	if icon == null:
 		icon_padding.visible = false
@@ -28,9 +34,9 @@ func display(text:String, icon:Texture, buttontext:String, at):
 		icon_padding.visible = true
 		self.icon.texture = icon
 	if buttontext == null:
-		button.visible = false
+		button.get_parent().visible = false
 	else:
-		button.visible = true
+		button.get_parent().visible = true
 		button.text = buttontext
 
 func _input(event):

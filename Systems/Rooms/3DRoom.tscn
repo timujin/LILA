@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.gd" type="Script" id=2]
+
+[node name="Room" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.716302, 0.325956, -0.61698, 0, 0.884191, 0.467126, 0.69779, -0.334604, 0.633348, -31.2336, 25.3737, 32.0315 )
+fov = 47.0846
+
+[node name="Geometry" type="Spatial" parent="."]
+
+[node name="Objects" type="Spatial" parent="."]

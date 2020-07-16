@@ -10,7 +10,7 @@ items = {
 "Shield": "res://Content/Items/Shield.tscn"
 }
 rooms = {
-"00000Corridor": "res://Content/Rooms/00000Tutorial/Corridor/Corridor.tscn",
+"CubeRoom": "res://Content/Rooms/FFFFFTestinghall/3Droom/Box.tscn",
 "Dogroom": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",
 "FFFFFBlueroom": "res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
 "FFFFFGreenroom": "res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",

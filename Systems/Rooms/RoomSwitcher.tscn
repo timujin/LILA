@@ -13,7 +13,7 @@ func r(id:String):
 #####################
 
 
-var room:Node2D = null
+var room:Node = null
 	
 func switch_room_obj(to_room):
 	$\"/root/Room\".pickle()
