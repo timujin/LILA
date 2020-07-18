@@ -1,0 +1,15 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+path="res://.import/WindowMask.png-b0b4ef45699b91de1323948d3b45bc9f.res"
+
+[deps]
+
+source_file="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/WindowMask.png"
+dest_files=[ "res://.import/WindowMask.png-b0b4ef45699b91de1323948d3b45bc9f.res" ]
+
+[params]
+
+create_from=0
+threshold=0.03

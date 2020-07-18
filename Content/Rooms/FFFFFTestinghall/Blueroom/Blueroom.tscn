@@ -82,6 +82,12 @@ script = SubResource( 1 )
 [node name="BaseInteractable" parent="Redroom" index="3" instance=ExtResource( 3 )]
 position = Vector2( 264.795, 124.572 )
 
+[node name="TheClickable" parent="Redroom" index="4"]
+margin_left = -78.0
+margin_top = -181.0
+margin_right = 142.0
+margin_bottom = 88.0
+
 [node name="Greenroom" parent="." index="4" instance=ExtResource( 3 )]
 position = Vector2( 247.729, 405.675 )
 scale = Vector2( 2.11991, 1.80825 )
@@ -97,6 +103,12 @@ margin_bottom = 71.0
 
 [node name="Activator" parent="Greenroom" index="2"]
 script = SubResource( 2 )
+
+[node name="TheClickable" parent="Greenroom" index="3"]
+margin_left = 464.0
+margin_top = -170.0
+margin_right = 767.0
+margin_bottom = 79.0
 
 [node name="Lamp" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 720.573, 538.118 )
@@ -128,6 +140,12 @@ script = ExtResource( 6 )
 data = {
 "is_on": true
 }
+
+[node name="TheClickable" parent="Lamp" index="6"]
+margin_left = 56.0
+margin_top = -325.0
+margin_right = 203.0
+margin_bottom = -229.0
 [connection signal="unpickled" from="Lamp/OnOffPickler" to="Lamp/Halo" method="_on_OnOffPickler_unpickled"]
 
 [editable path="Redroom"]

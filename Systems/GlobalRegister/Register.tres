@@ -10,10 +10,13 @@ items = {
 "Shield": "res://Content/Items/Shield.tscn"
 }
 rooms = {
+"00000WaitingRoom": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoom.tscn",
+"00000WaitingRoomWC": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoomWC.tscn",
 "CubeRoom": "res://Content/Rooms/FFFFFTestinghall/3Droom/Box.tscn",
 "Dogroom": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",
 "FFFFFBlueroom": "res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
 "FFFFFGreenroom": "res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
+"FFFFFPlainCubeRoom": "res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn",
 "FFFFFRedroom": "res://Content/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
 "GoddessRoom": "res://Content/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn"
 }

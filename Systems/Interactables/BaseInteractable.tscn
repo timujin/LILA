@@ -94,7 +94,7 @@ export var enabled : bool = true
 export var hidden : bool = false
 
 func _ready():
-	if self.texture_normal == null: return
+	if self.texture_normal == null or self.texture_click_mask != null: return
 	var mask = BitMap.new()
 	mask.create_from_image_alpha(self.texture_normal.get_data())
 	self.texture_click_mask = mask

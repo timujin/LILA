@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/PlainWhiteDoor.png" type="Texture" id=2]
@@ -12,6 +12,11 @@
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/LongTable.png" type="Texture" id=10]
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Magazines.png" type="Texture" id=11]
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Window.png" type="Texture" id=12]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Aquarium.png" type="Texture" id=13]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/SpiritSillhouette.png" type="Texture" id=14]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/PlainWhiteDoorMirrored.png" type="Texture" id=16]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/WindowMask.png" type="BitMap" id=17]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -34,23 +39,43 @@ roomName = "Waiting room"
 roomID = "00000WaitingRoom"
 
 [node name="DoorOut" type="Sprite" parent="Cube" index="0"]
-position = Vector2( -296.67, -261.154 )
+position = Vector2( -298.87, -241.352 )
 scale = Vector2( 1.22336, 1.24549 )
 texture = ExtResource( 2 )
 
-[node name="WCDoor" type="Sprite" parent="Cube" index="1"]
-position = Vector2( 762.684, -58.4696 )
-scale = Vector2( 1.22336, 1.24549 )
-texture = ExtResource( 2 )
-flip_h = true
+[node name="WCDoor" parent="Cube" index="1" instance=ExtResource( 15 )]
 
-[node name="WC" type="Sprite" parent="Cube/WCDoor" index="0"]
-position = Vector2( 4.30249, -39.0437 )
+[node name="BlurbPoint" parent="Cube/WCDoor" index="0"]
+position = Vector2( 495.059, -167.22 )
+
+[node name="TheClickable" parent="Cube/WCDoor" index="3"]
+margin_left = 641.0
+margin_top = -264.0
+margin_right = 922.0
+margin_bottom = 195.0
+texture_normal = ExtResource( 16 )
+expand = true
+stretch_mode = 5
+ActivatorName = "Bathroom door"
+
+[node name="WC" type="Sprite" parent="Cube/WCDoor/TheClickable" index="0"]
+position = Vector2( 143.848, 164.551 )
+scale = Vector2( 1.913, 1.94759 )
 texture = ExtResource( 3 )
 
-[node name="Wallclock" type="AnimatedSprite" parent="Cube" index="2"]
-position = Vector2( 209.463, -519.047 )
+[node name="Wallclock" parent="Cube" index="2" instance=ExtResource( 15 )]
+
+[node name="TheClickable" parent="Cube/Wallclock" index="3"]
+margin_left = 158.574
+margin_top = -578.323
+margin_right = 287.574
+margin_bottom = -420.323
+texture_normal = ExtResource( 4 )
+
+[node name="Wallclock" type="AnimatedSprite" parent="Cube/Wallclock/TheClickable" index="0"]
+position = Vector2( 63.8378, 77.9531 )
 frames = SubResource( 1 )
+frame = 1
 playing = true
 
 [node name="LongTable" type="Sprite" parent="Cube" index="3"]
@@ -68,6 +93,11 @@ position = Vector2( 262.89, 368.334 )
 scale = Vector2( 1.13321, 1.13321 )
 texture = ExtResource( 9 )
 
+[node name="SpiritSillhouette" type="Sprite" parent="Cube/Sofa" index="0"]
+position = Vector2( -28.2094, -73.3492 )
+scale = Vector2( 1.50238, 1.50238 )
+texture = ExtResource( 14 )
+
 [node name="SmallTable" type="Sprite" parent="Cube" index="5"]
 position = Vector2( -18.6402, 502.784 )
 scale = Vector2( 1.22336, 1.24549 )
@@ -78,7 +108,28 @@ position = Vector2( 2.70496, -64.12 )
 scale = Vector2( 1.36246, 1.33826 )
 frames = SubResource( 2 )
 
-[node name="Window" type="Sprite" parent="." index="4"]
+[node name="Window" parent="Cube" index="6" instance=ExtResource( 15 )]
+
+[node name="TheClickable" parent="Cube/Window" index="3"]
+margin_left = -847.0
+margin_top = -311.0
+margin_right = -379.0
+margin_bottom = 326.0
+texture_click_mask = ExtResource( 17 )
+
+[node name="Window" type="Sprite" parent="Cube/Window" index="4"]
 modulate = Color( 1, 1, 1, 0.388235 )
-position = Vector2( -374.592, 34.475 )
+position = Vector2( -612.714, 7.77765 )
+scale = Vector2( 1.70251, 1.70251 )
 texture = ExtResource( 12 )
+
+[node name="Aquarium" type="Sprite" parent="Cube" index="7"]
+position = Vector2( 424.013, -42.8869 )
+scale = Vector2( 0.971875, 0.971875 )
+texture = ExtResource( 13 )
+
+[editable path="Cube/WCDoor"]
+
+[editable path="Cube/Wallclock"]
+
+[editable path="Cube/Window"]
