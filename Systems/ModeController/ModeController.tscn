@@ -15,6 +15,7 @@ signal show_hud
 
 func reset():
 	set_mode(EXPLORE)
+	unhover()
 	emit_signal(\"reset\")
 
 ############
@@ -89,6 +90,22 @@ func is_room_scrollable():
 
 func is_menu_openable():
 	return mode == EXPLORE and hud_hidden == false
+
+##########
+# Trying to resolve interactable hover conflicts
+##########
+
+var currently_hovered = false
+
+func hover(area):
+	currently_hovered = area
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+	
+func unhover():
+	currently_hovered = null
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	
+	
 "
 
 [node name="ModeController" type="Node"]

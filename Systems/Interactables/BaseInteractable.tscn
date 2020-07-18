@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Position2D
@@ -8,84 +8,8 @@ func blurb(text:String,icon:Texture,  buttontext=null):
 	ItemInteractionPopup.display(text, icon, buttontext, self)
 "
 
-[sub_resource type="GDScript" id=2]
-script/source = "extends Control
-
-signal on_activate
-#signal on_apply_item
-
-export var ActivatorName : String = \"Unnamed\"
-export var enabled : bool = true
-export var hidden : bool = false
-
-func _gui_input(event):
-	
-	if not enabled:
-		mouse_default_cursor_shape = Control.CURSOR_ARROW
-		return
-		
-	if ModeController.mode != ModeController.EXPLORE:
-		mouse_default_cursor_shape = Control.CURSOR_ARROW
-		return
-		
-	if hidden:
-		mouse_default_cursor_shape = Control.CURSOR_ARROW
-	else:
-		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-
-	if not event is InputEventMouseButton: return
-	if event.button_index != BUTTON_LEFT or not event.pressed:return
-	
-	print(\"Clicked %s!\" % ActivatorName)
-
-	#if ModeController.get_is_player_holding_item():
-	#	emit_signal(\"on_apply_item\", ModeController.holding_item, ModeController.holding_callback)
-	#	ModeController.apply_item(get_parent())
-	#else:
-
-	emit_signal(\"on_activate\")
-	var activatable = get_parent().get_node(\"Activator\")
-	if activatable != null and activatable.has_method(\"activate\"):
-		activatable.activate()
-	if activatable != null and activatable.has_method(\"on_activate\"):
-		activatable.on_activate()
-
-func blurb(text:String):
-	if $\"../BlurbPoint\" == null:
-		printerr(\"No blurb point set!\")
-	else:
-		$\"../BlurbPoint\".blurb(text)
-		
-func _ready():
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-
-
-var floatie = null
-func _on_ClickArea_mouse_entered():
-	return
-	\"\"\"
-	if floatie == null:
-		floatie = preload(\"res://Autoload/WorldspaceHUD/Floatie.tscn\").instance()
-	add_child(floatie)
-	if ActivatorName == null:
-		floatie.display(\"[no name]\")
-	else:
-		floatie.display(ActivatorName)
-	\"\"\"
-
-
-func _on_ClickArea_mouse_exited():
-	return
-	\"\"\"
-	if floatie != null:
-		floatie.queue_free()
-		floatie = null
-	\"\"\"
-"
-
-[sub_resource type="GDScript" id=3]
-script/source = "extends TextureButton
-
+[sub_resource type="GDScript" id=4]
+script/source = "extends Area2D
 
 signal on_activate
 
@@ -93,19 +17,12 @@ export var ActivatorName : String = \"Unnamed\"
 export var enabled : bool = true
 export var hidden : bool = false
 
-func _ready():
-	if self.texture_normal == null or self.texture_click_mask != null: return
-	var mask = BitMap.new()
-	mask.create_from_image_alpha(self.texture_normal.get_data())
-	self.texture_click_mask = mask
-
 
 func blurb(text:String):
 	if $\"../BlurbPoint\" == null:
 		printerr(\"No blurb point set!\")
 	else:
 		$\"../BlurbPoint\".blurb(text)
-
 
 func _on_TheClickable_pressed():
 	print(\"Clicked %s!\" % ActivatorName)
@@ -115,6 +32,19 @@ func _on_TheClickable_pressed():
 		activatable.activate()
 	if activatable != null and activatable.has_method(\"on_activate\"):
 		activatable.on_activate()
+
+
+func _on_Area2D_mouse_entered():
+	ModeController.hover(self)
+
+
+func _on_Area2D_mouse_exited():
+	ModeController.unhover()
+
+
+func _on_Area2D_input_event(viewport, event, shape_idx):
+	if Input.is_action_just_pressed(\"select\") and ModeController.currently_hovered == self:
+		_on_TheClickable_pressed()
 "
 
 [node name="BaseInteractable" type="Node2D"]
@@ -122,27 +52,10 @@ func _on_TheClickable_pressed():
 [node name="BlurbPoint" type="Position2D" parent="."]
 script = SubResource( 1 )
 
-[node name="ClickArea" type="Control" parent="."]
-visible = false
-margin_left = -15.0
-margin_top = -30.0
-margin_right = 14.0
-mouse_default_cursor_shape = 2
-script = SubResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="Activator" type="Node" parent="."]
 
-[node name="TheClickable" type="TextureButton" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-mouse_default_cursor_shape = 2
-script = SubResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-[connection signal="mouse_entered" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_entered"]
-[connection signal="mouse_exited" from="ClickArea" to="ClickArea" method="_on_ClickArea_mouse_exited"]
-[connection signal="pressed" from="TheClickable" to="TheClickable" method="_on_TheClickable_pressed"]
+[node name="Clickable" type="Area2D" parent="."]
+script = SubResource( 4 )
+[connection signal="input_event" from="Clickable" to="Clickable" method="_on_Area2D_input_event"]
+[connection signal="mouse_entered" from="Clickable" to="Clickable" method="_on_Area2D_mouse_entered"]
+[connection signal="mouse_exited" from="Clickable" to="Clickable" method="_on_Area2D_mouse_exited"]

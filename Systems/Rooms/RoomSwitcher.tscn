@@ -16,6 +16,7 @@ func r(id:String):
 var room:Node = null
 	
 func switch_room_obj(to_room):
+	ModeController.reset()
 	$\"/root/Room\".pickle()
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
