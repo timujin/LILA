@@ -1,0 +1,84 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/PlainWhiteDoor.png" type="Texture" id=2]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/WC.png" type="Texture" id=3]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Wallclock.png" type="Texture" id=4]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Wallclock0.png" type="Texture" id=5]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/SmallTable.png" type="Texture" id=6]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/BowlEmpty.png" type="Texture" id=7]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Bowl.png" type="Texture" id=8]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Sofa.png" type="Texture" id=9]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/LongTable.png" type="Texture" id=10]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Magazines.png" type="Texture" id=11]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Window.png" type="Texture" id=12]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "default",
+"speed": 1.0
+} ]
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 8 ), ExtResource( 7 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+} ]
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Waiting room"
+roomID = "00000WaitingRoom"
+
+[node name="DoorOut" type="Sprite" parent="Cube" index="0"]
+position = Vector2( -296.67, -261.154 )
+scale = Vector2( 1.22336, 1.24549 )
+texture = ExtResource( 2 )
+
+[node name="WCDoor" type="Sprite" parent="Cube" index="1"]
+position = Vector2( 762.684, -58.4696 )
+scale = Vector2( 1.22336, 1.24549 )
+texture = ExtResource( 2 )
+flip_h = true
+
+[node name="WC" type="Sprite" parent="Cube/WCDoor" index="0"]
+position = Vector2( 4.30249, -39.0437 )
+texture = ExtResource( 3 )
+
+[node name="Wallclock" type="AnimatedSprite" parent="Cube" index="2"]
+position = Vector2( 209.463, -519.047 )
+frames = SubResource( 1 )
+playing = true
+
+[node name="LongTable" type="Sprite" parent="Cube" index="3"]
+position = Vector2( -6.24988, -197.456 )
+scale = Vector2( 1.41208, 1.41208 )
+texture = ExtResource( 10 )
+
+[node name="Magazines" type="Sprite" parent="Cube/LongTable" index="0"]
+position = Vector2( 6.52347, -62.0011 )
+scale = Vector2( 1.15491, 1.15491 )
+texture = ExtResource( 11 )
+
+[node name="Sofa" type="Sprite" parent="Cube" index="4"]
+position = Vector2( 262.89, 368.334 )
+scale = Vector2( 1.13321, 1.13321 )
+texture = ExtResource( 9 )
+
+[node name="SmallTable" type="Sprite" parent="Cube" index="5"]
+position = Vector2( -18.6402, 502.784 )
+scale = Vector2( 1.22336, 1.24549 )
+texture = ExtResource( 6 )
+
+[node name="CandyBowl" type="AnimatedSprite" parent="Cube/SmallTable" index="0"]
+position = Vector2( 2.70496, -64.12 )
+scale = Vector2( 1.36246, 1.33826 )
+frames = SubResource( 2 )
+
+[node name="Window" type="Sprite" parent="." index="4"]
+modulate = Color( 1, 1, 1, 0.388235 )
+position = Vector2( -374.592, 34.475 )
+texture = ExtResource( 12 )

@@ -13,21 +13,21 @@ script/source = "extends Node
 func activate():
 	RoomSwitcher.switch_to(\"FFFFFRedroom\")"
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 func activate():
 	RoomSwitcher.switch_to(\"FFFFFGreenroom\")
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 func activate():
 	$\"../Halo\".switch()
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 script/source = "extends Sprite
 
 
@@ -96,7 +96,7 @@ margin_right = 777.0
 margin_bottom = 71.0
 
 [node name="Activator" parent="Greenroom" index="2"]
-script = SubResource( 3 )
+script = SubResource( 2 )
 
 [node name="Lamp" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 720.573, 538.118 )
@@ -111,7 +111,7 @@ margin_right = 200.0
 margin_bottom = -39.0
 
 [node name="Activator" parent="Lamp" index="2"]
-script = SubResource( 4 )
+script = SubResource( 3 )
 
 [node name="Lamp" type="Sprite" parent="Lamp" index="3"]
 position = Vector2( 127.35, -200.739 )
@@ -121,7 +121,7 @@ texture = ExtResource( 4 )
 position = Vector2( 135.864, -272.576 )
 scale = Vector2( 0.883643, 0.582174 )
 texture = ExtResource( 5 )
-script = SubResource( 5 )
+script = SubResource( 4 )
 
 [node name="OnOffPickler" type="Node" parent="Lamp" index="5"]
 script = ExtResource( 6 )

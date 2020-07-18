@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Sprites/Rooms/OrthonormalCubeRoom.png" type="Texture" id=2]
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Plain cube room"
+roomID = "FFFFFPlainCubeRoom"
+
+[node name="FirstPersonCamera" parent="." index="2"]
+is_scrolling = false
+
+[node name="Cube" type="Sprite" parent="." index="3"]
+position = Vector2( -14.7039, 29.9067 )
+scale = Vector2( 0.587367, 0.587367 )
+texture = ExtResource( 2 )

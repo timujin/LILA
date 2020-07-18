@@ -154,7 +154,7 @@ position = Vector2( 939.081, 895.861 )
 position = Vector2( 1934.06, 473.655 )
 
 [node name="FirstPersonCamera" parent="." index="2"]
-position = Vector2( 815.474, 456.717 )
+position = Vector2( 1046.96, 361.847 )
 
 [node name="RedroomDoor" parent="." index="3" instance=ExtResource( 3 )]
 position = Vector2( 575.348, 420.899 )
