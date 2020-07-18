@@ -1,7 +1,43 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/PlainWhiteDoor.png" type="Texture" id=2]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/WC.png" type="Texture" id=3]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func on_activate():
+	RoomSwitcher.switch_to(\"00000WaitingRoom\")
+"
 
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Bathroom"
 roomID = "00000WaitingRoomWC"
+
+[node name="DoorToTheWR" parent="Cube" index="0" instance=ExtResource( 4 )]
+
+[node name="Activator" parent="Cube/DoorToTheWR" index="1"]
+script = SubResource( 1 )
+
+[node name="Clickable" parent="Cube/DoorToTheWR" index="2"]
+ActivatorName = "DoorOut"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Cube/DoorToTheWR/Clickable" index="0"]
+visible = false
+polygon = PoolVector2Array( -233.655, 154.194, -233.655, 525.164, -47.274, 618.354, -41.8976, 238.424 )
+
+[node name="PlainWhiteDoor" type="Sprite" parent="Cube/DoorToTheWR" index="3"]
+modulate = Color( 1, 1, 1, 0.419608 )
+position = Vector2( -137.554, 383.164 )
+scale = Vector2( 1.30454, 1.30454 )
+texture = ExtResource( 2 )
+flip_h = true
+
+[node name="WC" type="Sprite" parent="Cube/DoorToTheWR/PlainWhiteDoor" index="0"]
+position = Vector2( -2.23073, -57.3741 )
+scale = Vector2( 1.30506, 1.30506 )
+texture = ExtResource( 3 )
+
+[editable path="Cube/DoorToTheWR"]

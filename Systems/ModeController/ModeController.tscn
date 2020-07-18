@@ -95,11 +95,12 @@ func is_menu_openable():
 # Trying to resolve interactable hover conflicts
 ##########
 
-var currently_hovered = false
+var currently_hovered = null
 
-func hover(area):
+func hover(area, hidden):
 	currently_hovered = area
-	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+	if not hidden:
+		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
 	
 func unhover():
 	currently_hovered = null

@@ -35,7 +35,8 @@ func _on_TheClickable_pressed():
 
 
 func _on_Area2D_mouse_entered():
-	ModeController.hover(self)
+	if enabled:
+		ModeController.hover(self, hidden)
 
 
 func _on_Area2D_mouse_exited():

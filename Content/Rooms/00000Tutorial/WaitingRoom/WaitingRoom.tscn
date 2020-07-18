@@ -47,7 +47,11 @@ position = Vector2( 495.059, -167.22 )
 [node name="Activator" parent="Cube/WCDoor" index="1"]
 script = SubResource( 3 )
 
+[node name="Clickable" parent="Cube/WCDoor" index="2"]
+ActivatorName = "WC door"
+
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Cube/WCDoor/Clickable" index="0"]
+visible = false
 polygon = PoolVector2Array( 690.72, -246.704, 869.485, -166.686, 871.187, 189.141, 687.315, 104.015 )
 
 [node name="PlainWhiteDoor" type="Sprite" parent="Cube/WCDoor" index="3"]
