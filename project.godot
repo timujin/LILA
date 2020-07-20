@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn"
+run/main_scene="res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoom.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
@@ -100,3 +100,7 @@ select={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+
+[rendering]
+
+environment/default_clear_color=Color( 0, 0, 0, 1 )

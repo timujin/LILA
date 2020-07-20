@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/PlainWhiteDoor.png" type="Texture" id=2]
 [ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/WC.png" type="Texture" id=3]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/ToiletStall.png" type="Texture" id=5]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Sinks.png" type="Texture" id=6]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Mirror.png" type="Texture" id=7]
+[ext_resource path="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/LeaningSpirit.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Sprites/Rooms/SmallOrthonormalCubeRoom.png" type="Texture" id=9]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -16,28 +21,69 @@ func on_activate():
 roomName = "Bathroom"
 roomID = "00000WaitingRoomWC"
 
-[node name="DoorToTheWR" parent="Cube" index="0" instance=ExtResource( 4 )]
+[node name="HalfCube" type="Sprite" parent="." index="3"]
+position = Vector2( 0.514252, 1.14685 )
+scale = Vector2( 0.590496, 0.590496 )
+texture = ExtResource( 9 )
 
-[node name="Activator" parent="Cube/DoorToTheWR" index="1"]
+[node name="ToiletStall6" type="Sprite" parent="HalfCube" index="0"]
+position = Vector2( 295.74, -105.478 )
+scale = Vector2( 0.909774, 0.909774 )
+texture = ExtResource( 5 )
+
+[node name="ToiletStall5" type="Sprite" parent="HalfCube" index="1"]
+position = Vector2( 111.437, -27.8768 )
+scale = Vector2( 0.909774, 0.909774 )
+texture = ExtResource( 5 )
+
+[node name="Sinks2" type="Sprite" parent="HalfCube" index="2"]
+position = Vector2( -447.045, 240.763 )
+scale = Vector2( 1.00381, 1.00381 )
+texture = ExtResource( 6 )
+flip_h = true
+
+[node name="Mirror2" type="Sprite" parent="HalfCube" index="3"]
+position = Vector2( -510.891, 7.56067 )
+scale = Vector2( 0.967523, 0.967523 )
+texture = ExtResource( 7 )
+flip_h = true
+
+[node name="LeaningSpirit2" type="Sprite" parent="HalfCube" index="4"]
+position = Vector2( 58.9364, 282.983 )
+scale = Vector2( 0.894822, 0.894822 )
+texture = ExtResource( 8 )
+
+[node name="DoorToTheWR" parent="HalfCube" index="5" instance=ExtResource( 4 )]
+position = Vector2( -199.067, -32.4821 )
+scale = Vector2( 0.994701, 0.994701 )
+
+[node name="BlurbPoint" parent="HalfCube/DoorToTheWR" index="0"]
+position = Vector2( -32.3714, -75.5336 )
+
+[node name="Activator" parent="HalfCube/DoorToTheWR" index="1"]
 script = SubResource( 1 )
 
-[node name="Clickable" parent="Cube/DoorToTheWR" index="2"]
+[node name="Clickable" parent="HalfCube/DoorToTheWR" index="2"]
+position = Vector2( 75.5334, 399.249 )
 ActivatorName = "DoorOut"
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Cube/DoorToTheWR/Clickable" index="0"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HalfCube/DoorToTheWR/Clickable" index="0"]
 visible = false
-polygon = PoolVector2Array( -233.655, 154.194, -233.655, 525.164, -47.274, 618.354, -41.8976, 238.424 )
+polygon = PoolVector2Array( -309.806, -244.493, -309.424, 123.556, -119.594, 215.362, -116.782, -163.331 )
 
-[node name="PlainWhiteDoor" type="Sprite" parent="Cube/DoorToTheWR" index="3"]
+[node name="PlainWhiteDoor" type="Sprite" parent="HalfCube/DoorToTheWR" index="3"]
 modulate = Color( 1, 1, 1, 0.419608 )
 position = Vector2( -137.554, 383.164 )
 scale = Vector2( 1.30454, 1.30454 )
 texture = ExtResource( 2 )
 flip_h = true
 
-[node name="WC" type="Sprite" parent="Cube/DoorToTheWR/PlainWhiteDoor" index="0"]
+[node name="WC" type="Sprite" parent="HalfCube/DoorToTheWR/PlainWhiteDoor" index="0"]
 position = Vector2( -2.23073, -57.3741 )
 scale = Vector2( 1.30506, 1.30506 )
 texture = ExtResource( 3 )
 
-[editable path="Cube/DoorToTheWR"]
+[node name="Cube" parent="." index="4"]
+visible = false
+
+[editable path="HalfCube/DoorToTheWR"]

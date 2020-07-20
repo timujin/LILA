@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/LongCorridor.png-e728527f1ff9312c379a7d8fc0b62c52.stex"
+path="res://.import/Mirror.png-fa81fd6a7349b9e140a3e9a4dd88a75b.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Rooms/LongCorridor.png"
-dest_files=[ "res://.import/LongCorridor.png-e728527f1ff9312c379a7d8fc0b62c52.stex" ]
+source_file="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/Mirror.png"
+dest_files=[ "res://.import/Mirror.png-fa81fd6a7349b9e140a3e9a4dd88a75b.stex" ]
 
 [params]
 

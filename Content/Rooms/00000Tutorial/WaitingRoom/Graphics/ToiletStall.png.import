@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/GhostRoom.png-41ca4e1f273f9f27abaee0cdc37d85d3.stex"
+path="res://.import/ToiletStall.png-839434165f062431923e0a9c9bd0283a.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Rooms/GhostRoom.png"
-dest_files=[ "res://.import/GhostRoom.png-41ca4e1f273f9f27abaee0cdc37d85d3.stex" ]
+source_file="res://Content/Rooms/00000Tutorial/WaitingRoom/Graphics/ToiletStall.png"
+dest_files=[ "res://.import/ToiletStall.png-839434165f062431923e0a9c9bd0283a.stex" ]
 
 [params]
 
