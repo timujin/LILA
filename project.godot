@@ -56,6 +56,7 @@ RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
 Character="*res://Systems/Character/Character.tscn"
 HudButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
 ItemInteractionPopup="*res://Systems/WorldspaceMenus/Popups/ItemInteractionPopup.tscn"
+DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
 
 [display]
 

@@ -1,11 +1,10 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.png" type="Texture" id=2]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Assets/Placeholders/adeptmastersorc.png" type="Texture" id=4]
 [ext_resource path="res://Systems/Cutscenes/WOLModal/CutsceneStarter.gd" type="Script" id=5]
-[ext_resource path="res://Assets/Placeholders/tinygreathall.png" type="Texture" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -159,39 +158,19 @@ position = Vector2( 1046.96, 361.847 )
 [node name="RedroomDoor" parent="." index="3" instance=ExtResource( 3 )]
 position = Vector2( 575.348, 420.899 )
 
-[node name="ClickArea" parent="RedroomDoor" index="1"]
-margin_left = -507.0
-margin_top = -339.0
-margin_right = -44.0
-margin_bottom = 100.0
-ActivatorName = "Red door"
-
-[node name="Activator" parent="RedroomDoor" index="2"]
+[node name="Activator" parent="RedroomDoor" index="1"]
 script = SubResource( 1 )
 
 [node name="BlueDoor" parent="." index="4" instance=ExtResource( 3 )]
 position = Vector2( 934.156, 411.45 )
 
-[node name="ClickArea" parent="BlueDoor" index="1"]
-margin_left = 310.0
-margin_top = -366.0
-margin_right = 919.0
-margin_bottom = 188.0
-ActivatorName = "Blue door"
-
-[node name="Activator" parent="BlueDoor" index="2"]
+[node name="Activator" parent="BlueDoor" index="1"]
 script = SubResource( 2 )
 
 [node name="BaseInteractable" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 681.353, 201.342 )
 
-[node name="ClickArea" parent="BaseInteractable" index="1"]
-margin_left = -34.0
-margin_top = -21.0
-margin_right = 306.0
-margin_bottom = 243.0
-
-[node name="Activator" parent="BaseInteractable" index="2"]
+[node name="Activator" parent="BaseInteractable" index="1"]
 script = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="BaseInteractable" index="3"]
@@ -211,33 +190,14 @@ script = SubResource( 5 )
 [node name="YouGetJoke" type="Node" parent="BaseInteractable/Interaction/Hello" index="1"]
 script = SubResource( 6 )
 
-[node name="TheClickable" parent="BaseInteractable" index="5"]
-margin_left = 184.6
-margin_top = 270.746
-margin_right = 557.6
-margin_bottom = 455.746
-texture_normal = ExtResource( 4 )
-
 [node name="Popuper" parent="." index="6" instance=ExtResource( 3 )]
 position = Vector2( 669.71, 719.689 )
 
 [node name="BlurbPoint" parent="Popuper" index="0"]
 position = Vector2( 1.29236, -37.4785 )
 
-[node name="ClickArea" parent="Popuper" index="1"]
-margin_left = -26.0
-margin_top = -31.0
-margin_right = 29.0
-margin_bottom = 30.0
-ActivatorName = "Popuper"
-
-[node name="Activator" parent="Popuper" index="2"]
+[node name="Activator" parent="Popuper" index="1"]
 script = SubResource( 7 )
-
-[node name="TheClickable" parent="Popuper" index="3"]
-margin_left = -29.0
-margin_top = -121.0
-texture_normal = ExtResource( 6 )
 
 [editable path="RedroomDoor"]
 

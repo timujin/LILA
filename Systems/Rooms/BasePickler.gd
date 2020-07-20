@@ -13,13 +13,11 @@ func read(key:String):
 	return (data[key])
 
 func pickle():
-	print("data: %s" % data)
 	Character.pickles.pickle($"/root/Room".roomID, get_path(), data)
 
 func unpickle():
-	print("data: %s" % data)
 	data = Character.pickles.unpickle($"/root/Room".roomID, get_path(), data)
-	print("Unpickling in order")
+	print("Unpickling in order", data)
 	emit_signal("unpickled", data)
 	
 func repickle():

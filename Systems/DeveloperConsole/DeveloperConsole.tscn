@@ -71,7 +71,13 @@ func echoerr(text:String, repeat_in_stdout=true):
 	$Modal/VBoxContainer.add_child(x)
 	x.text = \"ERROR! \" + text
 	if repeat_in_stdout:
-		print(text)"
+		print(text)
+
+
+func _on_Button_pressed():
+	_on_LineEdit_text_entered(\"skip\")
+	close_console()
+"
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Node
@@ -92,16 +98,21 @@ func interpret(input:String):
 	var command = parsed[0]
 	parsed.remove(0)
 	match command:
+		\"skip\": skip()
+		#\"warp\": warp(parsed)
+		
+		
+		
 		# Inventory
-		\"print_inventory\": print_inventory()
-		\"add_item\": add_item(parsed)
-		\"remove_item\": remove_item(parsed)
+		#\"print_inventory\": print_inventory()
+		#\"add_item\": add_item(parsed)
+		#\"remove_item\": remove_item(parsed)
 		
 		# Karma
-		\"print_karma\": print_karma()
-		\"add_karma_xp\": add_karma_xp(parsed)
-		\"add_karma_levels\": add_karma_levels(parsed)
-		\"drain_karma_levels\": drain_karma_levels(parsed)
+		#\"print_karma\": print_karma()
+		#\"add_karma_xp\": add_karma_xp(parsed)
+		#\"add_karma_levels\": add_karma_levels(parsed)
+		#\"drain_karma_levels\": drain_karma_levels(parsed)
 		
 		#\"warp\": warp(parsed)
 		#\"skip\": skip()
@@ -112,7 +123,12 @@ func interpret(input:String):
 		#\"remove_karma_levels\": remove_karma_levels(parsed)
 		#\"print_karma\": print_karma()
 		_     : echoerr(\"Command not found: \"+command)
-	
+
+func skip():
+	$'..'.emit_signal(\"skip_cutscene\")
+
+
+\"\"\"
 func print_inventory():
 	var inventory = Character.inventory.entries
 	for entry in inventory:
@@ -199,8 +215,12 @@ func call(parsed):
 
 #func print_karma():
 #	echo(str($\"/root/CharacterData\".karma))
+
+\"\"\"
 	
 export(Resource) var test_sg
+	
+
 	
 func gsave(parsed):
 	return
@@ -240,7 +260,8 @@ func gload():
 	print(save_game)
 	print(save_game.data)
 	echo(save_game.data)
-	\"\"\""
+	\"\"\"
+"
 
 [node name="DeveloperConsole" type="CanvasLayer"]
 pause_mode = 2
@@ -251,6 +272,9 @@ script = SubResource( 1 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.156863 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Modal"]
 anchor_bottom = 1.0
@@ -275,6 +299,19 @@ margin_top = -68.0
 margin_right = -37.0
 margin_bottom = -34.0
 
+[node name="Button" type="Button" parent="Modal"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -203.0
+margin_top = 9.0
+margin_right = -7.0
+margin_bottom = 33.0
+text = "SKIP CUTSCENE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Interpreter" type="Node" parent="."]
 script = SubResource( 2 )
 [connection signal="text_entered" from="Modal/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="pressed" from="Modal/Button" to="." method="_on_Button_pressed"]

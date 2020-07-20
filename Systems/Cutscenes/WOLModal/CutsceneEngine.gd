@@ -10,9 +10,13 @@ func clear_player_choices():
 	
 func say_head(icon, text:String):
 	ModeController.window.add_talking_head(icon, text)
+	
+func sh(icon, text:String): say_head(icon, text)
 
 func say_headless(text:String):
 	ModeController.window.add_talking_head(null, text)
+	
+func shl(text:String): say_headless(text)
 
 func choice_call(text, funcname):
 	var response = ModeController.window.add_choice(text)
