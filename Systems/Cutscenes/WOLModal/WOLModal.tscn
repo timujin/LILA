@@ -45,15 +45,22 @@ func scroll_to_bottom():
 	var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
 	is_scrolling = true
 	starting_point = scroll_container.scroll_vertical
+	previous_scroll_value = starting_point
 	ending_point = scroll_container.get_v_scrollbar().max_value
 	
+var previous_scroll_value = 0
 func _physics_process (delta):
 	if is_scrolling:
 		#print(delta, \" \", ending_point, \" \", starting_point, \" \", delta * (ending_point - starting_point))
 		var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
-		scroll_container.scroll_vertical += delta * (ending_point - starting_point) / 0.5
-		if scroll_container.scroll_vertical >= ending_point:
+		var new_scroll = scroll_container.scroll_vertical + delta * (ending_point - starting_point) / 0.5
+		print(new_scroll, \"   \", ending_point)
+		#if scroll_container.scroll_vertical >= ending_point:
+		#	is_scrolling = false
+		if previous_scroll_value == new_scroll:
 			is_scrolling = false
+		scroll_container.scroll_vertical = new_scroll
+		previous_scroll_value = new_scroll
 
 \"\"\"
 func scroll_to_bottom():
@@ -198,6 +205,7 @@ anims/scroll_to_bottom = SubResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_bottom = -286.0
+scroll_horizontal_enabled = false
 __meta__ = {
 "_edit_use_anchors_": false
 }

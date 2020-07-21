@@ -18,9 +18,9 @@ func say_headless(text:String):
 	
 func shl(text:String): say_headless(text)
 
-func choice_call(text, funcname):
+func choice_call(text, funcname, binds=[]):
 	var response = ModeController.window.add_choice(text)
-	response.connect("selected", self, funcname)
+	response.connect("selected", self, funcname, binds)
 	return response
 	
 func add_choice_record(text:String):

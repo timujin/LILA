@@ -110,45 +110,52 @@ signal cont
 func _ready():
 	DeveloperConsole.connect(\"skip_cutscene\", self, \"skip\")
 
-func execute():
-	choice_call(\"Continue...\", \"signal_cont\")
-	yield(sequence(), \"completed\")
-	clear_player_choices()
-	choice_call(\"Continue...\", \"end_cutscene\")
+func execute(sequence = \"start_sequence\"):
+	start_sequence()
+	
+func signal_cont():
+	emit_signal(\"cont\")
 
-func sequence():
-	say_headless(\"This is the waiting room.\");yield(self, \"cont\")
+func skip():
+	self.end_cutscene()
+
+func start_sequence():
+	clear_player_choices()
+	choice_call(\"Continue...\", \"signal_cont\")
+	shl(\"This is the waiting room.\");yield(self, \"cont\")
 	shl(\"I'm sitting in it, surrounded by beige wallpaper, submersed into the drone of an air conditioner.\");yield(self, \"cont\")
-	shl(\"I sit on the sofa, glued onto the synthetic leather by a layer of drying sweat.\");yield(self, \"cont\")
-	shl(\"I feel like I've been here forever. The moments of the past stretch endlessly back in my head.\");yield(self, \"cont\")
-	shl(\"Like a temporal vanishing point, my memories converge onto a singularity.\");yield(self, \"cont\")
+	shl(\"I'm on the sofa, glued onto the synthetic leather by a layer of drying sweat.\");yield(self, \"cont\")
+	shl(\"I've been here forever. The moments of the past stretch endlessly back in my head.\");yield(self, \"cont\")
+	shl(\"My memories converge onto an infinitely-away singularity, like on a temporal vanishing point.\");yield(self, \"cont\")
 	shl(\"There is nothing else.\");yield(self, \"cont\")
 	shl(\"Nothing ever happens here, in the waiting room. I will just sit here until things start happening elsewhere.\");yield(self, \"cont\")
 	shl(\"This is what \\\"waiting\\\" means.\");yield(self, \"cont\")
 	shl(\"I'm just sitting.\");yield(self, \"cont\")
-	shl(\"But then, once per infinity, just like a spontaneous bubble of order arises amidst an \"+\\
-		\"endless sea of chaos by a fluke, a thought rises to my attention\");yield(self, \"cont\")
-	shl(\"\\\"This is bullshit.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"I'm wasting time.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"I have infinity before me, and I'm washing it all down the drain.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"I will not waste another second.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"I will rip my ass form this sofa and...\\\"\");yield(self, \"cont\")
+	shl(\"But then, once per eternity, just like a spontaneous bubble of order arises amidst an \"+\\
+		\"endless sea of chaos, by a fluke, a thought rises to my attention.\");yield(self, \"cont\")
+	shl(\"\\\"This is bullshit\\\" the thought says.\");yield(self, \"cont\")
+	shl(\"\\\"You're wasting time.\\\"\");yield(self, \"cont\")
+	shl(\"\\\"You have eternity in front of you, and you're washing it all down the drain.\\\"\");yield(self, \"cont\")
+	shl(\"\\\"Don't you dare waste another second.\\\"\");yield(self, \"cont\")
 	add_item_get(load(\"res://Content/Items/Chains/Icon.png\"),\\
 				 \"You have lost 1 chain.\",\\
 				 \"You still have: 22.\")
-	shl(\"...and what?\");yield(self, \"cont\")
+	clear_player_choices()
+	choice_call(\"\\\"You are right! I will start doing stuff this very second!\\\"\", \"seq_you_are_right\")
+	choice_call(\"\\\"This is the Waiting Room. I can only wait. It's in the name.\\\"\", \"seq_you_are_right\")
+	choice_call(\"\\\"I like wasting time.\\\"\", \"seq_you_are_right\")
+	choice_call(\"\\\"Wait, what's that thing with the chains?\\\"\", \"seq_you_are_right\")
+	
+func seq_you_are_right():
+	clear_player_choices()
+	shl(\"\\\"Don't you dare waste another second.\\\"\");yield(self, \"cont\")
 	
 
+	#shl(\"\\\"But what can I do?\\\" I ask the thought, \\\"This is the waiting room. I can only wait.\\\"\");yield(self, \"cont\")
+	#shl(\"\\\"I will rip my ass form this sofa and...\\\"\");yield(self, \"cont\")
 
-func signal_cont():
-	emit_signal(\"cont\")
-
-func _on_Hello_cont():
-	pass # Replace with function body.
-
-
-func skip():
-	self.end_cutscene()
+	#shl(\"...and what?\");yield(self, \"cont\")
+	
 "
 
 [sub_resource type="GDScript" id=8]
