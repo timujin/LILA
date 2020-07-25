@@ -76,8 +76,9 @@ func stop_interaction():
 	reset()
 	set_hud_hidden(false)
 	set_mode(EXPLORE)
-	window.queue_free()
-	window = null
+	if window != null:
+		window.queue_free()
+		window = null
 
 #########
 # Helper logical functions.

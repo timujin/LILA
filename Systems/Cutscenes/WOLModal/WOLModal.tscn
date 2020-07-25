@@ -54,7 +54,7 @@ func _physics_process (delta):
 		#print(delta, \" \", ending_point, \" \", starting_point, \" \", delta * (ending_point - starting_point))
 		var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
 		var new_scroll = scroll_container.scroll_vertical + delta * (ending_point - starting_point) / 0.5
-		print(new_scroll, \"   \", ending_point)
+		#print(new_scroll, \"   \", ending_point)
 		#if scroll_container.scroll_vertical >= ending_point:
 		#	is_scrolling = false
 		if previous_scroll_value == new_scroll:
@@ -62,32 +62,6 @@ func _physics_process (delta):
 		scroll_container.scroll_vertical = new_scroll
 		previous_scroll_value = new_scroll
 
-\"\"\"
-func scroll_to_bottom():
-	yield(get_tree(), \"idle_frame\")
-	yield(get_tree(), \"idle_frame\") # This has to be here for some reason
-	yield(get_tree(), \"idle_frame\")
-	var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
-	var scroller_anim = $\"Base/ScrollContainer/MarginContainer/Control/SmoothScroller\"
-	scroller_anim.stop(true)
-	#scroller_anim.remove_animation(\"scroll_to_bottom\")
-	#var animation = Animation.new()
-	#var track_index = animation.add_track(Animation.TYPE_VALUE)
-	#animation.track_set_path(track_index, \"ScrollContainer:scroll_vertical\")
-	#print(scroll_container.scroll_vertical)
-	#animation.track_insert_key(track_index, 0.0, scroll_container.scroll_vertical)
-	#animation.track_insert_key(track_index, 5, scroll_container.get_v_scrollbar().max_value)
-	scroller_anim.get_animation(\"scroll_to_bottom\").clear()
-	var track_key = scroller_anim.get_animation(\"scroll_to_bottom\").add_track(Animation.TYPE_VALUE)
-	scroller_anim.get_animation(\"scroll_to_bottom\").track_insert_key(track_key, 0.0, scroll_container.scroll_vertical)
-	scroller_anim.get_animation(\"scroll_to_bottom\").track_insert_key(track_key, 1.0, scroll_container.get_v_scrollbar().max_value)
-	print(scroller_anim.get_animation(\"scroll_to_bottom\").get_track_count(),scroll_container.scroll_vertical, \" \", scroll_container.get_v_scrollbar().max_value)
-	#scroller_anim.add_animation(\"scroll_to_bottom\", animation)
-	scroller_anim.play(\"scroll_to_bottom\")
-	
-	#$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".scroll_vertical = 
-	#	$\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\".get_v_scrollbar().max_value
-\"\"\"
 
 
 func add_talking_head(icon:Texture, text:String):

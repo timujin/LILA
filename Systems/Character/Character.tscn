@@ -86,8 +86,7 @@ func lose_items(id:String, number, cleanup=true):
 	
 	
 func _ready():
-	add_item_by_id(\"Knife\")
-	add_item_by_id(\"Shield\")
+	pass
 	
 "
 

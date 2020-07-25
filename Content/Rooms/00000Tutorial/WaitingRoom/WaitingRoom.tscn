@@ -88,6 +88,14 @@ animations = [ {
 [sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
+\"\"\"
+Some initial exposition.
+The game becomes fully interactive after that.
+\"\"\"
+
+func _ready():
+	DeveloperConsole.connect(\"skip_cutscene\", self, \"skip\")
+
 var expecting = false
 
 func _on_Pickler_unpickled(data):
@@ -100,6 +108,10 @@ func _on_Pickler_unpickled(data):
 	else:
 		if $Modal != null: $Modal.queue_free()
 		
+
+func skip():
+	if $Modal != null: $Modal.queue_free()
+	$Hello.skip()
 "
 
 [sub_resource type="GDScript" id=6]
@@ -109,17 +121,23 @@ signal cont
 
 onready var thought = null
 
+var nagging_thought_added = false
+
 func _ready():
-	DeveloperConsole.connect(\"skip_cutscene\", self, \"skip\")
+	pass
+	#DeveloperConsole.connect(\"skip_cutscene\", self, \"skip\")
 
 func execute(sequence = \"start_sequence\"):
 	thought = Character.inventory.add_item_by_id(\"NaggingThought\").icon
+	nagging_thought_added = true
 	start_sequence()
 	
 func signal_cont():
 	emit_signal(\"cont\")
 
 func skip():
+	if not nagging_thought_added:
+		Character.inventory.add_item_by_id(\"NaggingThought\")
 	self.end_cutscene()
 
 func start_sequence():
@@ -164,8 +182,9 @@ func seq_door_open():
 	sh(thought, \"'But right now you should really focus on *not* falling into eternal oblivion.'\");yield(self, \"cont\")
 	sh(thought, \"'As you sit here, in this goddess-forsaken hovel, you are disappearing. You were never particularly real anyway, and\"+\\
 				\" being unnoticed by the reality doesn't help'.\");yield(self, \"cont\")
-	sh(thought, \"'You need to *get out of here*. This room is where ideas go to die. You are an idea, Spirit. Please don't die.\")
+	sh(thought, \"'You need to *get out of here*. This room is where ideas go to die. You are an idea, Spirit. Please don't die.\");yield(self, \"cont\")
 	sh(thought, \"[[Some exposition and an opportunity for the PC to show off his attitude.]]\")
+	clear_player_choices()
 	choice_call(\"OK\", \"end_cutscene\")
 	
 "
