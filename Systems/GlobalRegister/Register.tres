@@ -7,6 +7,7 @@ script = ExtResource( 1 )
 items = {
 "Knife": "res://Content/Items/Knife.tscn",
 "MissingNo": "res://Content/Items/MissingNo.tscn",
+"NaggingThought": "res://Content/Items/NaggingThought/NaggingThought.tscn",
 "Shield": "res://Content/Items/Shield.tscn"
 }
 rooms = {
@@ -18,5 +19,6 @@ rooms = {
 "FFFFFGreenroom": "res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
 "FFFFFPlainCubeRoom": "res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn",
 "FFFFFRedroom": "res://Content/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
-"GoddessRoom": "res://Content/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn"
+"GoddessRoom": "res://Content/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn",
+"[ID NOT SET]": "res://Content/Rooms/FFFFFTestinghall/Corridor/CorridorTest.tscn"
 }

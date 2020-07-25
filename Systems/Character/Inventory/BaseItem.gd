@@ -16,14 +16,14 @@ export(String) var category = "Miscellaneous"
 export(bool)   var countable = true
 export(bool)   var usable_in_dialogues = true
 export(Array) var tags = []
-export(bool) var hidden = false
+export(bool) var hidden = false setget , get_hidden
 
 
 # Runtime properties to be serialized
 
 var count:int = 0 
 export(Dictionary) var payload = {}
-var notification_up:bool = false
+var notification_up:bool = false setget , get_notification_up
 
 # Override those getters for items with dynamic presentations
 
@@ -42,6 +42,11 @@ func get_description():
 func get_icon():
 	return icon
 	
+func get_hidden():
+	return hidden
+	
+func get_notification_up():
+	return notification_up
 
 func add_count(number:int):
 	assert(number >= 0)

@@ -30,7 +30,7 @@ func on_activate():
 	RoomSwitcher.switch_to(\"00000WaitingRoomWC\")
 "
 
-[sub_resource type="SpriteFrames" id=4]
+[sub_resource type="SpriteFrames" id=2]
 animations = [ {
 "frames": [ ExtResource( 19 ), ExtResource( 17 ) ],
 "loop": true,
@@ -77,7 +77,7 @@ func _on_Clickable_on_activate():
 		set_magazine_state(0)
 "
 
-[sub_resource type="SpriteFrames" id=2]
+[sub_resource type="SpriteFrames" id=4]
 animations = [ {
 "frames": [ ExtResource( 8 ), ExtResource( 7 ), ExtResource( 20 ) ],
 "loop": true,
@@ -107,10 +107,13 @@ script/source = "extends CutsceneEngine
 
 signal cont
 
+onready var thought = null
+
 func _ready():
 	DeveloperConsole.connect(\"skip_cutscene\", self, \"skip\")
 
 func execute(sequence = \"start_sequence\"):
+	thought = Character.inventory.add_item_by_id(\"NaggingThought\").icon
 	start_sequence()
 	
 func signal_cont():
@@ -124,41 +127,50 @@ func start_sequence():
 	choice_call(\"Continue...\", \"signal_cont\")
 	shl(\"This is the waiting room.\");yield(self, \"cont\")
 	shl(\"I'm sitting in it, surrounded by beige wallpaper, submersed into the drone of an air conditioner.\");yield(self, \"cont\")
-	shl(\"I'm on the sofa, glued onto the synthetic leather by a layer of drying sweat.\");yield(self, \"cont\")
+	shl(\"Under me is a sofa, my back glued onto the synthetic leather by a layer of drying sweat.\");yield(self, \"cont\")
 	shl(\"I've been here forever. The moments of the past stretch endlessly back in my head.\");yield(self, \"cont\")
-	shl(\"My memories converge onto an infinitely-away singularity, like on a temporal vanishing point.\");yield(self, \"cont\")
+	shl(\"My memories converge onto an infinitely-away singularity, like onto a temporal vanishing point.\");yield(self, \"cont\")
 	shl(\"There is nothing else.\");yield(self, \"cont\")
 	shl(\"Nothing ever happens here, in the waiting room. I will just sit here until things start happening elsewhere.\");yield(self, \"cont\")
 	shl(\"This is what \\\"waiting\\\" means.\");yield(self, \"cont\")
 	shl(\"I'm just sitting.\");yield(self, \"cont\")
 	shl(\"But then, once per eternity, just like a spontaneous bubble of order arises amidst an \"+\\
 		\"endless sea of chaos, by a fluke, a thought rises to my attention.\");yield(self, \"cont\")
-	shl(\"\\\"This is bullshit\\\" the thought says.\");yield(self, \"cont\")
-	shl(\"\\\"You're wasting time.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"You have eternity in front of you, and you're washing it all down the drain.\\\"\");yield(self, \"cont\")
-	shl(\"\\\"Don't you dare waste another second.\\\"\");yield(self, \"cont\")
-	add_item_get(load(\"res://Content/Items/Chains/Icon.png\"),\\
-				 \"You have lost 1 chain.\",\\
-				 \"You still have: 22.\")
+	sh(thought,\"\\\"What are you waiting for?\\\" the thought asks.\");yield(self, \"cont\")
+	sh(thought,\"\\\"Is that ever going to come?\\\"\");yield(self, \"cont\")
+	sh(thought,\"\\\"You've been here forever, and nothing happened. Why do you think it'll happen in the next forever?\\\"\")
 	clear_player_choices()
-	choice_call(\"\\\"You are right! I will start doing stuff this very second!\\\"\", \"seq_you_are_right\")
-	choice_call(\"\\\"This is the Waiting Room. I can only wait. It's in the name.\\\"\", \"seq_you_are_right\")
-	choice_call(\"\\\"I like wasting time.\\\"\", \"seq_you_are_right\")
-	choice_call(\"\\\"Wait, what's that thing with the chains?\\\"\", \"seq_you_are_right\")
+	choice_call(\"\\\"I'm waiting for the door to open.\\\"\", \"seq_door_open\")
+	choice_call(\"\\\"I'm waiting for the world to end.\\\"\", \"\").\\
+		set_enabled(false).\\
+		add_req_icon(preload(\"res://Assets/Sprites/Icons/No.png\"), false).\\
+		set_req_text(\"Not implemented!\")
+	choice_call(\"\\\"I'm just sitting.\\\"\", \"seq_sitting\").\\
+		set_enabled(false).\\
+		add_req_icon(preload(\"res://Assets/Sprites/Icons/No.png\"), false).\\
+		set_req_text(\"Not implemented!\")
 	
-func seq_you_are_right():
+func seq_door_open():
 	clear_player_choices()
-	shl(\"\\\"Don't you dare waste another second.\\\"\");yield(self, \"cont\")
-	
-
-	#shl(\"\\\"But what can I do?\\\" I ask the thought, \\\"This is the waiting room. I can only wait.\\\"\");yield(self, \"cont\")
-	#shl(\"\\\"I will rip my ass form this sofa and...\\\"\");yield(self, \"cont\")
-
-	#shl(\"...and what?\");yield(self, \"cont\")
+	choice_call(\"Continue...\", \"signal_cont\")
+	shl(\"'I'm waiting for the door to open.', I reply, 'The door is the only way out of the Waiting Room.'\");yield(self, \"cont\")
+	sh(thought,\"'And what do you expect to find behind it?' the thought asks, 'What exactly are you waiting for, Spirit?'\");yield(self, \"cont\")
+	shl(\"I give it a moment of thought. 'Sweet oblivion, I guess. An endless, eternal void where nothing happens. That sounds very attractive to me right now.'\");yield(self, \"cont\")
+	sh(thought,\"'How do you know you're not already in oblivion, Spirit? Nothing happens here, either.\");yield(self, \"cont\")
+	shl(\"'But I'm still here. I think, therefore, I am. I think.'\");yield(self, \"cont\")
+	sh(thought, \"'Oh, well, that's a nice attempt at deduction. But it's not that simple.'\");yield(self, \"cont\")
+	sh(thought, \"'In fact, it's the other way around. You are in oblivion right now, and behind the door is the real world'\");yield(self, \"cont\")
+	sh(thought, \"'Don't worry, though! You'll learn more about the nature of reality as you go'\");yield(self, \"cont\")
+	sh(thought, \"'But right now you should really focus on *not* falling into eternal oblivion.'\");yield(self, \"cont\")
+	sh(thought, \"'As you sit here, in this goddess-forsaken hovel, you are disappearing. You were never particularly real anyway, and\"+\\
+				\" being unnoticed by the reality doesn't help'.\");yield(self, \"cont\")
+	sh(thought, \"'You need to *get out of here*. This room is where ideas go to die. You are an idea, Spirit. Please don't die.\")
+	sh(thought, \"[[Some exposition and an opportunity for the PC to show off his attitude.]]\")
+	choice_call(\"OK\", \"end_cutscene\")
 	
 "
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=7]
 script/source = "extends Panel
 
 signal clicked
@@ -168,8 +180,7 @@ func _gui_input(event):
 		emit_signal(\"clicked\")
 "
 
-[sub_resource type="Animation" id=7]
-resource_name = "New Anim"
+[sub_resource type="Animation" id=8]
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:modulate")
 tracks/0/interp = 1
@@ -234,7 +245,7 @@ texture = ExtResource( 3 )
 
 [node name="Wallclock" type="AnimatedSprite" parent="Cube/Wallclock" index="3"]
 position = Vector2( 235.942, -495.651 )
-frames = SubResource( 4 )
+frames = SubResource( 2 )
 
 [node name="LongTable" type="Sprite" parent="Cube" index="3"]
 position = Vector2( -6.24988, -197.456 )
@@ -245,7 +256,6 @@ texture = ExtResource( 10 )
 script = SubResource( 3 )
 
 [node name="BWMagazines" type="Sprite" parent="Cube/LongTable/Magazines" index="0"]
-visible = false
 position = Vector2( -12.9642, -137.497 )
 scale = Vector2( 0.957893, 0.957893 )
 texture = ExtResource( 4 )
@@ -257,6 +267,7 @@ scale = Vector2( 0.957893, 0.957893 )
 texture = ExtResource( 11 )
 
 [node name="DadaMagazines" type="Sprite" parent="Cube/LongTable/Magazines" index="2"]
+visible = false
 position = Vector2( -12.9642, -137.497 )
 scale = Vector2( 0.957893, 0.957893 )
 texture = ExtResource( 5 )
@@ -296,7 +307,8 @@ texture = ExtResource( 6 )
 [node name="1" type="AnimatedSprite" parent="Cube/SmallTable/CandyBowl" index="0"]
 position = Vector2( 2.70496, -64.12 )
 scale = Vector2( 1.36246, 1.33826 )
-frames = SubResource( 2 )
+frames = SubResource( 4 )
+frame = 2
 
 [node name="Window" parent="Cube" index="6" instance=ExtResource( 15 )]
 
@@ -318,6 +330,7 @@ scale = Vector2( 1.75178, 1.75178 )
 texture = ExtResource( 18 )
 
 [node name="Label" type="Label" parent="Cube" index="8"]
+visible = false
 margin_left = -673.0
 margin_top = -398.0
 margin_right = -458.0
@@ -346,18 +359,18 @@ script = SubResource( 6 )
 modulate = Color( 0, 0, 0, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -1136.0
-margin_top = -591.0
-margin_right = 78.0
-margin_bottom = 183.0
-script = SubResource( 8 )
+margin_left = -1130.73
+margin_top = -576.935
+margin_right = 83.2742
+margin_bottom = 197.065
+script = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="StartingCutscene/Modal/Panel" index="0"]
 autoplay = "New Anim"
-"anims/New Anim" = SubResource( 7 )
+"anims/New Anim" = SubResource( 8 )
 [connection signal="unpickled" from="Cube/LongTable/Magazines/Pickler" to="Cube/LongTable/Magazines" method="_on_Pickler_unpickled"]
 [connection signal="on_activate" from="Cube/LongTable/Magazines/Clicker/Clickable" to="Cube/LongTable/Magazines" method="_on_Clickable_on_activate"]
 [connection signal="unpickled" from="StartingCutscene/Pickler" to="StartingCutscene" method="_on_Pickler_unpickled"]

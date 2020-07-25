@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Character/Inventory/BaseItem.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Items/NaggingThought/icon.png" type="Texture" id=2]
+
+[node name="Item" instance=ExtResource( 1 )]
+id = "NaggingThought"
+display_name = "Nagging thought"
+icon = ExtResource( 2 )
+description = "A wake-up call. Snooze! Just five more minutes!"
+category = "Thoughts"
+countable = false
+usable_in_dialogues = false
