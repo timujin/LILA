@@ -202,13 +202,6 @@ position = Vector2( 805.013, 442.498 )
 [node name="BlurbPoint" parent="Window" index="0"]
 position = Vector2( 347.629, 168.134 )
 
-[node name="ClickArea" parent="Window" index="1"]
-margin_left = 206.0
-margin_top = 30.0
-margin_right = 459.0
-margin_bottom = 389.0
-ActivatorName = "Window"
-
 [node name="Sprite" type="Sprite" parent="Window" index="3"]
 position = Vector2( 330.522, 210.972 )
 texture = ExtResource( 4 )
@@ -218,13 +211,6 @@ texture = ExtResource( 4 )
 [node name="BlurbPoint" parent="Wastebasket" index="0"]
 position = Vector2( 171.838, 491.396 )
 
-[node name="ClickArea" parent="Wastebasket" index="1"]
-margin_left = 110.0
-margin_top = 561.0
-margin_right = 210.0
-margin_bottom = 716.0
-ActivatorName = "Wastebasket"
-
 [node name="Sprite" type="Sprite" parent="Wastebasket" index="3"]
 position = Vector2( 158.229, 643.463 )
 texture = ExtResource( 5 )
@@ -233,14 +219,6 @@ texture = ExtResource( 5 )
 
 [node name="BlurbPoint" parent="Sofa" index="0"]
 position = Vector2( 501.057, 383.265 )
-
-[node name="ClickArea" parent="Sofa" index="1"]
-margin_left = 212.0
-margin_top = 431.0
-margin_right = 766.0
-margin_bottom = 701.0
-ActivatorName = "Sofa"
-enabled = false
 
 [node name="Sprite" type="Sprite" parent="Sofa" index="3"]
 position = Vector2( 495.783, 559.075 )
@@ -252,13 +230,6 @@ texture = ExtResource( 6 )
 [node name="BlurbPoint" parent="Racoon" index="0"]
 position = Vector2( 704.997, 369.2 )
 
-[node name="ClickArea" parent="Racoon" index="1"]
-margin_left = 618.0
-margin_top = 439.0
-margin_right = 730.0
-margin_bottom = 568.0
-ActivatorName = "Racoon"
-
 [node name="Sprite" type="Sprite" parent="Racoon" index="3"]
 position = Vector2( 670.714, 496.662 )
 scale = Vector2( 0.935365, 0.912095 )
@@ -269,13 +240,6 @@ texture = ExtResource( 7 )
 [node name="BlurbPoint" parent="Poster" index="0"]
 position = Vector2( 901.904, 230.311 )
 
-[node name="ClickArea" parent="Poster" index="1"]
-margin_left = 495.0
-margin_top = 54.0
-margin_right = 713.0
-margin_bottom = 354.0
-ActivatorName = "Poster"
-
 [node name="Sprite" type="Sprite" parent="Poster" index="3"]
 position = Vector2( 615.334, 196.907 )
 texture = ExtResource( 8 )
@@ -284,13 +248,6 @@ texture = ExtResource( 8 )
 
 [node name="BlurbPoint" parent="Microwave" index="0"]
 position = Vector2( 1248.25, 261.956 )
-
-[node name="ClickArea" parent="Microwave" index="1"]
-margin_left = 1237.0
-margin_top = 360.0
-margin_right = 1410.0
-margin_bottom = 477.0
-ActivatorName = "Microwave"
 
 [node name="Sprite" type="Sprite" parent="Microwave" index="3"]
 position = Vector2( 1295.72, 534.461 )
@@ -301,14 +258,7 @@ texture = ExtResource( 9 )
 [node name="BlurbPoint" parent="Hairpin" index="0"]
 position = Vector2( 460.806, 625.512 )
 
-[node name="ClickArea" parent="Hairpin" index="1"]
-margin_left = 420.0
-margin_top = 810.0
-margin_right = 451.0
-margin_bottom = 836.0
-ActivatorName = "Hairpin"
-
-[node name="Activator" parent="Hairpin" index="2"]
+[node name="Activator" parent="Hairpin" index="1"]
 script = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="Hairpin" index="3"]
@@ -320,13 +270,6 @@ texture = ExtResource( 10 )
 [node name="BlurbPoint" parent="Drawer" index="0"]
 position = Vector2( 205.42, 477.462 )
 
-[node name="ClickArea" parent="Drawer" index="1"]
-margin_left = -95.0
-margin_top = 546.0
-margin_right = 88.0
-margin_bottom = 875.0
-ActivatorName = "Drawer"
-
 [node name="Sprite" type="Sprite" parent="Drawer" index="3"]
 position = Vector2( 3.11882, 700.943 )
 scale = Vector2( 0.806375, 0.865023 )
@@ -337,13 +280,6 @@ texture = ExtResource( 11 )
 [node name="BlurbPoint" parent="Door" index="0"]
 position = Vector2( 1349.11, 347.918 )
 
-[node name="ClickArea" parent="Door" index="1"]
-margin_left = 1497.0
-margin_top = 248.0
-margin_right = 1676.0
-margin_bottom = 834.0
-ActivatorName = "Door"
-
 [node name="Sprite" type="Sprite" parent="Door" index="3"]
 position = Vector2( 1588.07, 564.433 )
 texture = ExtResource( 12 )
@@ -352,12 +288,6 @@ texture = ExtResource( 12 )
 
 [node name="BlurbPoint" parent="Note" index="0"]
 position = Vector2( 1106.68, 392.333 )
-
-[node name="ClickArea" parent="Note" index="1"]
-margin_left = 1488.0
-margin_top = 248.0
-margin_right = 1672.0
-margin_bottom = 892.0
 
 [node name="Sprite" type="Sprite" parent="Note" index="3"]
 position = Vector2( 1570.88, 556.03 )
@@ -368,13 +298,6 @@ texture = ExtResource( 13 )
 [node name="BlurbPoint" parent="Cupboard" index="0"]
 position = Vector2( 1269.53, 179.511 )
 
-[node name="ClickArea" parent="Cupboard" index="1"]
-margin_left = 1121.0
-margin_top = 29.0
-margin_right = 1415.0
-margin_bottom = 316.0
-ActivatorName = "Pantry"
-
 [node name="Sprite" type="Sprite" parent="Cupboard" index="3"]
 position = Vector2( 1265.19, 172.2 )
 texture = ExtResource( 14 )
@@ -383,13 +306,6 @@ texture = ExtResource( 14 )
 
 [node name="BlurbPoint" parent="Bike" index="0"]
 position = Vector2( 898.843, 230.996 )
-
-[node name="ClickArea" parent="Bike" index="1"]
-margin_left = 755.0
-margin_top = 312.0
-margin_right = 1130.0
-margin_bottom = 661.0
-ActivatorName = "Exercise bike"
 
 [node name="Sprite" type="Sprite" parent="Bike" index="3"]
 position = Vector2( 939.925, 492.684 )
@@ -405,14 +321,7 @@ script = SubResource( 2 )
 [node name="BlurbPoint" parent="Gift" index="0"]
 position = Vector2( 679.181, 479.313 )
 
-[node name="ClickArea" parent="Gift" index="1"]
-margin_left = 564.0
-margin_top = 583.0
-margin_right = 730.0
-margin_bottom = 753.0
-ActivatorName = "Gift box"
-
-[node name="Activator" parent="Gift" index="2"]
+[node name="Activator" parent="Gift" index="1"]
 script = SubResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="Gift" index="3"]
@@ -433,13 +342,6 @@ data = {
 
 [node name="BlurbPoint" parent="Cake" index="0"]
 position = Vector2( 901.256, 412.69 )
-
-[node name="ClickArea" parent="Cake" index="1"]
-margin_left = 751.0
-margin_top = 564.0
-margin_right = 1037.0
-margin_bottom = 712.0
-ActivatorName = "Cake"
 
 [node name="Sprite" type="Sprite" parent="Cake" index="3"]
 position = Vector2( 899.267, 629.009 )
