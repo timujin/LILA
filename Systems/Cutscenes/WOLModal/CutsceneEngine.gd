@@ -2,6 +2,11 @@ extends Node
 
 class_name CutsceneEngine
 
+signal cont
+
+func signal_cont():
+	emit_signal("cont")
+
 func clear_full():
 	ModeController.window.clear()
 

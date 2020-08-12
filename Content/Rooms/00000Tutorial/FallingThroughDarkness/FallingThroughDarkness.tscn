@@ -1,0 +1,130 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/Themes/PlaceholderLabels.tres" type="Theme" id=2]
+[ext_resource path="res://Content/Rooms/00000Tutorial/FallingThroughDarkness/Assets/FallingSilhouette.png" type="Texture" id=3]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+\"\"\"
+This is the room where the game starts in. The room is not supposed to be revisited, ever.
+
+The player, represented by his normal sillhouette, is depicted falling through prich darkness.
+
+Clicking anywhere starts the Falling cutscene.
+
+At the end of the cutscene, PC warps into 00000DivinePicnicCamp
+
+
+\"\"\"
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+
+
+func _on_Room_room_loaded():
+	HudButtons.hide()
+"
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0 )
+colors = PoolColorArray( 0, 0, 0, 1 )
+
+[sub_resource type="GradientTexture" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+
+func on_activate():
+	ModeController.start_interaction()
+	$Hello.execute()
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends CutsceneEngine
+
+func execute():
+	start_sequence()
+
+func start_sequence():
+	clear_player_choices()
+	choice_call(\"Continue...\", \"signal_cont\")
+	
+	shl(\"I am falling through the darkness.\");yield(self, \"cont\")
+	shl(\"I've been falling for as long as I remember. The memory of falling stretches \"+\\
+		\"infinitely into the past, like into a temporal vanishing point.\");yield(self, \"cont\")
+	shl(\"The past converges onto a singularity. There is nothing further back in \"+\\
+		\"the past than me falling.\");yield(self, \"cont\")
+	shl(\"No light. No sound. No sensation. It's been this way forever.\");yield(self, \"cont\")
+	shl(\"But then, once per eternity, just like a spontaneous bubble of order arises \"+\\
+		\"amidst an endless sea of chaos, by a fluke, a thought rises to my attention.\");yield(self, \"cont\")
+	shl(\"'Hey!' the thought says, 'Is this thing on? Think something so I can tell.'\");yield(self, \"cont\")
+	shl(\"'Uh. Hello?' I think out loud.\");yield(self, \"cont\")
+	shl(\"'Great! It works! I told you it would work!' the thought says gleefully.\")
+	shl(\"'So, listen to me, Spirit!' it continues.\");yield(self, \"cont\")
+	shl(\"[REST OF THE DIALOGUE NOT IMPLEMENTED YET]\")
+	choice_call(\"Wake up\", \"wake_up\")
+	
+func wake_up():
+	ModeController.stop_interaction()
+	RoomSwitcher.switch_to(\"00000DivinePicnicCamp\")
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Falling through darkness"
+roomID = "FallingThroughDarkness"
+
+[node name="Description" parent="." index="0"]
+script = SubResource( 1 )
+
+[node name="HideInventoryButton" type="Node" parent="." index="1"]
+script = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Background" index="0"]
+position = Vector2( 254.774, 183.041 )
+scale = Vector2( 2.60118, 2891.94 )
+texture = SubResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Filling" type="Node" parent="." index="5"]
+
+[node name="FallingSilhouette" type="Sprite" parent="Filling" index="0"]
+position = Vector2( -42.1312, -8.65784 )
+scale = Vector2( 1.61236, 1.61236 )
+texture = ExtResource( 3 )
+
+[node name="Label" type="Label" parent="Filling" index="1"]
+margin_left = 71.5662
+margin_top = -336.838
+margin_right = 396.566
+margin_bottom = -298.838
+theme = ExtResource( 2 )
+text = "Falling is animated"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="WholeAreaClick" parent="Filling" index="2" instance=ExtResource( 4 )]
+
+[node name="Activator" parent="Filling/WholeAreaClick" index="1"]
+script = SubResource( 5 )
+
+[node name="Hello" type="Node" parent="Filling/WholeAreaClick/Activator" index="0"]
+script = SubResource( 6 )
+
+[node name="Clickable" parent="Filling/WholeAreaClick" index="2"]
+ActivatorName = "WholeArea"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/WholeAreaClick/Clickable" index="0"]
+visible = false
+polygon = PoolVector2Array( -933.757, -542.794, -947.393, 676.67, 1000.63, 647.45, 1016.22, -544.742 )
+[connection signal="room_loaded" from="." to="HideInventoryButton" method="_on_Room_room_loaded"]
+
+[editable path="Filling/WholeAreaClick"]

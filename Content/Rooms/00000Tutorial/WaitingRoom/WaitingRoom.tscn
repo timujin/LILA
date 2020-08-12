@@ -117,8 +117,6 @@ func skip():
 [sub_resource type="GDScript" id=6]
 script/source = "extends CutsceneEngine
 
-signal cont
-
 onready var thought = null
 
 var nagging_thought_added = false
@@ -131,9 +129,6 @@ func execute(sequence = \"start_sequence\"):
 	thought = Character.inventory.add_item_by_id(\"NaggingThought\").icon
 	nagging_thought_added = true
 	start_sequence()
-	
-func signal_cont():
-	emit_signal(\"cont\")
 
 func skip():
 	if not nagging_thought_added:

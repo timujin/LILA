@@ -33,11 +33,24 @@ script/source = "extends Sprite
 
 func switch():
 	visible = not visible
-	$\"../OnOffPickler\".update(\"is_on\", visible)
+	#$\"../OnOffPickler\".update(\"is_on\", visible)
 
 
-func _on_OnOffPickler_unpickled(data):
-	visible = data[\"is_on\"]
+#func _on_OnOffPickler_unpickled(data):
+#	visible = data[\"is_on\"]
+
+func _ready():
+	print (\"!\"+str(self.is_in_group(\"serializable_room\")))
+
+
+func serialize():
+	return {
+		\"on\": visible
+	}
+	
+func deserialize(data):
+	assert( data.has(\"on\") )
+	visible = data[\"on\"]
 "
 
 [node name="Room" instance=ExtResource( 1 )]
@@ -59,9 +72,6 @@ position = Vector2( 939.081, 895.861 )
 
 [node name="CameraLimitRight" parent="Geometry" index="3"]
 position = Vector2( 4066.73, 485.039 )
-
-[node name="FirstPersonCamera" parent="." index="2"]
-position = Vector2( 781.321, 449.127 )
 
 [node name="Redroom" parent="." index="3" instance=ExtResource( 3 )]
 position = Vector2( 247.729, 405.675 )
@@ -86,6 +96,9 @@ position = Vector2( 297.802, -34.101 )
 [node name="Activator" parent="Greenroom" index="1"]
 script = SubResource( 2 )
 
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Greenroom/Clickable" index="0"]
+polygon = PoolVector2Array( 481.668, -200.703, 462.76, 30.2094, 744.026, 110.567, 794.449, -197.009 )
+
 [node name="Lamp" parent="." index="5" instance=ExtResource( 3 )]
 position = Vector2( 720.573, 538.118 )
 
@@ -94,6 +107,9 @@ position = Vector2( 176.995, -410.112 )
 
 [node name="Activator" parent="Lamp" index="1"]
 script = SubResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Lamp/Clickable" index="0"]
+polygon = PoolVector2Array( 40.5109, -360.079, -19.616, -204.752, 32.1599, -17.6899, 160.765, -7.66876, 332.795, -154.646, 327.784, -371.771, 95.6272, -483.674 )
 
 [node name="Lamp" type="Sprite" parent="Lamp" index="3"]
 position = Vector2( 127.35, -200.739 )
@@ -110,6 +126,33 @@ script = ExtResource( 6 )
 data = {
 "is_on": true
 }
+
+[node name="Lamp2" parent="." index="6" instance=ExtResource( 3 )]
+position = Vector2( 349.422, 722.668 )
+
+[node name="BlurbPoint" parent="Lamp2" index="0"]
+position = Vector2( 176.995, -410.112 )
+
+[node name="Activator" parent="Lamp2" index="1"]
+script = SubResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Lamp2/Clickable" index="0"]
+polygon = PoolVector2Array( 40.5109, -360.079, -19.616, -204.752, 32.1599, -17.6899, 160.765, -7.66876, 332.795, -154.646, 327.784, -371.771, 95.6272, -483.674 )
+
+[node name="Lamp" type="Sprite" parent="Lamp2" index="3"]
+position = Vector2( 127.35, -200.739 )
+texture = ExtResource( 4 )
+
+[node name="Halo" type="Sprite" parent="Lamp2" index="4" groups=[
+"serializable_room",
+]]
+position = Vector2( 135.864, -272.576 )
+scale = Vector2( 0.883643, 0.582174 )
+texture = ExtResource( 5 )
+script = SubResource( 4 )
+
+[node name="FirstPersonCamera" parent="." index="7"]
+position = Vector2( 781.321, 449.127 )
 [connection signal="unpickled" from="Lamp/OnOffPickler" to="Lamp/Halo" method="_on_OnOffPickler_unpickled"]
 
 [editable path="Redroom"]
@@ -117,3 +160,5 @@ data = {
 [editable path="Greenroom"]
 
 [editable path="Lamp"]
+
+[editable path="Lamp2"]

@@ -4,13 +4,13 @@
 
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Dogroom"
-roomID = "Dogroom"
+roomID = "FFFFFDogroom"
 
-[node name="Label" type="Label" parent="Background" index="0"]
-margin_left = 367.0
-margin_top = 203.0
-margin_right = 719.0
-margin_bottom = 479.0
+[node name="Label" type="Button" parent="Background" index="0"]
+margin_left = -211.314
+margin_top = -134.865
+margin_right = 140.686
+margin_bottom = 141.135
 text = "Invalid room
 Report to the developer"
 
