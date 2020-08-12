@@ -1,0 +1,145 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/PathArrow.jpeg" type="Texture" id=3]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/CaveEntrance.PNG" type="Texture" id=4]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/FreeFirewoodSign.png" type="Texture" id=5]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/stick.png" type="Texture" id=6]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=7]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node
+
+
+func on_activate():
+	RoomSwitcher.switch_to(\"00000DivineCave\")
+"
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+func activate():
+	RoomSwitcher.switch_to(\"00000DivinePond\")
+"
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+
+func activate():
+	RoomSwitcher.switch_to(\"00000DivinePicnicCamp\")
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Divine Cave Entrance"
+roomID = "00000DivineCaveEntrance"
+
+[node name="Grass" type="Sprite" parent="Background" index="0"]
+position = Vector2( -7.51428, 7.18942 )
+scale = Vector2( 0.726751, 0.63076 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Filling" type="Node" parent="." index="5"]
+
+[node name="CaveEntrance" parent="Filling" index="0" instance=ExtResource( 7 )]
+
+[node name="Activator" parent="Filling/CaveEntrance" index="1"]
+script = SubResource( 3 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/CaveEntrance/Clickable" index="0"]
+polygon = PoolVector2Array( -130.878, -324.29, -86.4634, -383.51, -17.9902, -426.074, 70.8397, -407.568, 107.852, -346.498, 81.9435, -305.784, -75.3596, -287.278 )
+
+[node name="CaveEntrance1" type="Sprite" parent="Filling/CaveEntrance" index="3"]
+position = Vector2( -1.71094, -357.192 )
+scale = Vector2( 0.726751, 0.63076 )
+texture = ExtResource( 4 )
+
+[node name="FreeFirewoodSign" type="Sprite" parent="Filling/CaveEntrance/CaveEntrance1" index="0"]
+position = Vector2( 184.225, -17.9102 )
+scale = Vector2( 0.324657, 0.34741 )
+texture = ExtResource( 5 )
+
+[node name="Sticks" type="Node" parent="Filling" index="1"]
+
+[node name="stick" type="Sprite" parent="Filling/Sticks" index="0"]
+position = Vector2( -19.2745, -230.409 )
+texture = ExtResource( 6 )
+
+[node name="stick2" type="Sprite" parent="Filling/Sticks" index="1"]
+position = Vector2( -10.8534, -203.041 )
+texture = ExtResource( 6 )
+
+[node name="stick3" type="Sprite" parent="Filling/Sticks" index="2"]
+position = Vector2( -6.64282, -179.883 )
+texture = ExtResource( 6 )
+
+[node name="stick4" type="Sprite" parent="Filling/Sticks" index="3"]
+position = Vector2( 1.29053, -146.562 )
+texture = ExtResource( 6 )
+
+[node name="stick5" type="Sprite" parent="Filling/Sticks" index="4"]
+position = Vector2( 4.46393, -110.069 )
+texture = ExtResource( 6 )
+
+[node name="stick6" type="Sprite" parent="Filling/Sticks" index="5"]
+position = Vector2( 4.46393, -60.8817 )
+texture = ExtResource( 6 )
+
+[node name="stick7" type="Sprite" parent="Filling/Sticks" index="6"]
+position = Vector2( 12.3973, -2.1745 )
+texture = ExtResource( 6 )
+
+[node name="stick8" type="Sprite" parent="Filling/Sticks" index="7"]
+position = Vector2( 13.984, 53.3593 )
+texture = ExtResource( 6 )
+
+[node name="stick9" type="Sprite" parent="Filling/Sticks" index="8"]
+position = Vector2( 23.5041, 104.133 )
+texture = ExtResource( 6 )
+
+[node name="stick10" type="Sprite" parent="Filling/Sticks" index="9"]
+position = Vector2( 33.0242, 159.667 )
+texture = ExtResource( 6 )
+
+[node name="stick11" type="Sprite" parent="Filling/Sticks" index="10"]
+position = Vector2( 33.0242, 208.854 )
+texture = ExtResource( 6 )
+
+[node name="PathArrowLeft" parent="Filling" index="2" instance=ExtResource( 7 )]
+
+[node name="Activator" parent="Filling/PathArrowLeft" index="1"]
+script = SubResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/PathArrowLeft/Clickable" index="0"]
+polygon = PoolVector2Array( -799.35, 182.054, -659.738, 179.838, -657.522, 329.423, -804.891, 326.099 )
+
+[node name="Sprite" type="Sprite" parent="Filling/PathArrowLeft" index="3"]
+position = Vector2( -729.157, 255.239 )
+rotation = -1.5708
+scale = Vector2( 0.132791, 0.0980954 )
+texture = ExtResource( 3 )
+
+[node name="PathArrowRight" parent="Filling" index="3" instance=ExtResource( 7 )]
+
+[node name="Activator" parent="Filling/PathArrowRight" index="1"]
+script = SubResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/PathArrowRight/Clickable" index="0"]
+polygon = PoolVector2Array( 544.6, 193.885, 544.6, 334.532, 738.915, 330.831, 738.915, 190.184 )
+
+[node name="Sprite" type="Sprite" parent="Filling/PathArrowRight" index="3"]
+position = Vector2( 642.967, 261.591 )
+rotation = 1.5708
+scale = Vector2( 0.123093, 0.131407 )
+texture = ExtResource( 3 )
+
+[editable path="Filling/CaveEntrance"]
+
+[editable path="Filling/PathArrowLeft"]
+
+[editable path="Filling/PathArrowRight"]

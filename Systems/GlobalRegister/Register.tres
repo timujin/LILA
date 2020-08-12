@@ -8,7 +8,10 @@ items = {
 "NaggingThought": "res://Content/Items/NaggingThought/NaggingThought.tscn"
 }
 rooms = {
+"00000DivineCave": "res://Content/Rooms/00000Tutorial/DivinePicnic/Cave.tscn",
+"00000DivineCaveEntrance": "res://Content/Rooms/00000Tutorial/DivinePicnic/CaveEntrance.tscn",
 "00000DivinePicnicCamp": "res://Content/Rooms/00000Tutorial/DivinePicnic/Camp.tscn",
+"00000DivinePond": "res://Content/Rooms/00000Tutorial/DivinePicnic/Pond.tscn",
 "00000WaitingRoom": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoom.tscn",
 "00000WaitingRoomWC": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoomWC.tscn",
 "CubeRoom": "res://Content/Rooms/FFFFFTestinghall/3Droom/Box.tscn",

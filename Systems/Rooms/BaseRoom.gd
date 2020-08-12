@@ -11,7 +11,7 @@ func _ready():
 	RoomSwitcher.room = self
 	call_deferred("move_to_back")
 	call_deferred("unpickle")
-	call_deferred("deserialize")
+	#call_deferred("deserialize")
 	call_deferred("emit_signal", "room_loaded")
 	
 func move_to_back():
