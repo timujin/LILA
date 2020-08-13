@@ -3,10 +3,6 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-\"\"\"
-This module is sort of obsolete\\redundant.
-Its main purpose is to tell if the player can scroll the room.
-\"\"\"
 
 signal reset
 signal mode_changed (mode)

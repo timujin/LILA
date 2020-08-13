@@ -5,17 +5,40 @@ script/source = "extends Node
 
 signal new_room_loaded
 
+signal deserialize_complete
+var room_deserialized setget set_room_deserialized
+
 func r(id:String):
 	return GlobalRegister.room(id)
+	
+class DeserializeNotifierComplete:
+	signal deserialize_complete
+	func run():
+		emit_signal(\"deserialize_complete\")
+		return self
+	
+var notifier setget , get_notifier
+
+func get_notifier():
+	if notifier == null:
+		notifier = DeserializeNotifierComplete.new()
+	notifier.call_deferred(\"run\")
+	return notifier
 
 #####################
 ## ROOM LOADING #####
 #####################
 
+func set_room_deserialized(value):
+	room_deserialized = value
+	if value:
+		emit_signal(\"deserialize_complete\")
+		notifier.run()
 
 var room:Node = null
 	
 func switch_room_obj(to_room):
+	room_deserialized = false
 	ModeController.reset()
 	$\"/root/Room\".pickle()
 	$\"/root/Room\".serialize()

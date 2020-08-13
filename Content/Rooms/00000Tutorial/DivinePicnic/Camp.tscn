@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
@@ -34,6 +34,67 @@ brings you back to the beginning. (this part NIY)
 "
 
 [sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+var first_visit = true
+
+func serialize():
+	print(\"Serializing\", first_visit)
+	return { \"first_visit\": first_visit }
+	
+func deserialize(data):
+	assert(data.has(\"first_visit\"))
+	first_visit = data[\"first_visit\"]
+
+
+func _ready():
+	call_deferred(\"run_cutscene\")
+	
+	
+func run_cutscene():
+	#if not RoomSwitcher.room_deserialized:
+	print(\"pre-yield\")
+	yield(RoomSwitcher.notifier, \"deserialize_complete\")
+	print(\"pre-post_yield\")
+	print(\"->\", first_visit)
+	first_visit = false
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "tool
+extends Node
+
+export(String, \"on_blanket\", \"standing\") var state setget set_state
+
+export(NodePath) var on_blanket
+export(NodePath) var standing
+	
+func set_state(new_state):
+	state = new_state
+	if not self.is_inside_tree():
+		call_deferred(\"set_state\", new_state)
+		return
+	get_node(on_blanket).visible = false
+	get_node(standing).visible = false
+	match new_state:
+		\"on_blanket\":
+			get_node(on_blanket).visible = true
+		\"standing\":
+			get_node(standing).visible = true
+		_:
+			assert(false)
+
+func serialize():
+	return {
+		\"state\": state
+	}
+	
+func deserialize(data):
+	assert(data.has(\"state\"))
+	set_state(data[\"state\"])
+"
+
+[sub_resource type="GDScript" id=4]
 script/source = "tool
 extends Node
 
@@ -73,7 +134,7 @@ func deserialize(data):
 	set_state(data[\"state\"])
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=5]
 script/source = "extends Node
 
 
@@ -81,7 +142,7 @@ func activate():
 	RoomSwitcher.switch_to(\"00000DivinePond\")
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=6]
 script/source = "extends Node
 
 
@@ -106,12 +167,41 @@ __meta__ = {
 
 [node name="Objects" type="Node" parent="." index="5"]
 
-[node name="Firepit" type="Node" parent="Objects" index="0"]
+[node name="FirstVisitCutscene" type="Node" parent="Objects" index="0" groups=[
+"serializable_room",
+]]
+script = SubResource( 2 )
+
+[node name="SpiritStateSwitcher" type="Node" parent="Objects" index="1" groups=[
+"serializable_room",
+]]
+script = SubResource( 3 )
+state = "on_blanket"
+on_blanket = NodePath("../PentagramBlanket/SpiritLyingDown")
+standing = NodePath("../SpiritStanding")
+
+[node name="PentagramBlanket" type="Sprite" parent="Objects" index="2"]
+position = Vector2( -336.635, -208.149 )
+scale = Vector2( 0.440703, 0.36682 )
+texture = ExtResource( 8 )
+
+[node name="SpiritLyingDown" type="Sprite" parent="Objects/PentagramBlanket" index="0"]
+position = Vector2( 22.1015, -10.6212 )
+scale = Vector2( 0.9223, 0.579082 )
+texture = ExtResource( 7 )
+
+[node name="SpiritStanding" type="Sprite" parent="Objects" index="3"]
+visible = false
+position = Vector2( -558.711, -208.149 )
+scale = Vector2( 0.136324, 0.383632 )
+texture = ExtResource( 7 )
+
+[node name="Firepit" type="Node" parent="Objects" index="4"]
 
 [node name="StateSwitcher" type="Node" parent="Objects/Firepit" index="0" groups=[
 "serializable_room",
 ]]
-script = SubResource( 2 )
+script = SubResource( 4 )
 state = "empty"
 
 [node name="empty_firepit" type="Sprite" parent="Objects/Firepit/StateSwitcher" index="0"]
@@ -129,41 +219,26 @@ visible = false
 position = Vector2( 27.6863, 28.3787 )
 texture = ExtResource( 4 )
 
-[node name="Eris" type="Sprite" parent="Objects" index="1"]
+[node name="Eris" type="Sprite" parent="Objects" index="5"]
 position = Vector2( 87.1511, -295.962 )
 texture = ExtResource( 6 )
 
-[node name="Aneris" type="Sprite" parent="Objects" index="2"]
+[node name="Aneris" type="Sprite" parent="Objects" index="6"]
 position = Vector2( -269.434, 164.429 )
 rotation = -3.05258
 scale = Vector2( 1.06783, 1.08671 )
 texture = ExtResource( 6 )
 
-[node name="BackpacksnTent" type="Sprite" parent="Objects" index="3"]
+[node name="BackpacksnTent" type="Sprite" parent="Objects" index="7"]
 position = Vector2( 311.614, 41.4117 )
 texture = ExtResource( 11 )
 
-[node name="PentagramBlanket" type="Sprite" parent="Objects" index="4"]
-position = Vector2( -336.635, -208.149 )
-scale = Vector2( 0.440703, 0.36682 )
-texture = ExtResource( 8 )
-
-[node name="SpiritLyingDown" type="Sprite" parent="Objects/PentagramBlanket" index="0"]
-position = Vector2( 22.1015, -10.6212 )
-scale = Vector2( 0.9223, 0.579082 )
-texture = ExtResource( 7 )
-
-[node name="SpiritStanding" type="Sprite" parent="Objects" index="5"]
-position = Vector2( -558.711, -208.149 )
-scale = Vector2( 0.136324, 0.383632 )
-texture = ExtResource( 7 )
-
-[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="6"]
+[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="8"]
 position = Vector2( 148.679, -132.664 )
 scale = Vector2( 0.0414562, 0.0368791 )
 texture = ExtResource( 10 )
 
-[node name="PathArrowRight" parent="Objects" index="7" instance=ExtResource( 12 )]
+[node name="PathArrowRight" parent="Objects" index="9" instance=ExtResource( 12 )]
 position = Vector2( 681.091, 17.4935 )
 rotation = 1.5708
 scale = Vector2( 0.098522, 0.12893 )
@@ -172,22 +247,21 @@ scale = Vector2( 0.098522, 0.12893 )
 position = Vector2( 35.6893, 13.6362 )
 
 [node name="Activator" parent="Objects/PathArrowRight" index="1"]
-script = SubResource( 3 )
+script = SubResource( 5 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/PathArrowRight/Clickable" index="0"]
 polygon = PoolVector2Array( -497.101, 751.648, -544.231, -724.739, 563.171, -748.749, 563.178, 751.646 )
 
 [node name="Sprite" type="Sprite" parent="Objects/PathArrowRight" index="3"]
-scale = Vector2( 1, 1 )
 texture = ExtResource( 9 )
 
-[node name="PathArrowLeft" parent="Objects" index="8" instance=ExtResource( 12 )]
+[node name="PathArrowLeft" parent="Objects" index="10" instance=ExtResource( 12 )]
 
 [node name="BlurbPoint" parent="Objects/PathArrowLeft" index="0"]
 position = Vector2( -698.805, 60.1431 )
 
 [node name="Activator" parent="Objects/PathArrowLeft" index="1"]
-script = SubResource( 4 )
+script = SubResource( 6 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/PathArrowLeft/Clickable" index="0"]
 polygon = PoolVector2Array( -791.277, 1.66992, -599.379, -2.19901, -601.7, 111.547, -791.277, 109.226 )
