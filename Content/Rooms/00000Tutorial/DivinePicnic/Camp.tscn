@@ -43,21 +43,18 @@ func serialize():
 	return { \"first_visit\": first_visit }
 	
 func deserialize(data):
+	print(\"Deserializing camp\", data)
 	assert(data.has(\"first_visit\"))
 	first_visit = data[\"first_visit\"]
 
 
 func _ready():
-	call_deferred(\"run_cutscene\")
-	
-	
-func run_cutscene():
-	#if not RoomSwitcher.room_deserialized:
-	print(\"pre-yield\")
 	yield(RoomSwitcher.notifier, \"deserialize_complete\")
-	print(\"pre-post_yield\")
+	print(\"RoomSwitcher.room_deserialized\", RoomSwitcher.room_deserialized)
 	print(\"->\", first_visit)
 	first_visit = false
+	
+	
 "
 
 [sub_resource type="GDScript" id=3]

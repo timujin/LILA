@@ -18,8 +18,6 @@ func move_to_back():
 
 
 func deserialize():
-	print("!!!@!")
-	#Character.pickles.pickle("", "", {})
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
 		var data = Character.objects.deserialize($"/root/Room".roomID, object.get_path(), {})
@@ -29,7 +27,6 @@ func deserialize():
 	call_deferred("emit_signal", "room_loaded")
 
 func serialize():
-	print ("All seriazlied")
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
 		Character.objects.serialize($"/root/Room".roomID, object.get_path(), object.serialize())

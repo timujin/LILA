@@ -6,7 +6,7 @@ script/source = "extends Node
 signal new_room_loaded
 
 signal deserialize_complete
-var room_deserialized setget set_room_deserialized
+var room_deserialized = false setget set_room_deserialized
 
 func r(id:String):
 	return GlobalRegister.room(id)
@@ -14,6 +14,7 @@ func r(id:String):
 class DeserializeNotifierComplete:
 	signal deserialize_complete
 	func run():
+		print(\"deserialize complere!\")
 		emit_signal(\"deserialize_complete\")
 		return self
 	
