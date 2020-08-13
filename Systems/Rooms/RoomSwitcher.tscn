@@ -5,59 +5,68 @@ script/source = "extends Node
 
 signal new_room_loaded
 
-signal deserialize_complete
 var room_deserialized = false setget set_room_deserialized
 
 func r(id:String):
 	return GlobalRegister.room(id)
 	
-class DeserializeNotifierComplete:
-	signal deserialize_complete
-	func run():
-		print(\"deserialize complere!\")
-		emit_signal(\"deserialize_complete\")
-		return self
-	
-var notifier setget , get_notifier
-
-func get_notifier():
-	if notifier == null:
-		notifier = DeserializeNotifierComplete.new()
-	notifier.call_deferred(\"run\")
-	return notifier
-
 #####################
 ## ROOM LOADING #####
 #####################
+
+func _ready():
+	init_notifier()
+	$\"/root/Room\".connect(\"room_loaded\", self, \"on_room_loaded\")
+	
+class LoadedNotifier:
+	signal room_fully_loaded
+	func poke():
+		emit_signal(\"room_fully_loaded\")
+	
+var notifier setget , get_notifier
+
+func init_notifier():
+	if notifier == null: notifier = LoadedNotifier.new()
+
+func get_notifier():
+	init_notifier()
+	if room_deserialized:
+		notifier.call_deferred(\"poke\")
+	return notifier
+		
+		
+func on_room_loaded():
+	room_deserialized = true
+	init_notifier()
+	notifier.poke()
+
 
 func set_room_deserialized(value):
 	room_deserialized = value
 	if value:
 		emit_signal(\"deserialize_complete\")
-		notifier.run()
 
 var room:Node = null
 	
-func switch_room_obj(to_room):
+func _switch_room_obj(to_room):
 	room_deserialized = false
 	ModeController.reset()
-	$\"/root/Room\".pickle()
+	#$\"/root/Room\".pickle()
 	$\"/root/Room\".serialize()
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
+	room.connect(\"room_loaded\", self, \"on_room_loaded\")
 
 func switch_to(id:String):
-	#Character.variables.set_value(\"attempted_load_room\", id)
 	var roomscene = r(id)
 	if roomscene == null:
 		printerr(\"!!! Room not found!: \" + id)
 		assert(false)
-		#DeveloperConsole.echo(\"!!! Room not found!: \" + id)
 		pass
 	else:
-		switch_room_obj(roomscene)
+		_switch_room_obj(roomscene)
 "
 
 [node name="RoomSwitcher" type="Node"]

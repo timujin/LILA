@@ -9,13 +9,13 @@ export var roomID:String   = "[ID NOT SET]"
 
 func _ready():
 	RoomSwitcher.room = self
-	call_deferred("move_to_back")
-	#call_deferred("unpickle")
+	get_parent().move_child(self,0)#call_deferred("move_to_back")
 	call_deferred("deserialize")
-	
-func move_to_back():
-	get_parent().move_child(self,0)
 
+#func move_to_back():
+#	get_parent().move_child(self,0)
+
+var deserialization_complete = false
 
 func deserialize():
 	var objects = get_tree().get_nodes_in_group("serializable_room")
@@ -42,6 +42,8 @@ func pickle():
 	var picklers = get_tree().get_nodes_in_group("picklers")
 	for pickler in picklers:
 		pickler.pickle()
+
+###############################
 
 
 func _on_Room_room_loaded():

@@ -49,7 +49,8 @@ func deserialize(data):
 
 
 func _ready():
-	yield(RoomSwitcher.notifier, \"deserialize_complete\")
+	#print(RoomSwitcher)
+	yield(RoomSwitcher.notifier, \"room_fully_loaded\")
 	print(\"RoomSwitcher.room_deserialized\", RoomSwitcher.room_deserialized)
 	print(\"->\", first_visit)
 	first_visit = false
