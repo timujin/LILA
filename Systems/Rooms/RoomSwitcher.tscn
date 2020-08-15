@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Rooms/SwitcherLoadingScreen.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -59,16 +61,22 @@ func _switch_room_obj(to_room):
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
 	room.connect(\"room_loaded\", self, \"on_room_loaded\")
+	room.connect(\"room_loaded\", $LoadingScreen, \"set_visible\", [false])
 
 func switch_to(id:String):
+	$LoadingScreen.visible = true
+	yield(get_tree(), \"idle_frame\")
+	yield(get_tree(), \"idle_frame\")
 	var roomscene = r(id)
 	if roomscene == null:
+		$LoadingScreen.visible = false
 		printerr(\"!!! Room not found!: \" + id)
 		assert(false)
-		pass
 	else:
 		_switch_room_obj(roomscene)
 "
 
 [node name="RoomSwitcher" type="Node"]
 script = SubResource( 1 )
+
+[node name="LoadingScreen" parent="." instance=ExtResource( 1 )]

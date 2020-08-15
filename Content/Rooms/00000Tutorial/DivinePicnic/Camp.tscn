@@ -51,11 +51,11 @@ func deserialize(data):
 func _ready():
 	yield(RoomSwitcher.notifier, \"room_fully_loaded\")
 	if first_visit:
-		OverrideInteraction.bring_me_up(self)
+		pass #OverrideInteraction.bring_me_up(self)
 	first_visit = false
 	
 func activate():
-	ModeController.start_interaction()
+	ModeController.start_interaction(true)
 	self.execute()
 
 func execute():
