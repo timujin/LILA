@@ -1,6 +1,6 @@
 extends Node
 
-class_name CutsceneEngine
+class_name CutsceneEngineOld
 
 signal cont
 

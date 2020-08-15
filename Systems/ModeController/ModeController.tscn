@@ -60,13 +60,18 @@ func stop_cutscene():
 
 var window
 
-func start_interaction():
+func start_interaction(left:bool):
 	reset()
 	set_hud_hidden(true)
 	set_mode(INTERACTION)
 	#window = preload(\"res://Systems/Cutscenes/WOLModal/WOLModal.tscn\").instance()
 	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
 	get_node(\"/root\").add_child(window)
+	if left:
+		window.display_to_the_left()
+	else:
+		window.display_to_the_right()
+		
 	return window
 	
 func stop_interaction():

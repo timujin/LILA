@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Systems/Cutscenes/SideDialogue/ItemGetLost.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/Placeholders/advancedunholystrength.png" type="Texture" id=3]
 [ext_resource path="res://Systems/Cutscenes/SideDialogue/Choice.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Systems/Cutscenes/SideDialogue/HeadSayItem.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
@@ -17,20 +16,38 @@ func clear():
 	for child in events_container.get_children():
 		child.queue_free()
 	clear_pc()
+	set_speaker_userpic(null)
 		
 func clear_pc():
 	for child in choices_container.get_children():
 		child.queue_free()
 	
-func _ready(): pass
-	#clear()
-	#close_item_popup()
+func _ready(): 
+	#$Base.swap_to_left()
+	#add_item_get(load(\"res://Assets/Placeholders/advancedcreaturecarapace.png\"), \"blah blash\", \"blahfds\")
+	clear()
+	close_item_popup()
+	
+func set_speaker_userpic(icon:Texture):
+	$\"Base/LeftieSpeaker\".texture = icon
+	$\"Base/RightieSpeaker\".texture = icon
+	
 	
 func open_item_popup():
 	item_popup.open(true)
 	
 func close_item_popup():
 	item_popup.close()
+	
+func display_to_the_left():
+	$Base.swap_to_left()
+	$\"Base/LeftieSpeaker\".visible = true
+	$\"Base/RightieSpeaker\".visible = false
+	
+func display_to_the_right():
+	$Base.swap_to_right()
+	$\"Base/LeftieSpeaker\".visible = false
+	$\"Base/RightieSpeaker\".visible = true
 	
 	
 # Scrolling anim
@@ -220,6 +237,7 @@ anims/scroll_to_bottom = SubResource( 3 )
 [node name="ScrollContainer" type="ScrollContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = 20.0
 margin_bottom = -286.0
 follow_focus = true
 scroll_horizontal_enabled = false
@@ -229,30 +247,14 @@ __meta__ = {
 
 [node name="Says" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer"]
 margin_right = 362.0
-margin_bottom = 551.0
-rect_min_size = Vector2( 0, 551 )
+margin_bottom = 531.0
+rect_min_size = Vector2( 0, 500 )
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Control5" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
-anchor_right = 0.0
-margin_right = 362.0
-
-[node name="HeadSayItem" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 3 )]
-anchor_right = 0.0
-margin_top = 104.0
-margin_right = 362.0
-margin_bottom = 204.0
-
-[node name="Control4" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
-anchor_right = 0.0
-margin_top = 208.0
-margin_right = 362.0
-margin_bottom = 308.0
 
 [node name="HSeparator" type="HSeparator" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_top = 0.5
@@ -280,41 +282,105 @@ margin_right = 362.0
 
 [node name="Choice6" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 49.0
+margin_top = 29.0
 margin_right = 362.0
-margin_bottom = 94.0
+margin_bottom = 54.0
 
 [node name="Choice7" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 98.0
+margin_top = 58.0
 margin_right = 362.0
-margin_bottom = 143.0
+margin_bottom = 83.0
+
+[node name="PanelContainer" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer" index="0"]
+margin_right = 162.0
+margin_bottom = 23.0
+
+[node name="HBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer/PanelContainer" index="0"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 160.0
+margin_bottom = 21.0
+
+[node name="Control2" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer/PanelContainer/HBoxContainer" index="0"]
+margin_bottom = 19.0
+
+[node name="Button" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer/PanelContainer/HBoxContainer" index="1"]
+margin_right = 144.0
+margin_bottom = 19.0
+text = "I want to learn about"
+
+[node name="Control" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer/PanelContainer/HBoxContainer" index="2"]
+margin_left = 148.0
+margin_right = 158.0
+margin_bottom = 19.0
+
+[node name="Control" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer" index="1"]
+margin_left = 166.0
+margin_right = 166.0
+margin_bottom = 23.0
+
+[node name="ReqContainer" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/HBoxContainer/Control/MarginContainer" index="0"]
+margin_right = 377.0
+margin_bottom = 23.0
+
+[node name="Label" parent="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7/Popup/MarginContainer" index="0"]
+margin_left = 25.0
+margin_right = 285.0
 
 [node name="Choice3" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 147.0
+margin_top = 87.0
 margin_right = 362.0
-margin_bottom = 192.0
+margin_bottom = 112.0
 
 [node name="Choice4" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 196.0
+margin_top = 116.0
 margin_right = 362.0
-margin_bottom = 241.0
+margin_bottom = 141.0
 
 [node name="Choice5" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 245.0
+margin_top = 145.0
 margin_right = 362.0
-margin_bottom = 290.0
+margin_bottom = 170.0
 
 [node name="Choice2" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 294.0
+margin_top = 174.0
 margin_right = 362.0
-margin_bottom = 339.0
+margin_bottom = 199.0
+
+[node name="LeftieSpeaker" type="TextureRect" parent="Base"]
+anchor_left = 1.0
+anchor_top = 0.374
+anchor_right = 1.0
+anchor_bottom = 0.374
+margin_left = 30.828
+margin_top = -149.638
+margin_right = 330.828
+margin_bottom = 150.362
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightieSpeaker" type="TextureRect" parent="Base"]
+anchor_top = 0.374
+anchor_bottom = 0.374
+margin_left = -337.464
+margin_top = -148.472
+margin_right = -37.4644
+margin_bottom = 151.528
+texture = ExtResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="item_rect_changed" from="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" to="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" method="_on_Says_item_rect_changed"]
 
 [editable path="Inventory"]
 
-[editable path="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says/HeadSayItem"]
+[editable path="Base/ScrollContainer/MarginContainer/Control/Responses/Choice7"]
