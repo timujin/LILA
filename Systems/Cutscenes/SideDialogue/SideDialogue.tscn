@@ -2,9 +2,9 @@
 
 [ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
 [ext_resource path="res://Systems/WorldspaceMenus/HUDButtons/Inventory/UseItemPopup.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Systems/Cutscenes/WOLModal/ItemGetLost.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Systems/Cutscenes/WOLModal/Choice.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Systems/Cutscenes/SideDialogue/ItemGetLost.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Systems/Cutscenes/SideDialogue/Choice.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Systems/Cutscenes/SideDialogue/HeadSayItem.tscn" type="PackedScene" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends CanvasLayer
@@ -22,9 +22,9 @@ func clear_pc():
 	for child in choices_container.get_children():
 		child.queue_free()
 	
-func _ready():
-	clear()
-	close_item_popup()
+func _ready(): pass
+	#clear()
+	#close_item_popup()
 	
 func open_item_popup():
 	item_popup.open(true)
@@ -66,7 +66,8 @@ func _physics_process (delta):
 
 
 func add_talking_head(icon:Texture, text:String):
-	var item = preload(\"res://Systems/Cutscenes/WOLModal/HeadSayItem.tscn\").instance()
+	print(\"Talking head added: \", text)
+	var item = preload(\"res://Systems/Cutscenes/SideDialogue/HeadSayItem.tscn\").instance()
 	self.add_child(item)
 	item.set_icon(icon)
 	item.set_text(text)
@@ -79,7 +80,7 @@ func add_talking_head(icon:Texture, text:String):
 	return item
 
 func add_choice_record(text:String):
-	var item = preload(\"res://Systems/Cutscenes/WOLModal/ChoiceRecord.tscn\").instance()
+	var item = preload(\"res://Systems/Cutscenes/SideDialogue/ChoiceRecord.tscn\").instance()
 	events_container.add_child(item)
 	item.set_text (text)
 	events_container.move_child(item, events_container.get_child_count()-2)
@@ -87,14 +88,14 @@ func add_choice_record(text:String):
 	return item
 	
 func add_item_get(icon:Texture, gettext:String, nametext:String):
-	var item = preload(\"res://Systems/Cutscenes/WOLModal/ItemGetLost.tscn\").instance()
+	var item = preload(\"res://Systems/Cutscenes/SideDialogue/ItemGetLost.tscn\").instance()
 	events_container.add_child(item)
 	item.set_icon(icon)
 	item.set_get_text(gettext)
 	item.set_item_name(nametext)
 	
 func add_choice(text:String):
-	var item = preload(\"res://Systems/Cutscenes/WOLModal/Choice.tscn\").instance()
+	var item = preload(\"res://Systems/Cutscenes/SideDialogue/Choice.tscn\").instance()
 	choices_container.add_child(item)
 	choices_container.move_child(item,  choices_container.get_child_count()-1)
 	item.set_text(text)
@@ -102,8 +103,38 @@ func add_choice(text:String):
 	return item
 "
 
-[sub_resource type="Animation" id=2]
-resource_name = "scroll_to_bottom"
+[sub_resource type="GDScript" id=2]
+script/source = "extends Panel
+
+
+func swap_to_left():
+	self.anchor_bottom = 1
+	self.anchor_top = 0
+	self.anchor_left = 0
+	self.anchor_right = 0
+	self.rect_position = Vector2(30, 30)
+
+func swap_to_right():
+	self.anchor_bottom = 1
+	self.anchor_top = 0
+	self.anchor_left = 1
+	self.anchor_right = 1
+	self.rect_position = Vector2(get_viewport().size.x - 30 - self.rect_size.x, 30)
+
+\"\"\"
+var left = false
+func _input(event):
+	if event.is_action_pressed(\"dismiss\"):
+		if left:
+			left = false
+			swap_to_right()
+		else:
+			left = true
+			swap_to_left()
+\"\"\"
+"
+
+[sub_resource type="Animation" id=3]
 length = 10.0
 tracks/0/type = "value"
 tracks/0/path = NodePath("ScrollContainer:scroll_vertical")
@@ -121,22 +152,6 @@ tracks/0/keys = {
 [sub_resource type="GDScript" id=4]
 script/source = "extends VBoxContainer
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
 func _on_Says_item_rect_changed():
 	if self.rect_size.y > get_parent().rect_size.y:
 		self.alignment = ALIGN_END
@@ -144,10 +159,7 @@ func _on_Says_item_rect_changed():
 		self.alignment = ALIGN_BEGIN
 "
 
-[sub_resource type="StreamTexture" id=3]
-flags = 4
-
-[node name="WOLModal" type="CanvasLayer"]
+[node name="SideDialogue" type="CanvasLayer"]
 layer = 10
 script = SubResource( 1 )
 
@@ -157,8 +169,11 @@ layer = 30
 [node name="Modal" parent="Inventory" index="0"]
 visible = false
 
+[node name="CategoriesContainer" parent="Inventory/Modal/Window/CategoriesPanel/ScrollContainer" index="0"]
+margin_bottom = 42.0
+
 [node name="BackgroundShade" type="Panel" parent="."]
-modulate = Color( 1, 1, 1, 0.34902 )
+self_modulate = Color( 1, 1, 1, 0 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -166,15 +181,15 @@ __meta__ = {
 }
 
 [node name="Base" type="Panel" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -529.0
-margin_top = -418.5
-margin_right = 529.0
-margin_bottom = 418.5
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -440.0
+margin_top = 30.0
+margin_right = -28.0
+margin_bottom = -33.0
 theme = ExtResource( 1 )
+script = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -189,18 +204,18 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="Base/ScrollContainer"]
-margin_right = 1058.0
+margin_right = 412.0
 margin_bottom = 837.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Control" type="Control" parent="Base/ScrollContainer/MarginContainer"]
-margin_left = 50.0
-margin_right = 1008.0
+margin_left = 25.0
+margin_right = 387.0
 margin_bottom = 837.0
 
 [node name="SmoothScroller" type="AnimationPlayer" parent="Base/ScrollContainer/MarginContainer/Control"]
-anims/scroll_to_bottom = SubResource( 2 )
+anims/scroll_to_bottom = SubResource( 3 )
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Base/ScrollContainer/MarginContainer/Control"]
 anchor_right = 1.0
@@ -213,7 +228,7 @@ __meta__ = {
 }
 
 [node name="Says" type="VBoxContainer" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer"]
-margin_right = 958.0
+margin_right = 362.0
 margin_bottom = 551.0
 rect_min_size = Vector2( 0, 551 )
 size_flags_horizontal = 3
@@ -225,18 +240,18 @@ __meta__ = {
 
 [node name="Control5" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
 anchor_right = 0.0
-margin_right = 958.0
+margin_right = 362.0
 
 [node name="HeadSayItem" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 3 )]
 anchor_right = 0.0
 margin_top = 104.0
-margin_right = 958.0
+margin_right = 362.0
 margin_bottom = 204.0
 
 [node name="Control4" parent="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" instance=ExtResource( 6 )]
 anchor_right = 0.0
 margin_top = 208.0
-margin_right = 958.0
+margin_right = 362.0
 margin_bottom = 308.0
 
 [node name="HSeparator" type="HSeparator" parent="Base/ScrollContainer/MarginContainer/Control"]
@@ -253,44 +268,51 @@ __meta__ = {
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -269.0
+margin_top = -266.485
+margin_bottom = -25.4849
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Choice" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_right = 958.0
+margin_right = 362.0
+
+[node name="Choice6" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_top = 49.0
+margin_right = 362.0
+margin_bottom = 94.0
+
+[node name="Choice7" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
+anchor_right = 0.0
+margin_top = 98.0
+margin_right = 362.0
+margin_bottom = 143.0
 
 [node name="Choice3" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 49.0
-margin_right = 958.0
-margin_bottom = 94.0
+margin_top = 147.0
+margin_right = 362.0
+margin_bottom = 192.0
 
 [node name="Choice4" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 98.0
-margin_right = 958.0
-margin_bottom = 143.0
+margin_top = 196.0
+margin_right = 362.0
+margin_bottom = 241.0
 
 [node name="Choice5" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 147.0
-margin_right = 958.0
-margin_bottom = 192.0
+margin_top = 245.0
+margin_right = 362.0
+margin_bottom = 290.0
 
 [node name="Choice2" parent="Base/ScrollContainer/MarginContainer/Control/Responses" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 196.0
-margin_right = 958.0
-margin_bottom = 241.0
-
-[node name="Capture" type="Sprite" parent="."]
-modulate = Color( 1, 1, 1, 0.184314 )
-position = Vector2( 2586.35, 464.416 )
-scale = Vector2( 1.18049, 1.12171 )
-texture = SubResource( 3 )
+margin_top = 294.0
+margin_right = 362.0
+margin_bottom = 339.0
 [connection signal="item_rect_changed" from="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" to="Base/ScrollContainer/MarginContainer/Control/ScrollContainer/Says" method="_on_Says_item_rect_changed"]
 
 [editable path="Inventory"]

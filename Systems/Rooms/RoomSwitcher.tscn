@@ -16,6 +16,7 @@ func r(id:String):
 
 func _ready():
 	init_notifier()
+	if $\"/root/Room\" == null: return # debug mode
 	$\"/root/Room\".connect(\"room_loaded\", self, \"on_room_loaded\")
 	
 class LoadedNotifier:

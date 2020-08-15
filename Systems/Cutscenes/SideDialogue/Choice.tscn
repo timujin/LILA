@@ -11,7 +11,7 @@ onready var btn = $HBoxContainer/PanelContainer/HBoxContainer/Button
 onready var reqs_box = $HBoxContainer/Control/MarginContainer/ReqContainer
 onready var popup = $Popup
 onready var popup_text = $Popup/MarginContainer/Label
-onready var req_prefab = preload(\"res://Systems/Cutscenes/WOLModal/ReqIcon.tscn\")
+onready var req_prefab = preload(\"res://Systems/Cutscenes/SideDialogue/ReqIcon.tscn\")
 
 func set_text(text:String):
 	btn.text = text

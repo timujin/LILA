@@ -49,6 +49,7 @@ layer = 8
 script = SubResource( 1 )
 
 [node name="Panel" type="Button" parent="."]
+self_modulate = Color( 1, 1, 1, 0.2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
@@ -57,13 +58,13 @@ __meta__ = {
 
 [node name="TextureRect" type="TextureRect" parent="Panel"]
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -50.0
-margin_top = -187.905
-margin_right = 50.0
-margin_bottom = -87.9048
+anchor_bottom = 0.5
+margin_left = -104.5
+margin_top = -104.5
+margin_right = 104.5
+margin_bottom = 104.5
 rect_scale = Vector2( 0.908097, 0.908097 )
 rect_pivot_offset = Vector2( 50.2747, 49.1145 )
 texture = ExtResource( 1 )

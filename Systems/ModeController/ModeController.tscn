@@ -64,7 +64,8 @@ func start_interaction():
 	reset()
 	set_hud_hidden(true)
 	set_mode(INTERACTION)
-	window = preload(\"res://Systems/Cutscenes/WOLModal/WOLModal.tscn\").instance()
+	#window = preload(\"res://Systems/Cutscenes/WOLModal/WOLModal.tscn\").instance()
+	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
 	get_node(\"/root\").add_child(window)
 	return window
 	

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/noun_Thought Bubble_1545188.png-4908c0684dc27ec56b079b1755871bf8.stex"
+path="res://.import/noun_Thought Bubble_1545188.png-bb46bc06501016e267471a07e11f777d.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Systems/Cutscenes/WOLModal/noun_Thought Bubble_1545188.png"
-dest_files=[ "res://.import/noun_Thought Bubble_1545188.png-4908c0684dc27ec56b079b1755871bf8.stex" ]
+source_file="res://Systems/Cutscenes/SideDialogue/noun_Thought Bubble_1545188.png"
+dest_files=[ "res://.import/noun_Thought Bubble_1545188.png-bb46bc06501016e267471a07e11f777d.stex" ]
 
 [params]
 

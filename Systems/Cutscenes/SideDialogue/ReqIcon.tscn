@@ -26,9 +26,9 @@ func set_fulfilled(is_fulfilled:bool):
 "
 
 [node name="ReqIcon" type="Panel"]
-margin_right = 45.0
-margin_bottom = 45.0
-rect_min_size = Vector2( 45, 45 )
+margin_right = 22.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 22, 22 )
 mouse_filter = 1
 theme = SubResource( 2 )
 script = SubResource( 3 )
@@ -41,10 +41,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
+margin_left = -11.3507
+margin_top = -10.9826
+margin_right = 10.6493
+margin_bottom = 11.0174
 texture = ExtResource( 1 )
 expand = true
 __meta__ = {
@@ -52,15 +52,14 @@ __meta__ = {
 }
 
 [node name="Cross" type="TextureRect" parent="."]
-visible = false
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
+margin_left = -11.1667
+margin_top = -10.7986
+margin_right = 10.8333
+margin_bottom = 11.2014
 texture = ExtResource( 2 )
 expand = true
 __meta__ = {
