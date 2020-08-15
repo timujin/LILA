@@ -1,6 +1,6 @@
 extends Node
 
-class_name CutsceneEngineOld
+class_name CutsceneEngine
 
 signal cont
 
@@ -39,6 +39,12 @@ func open_item_popup(filter, callback):
 	ModeController.window.open_item_popup()
 	ModeController.window.item_popup.set_filter(self, filter)
 	ModeController.window.item_popup.connect("item_selected", self, callback)
+	
+func start_cutscene_left():
+	ModeController.start_interaction(true)
+	
+func start_cutscene_right():
+	ModeController.start_interaction(false)
 	
 func end_cutscene():
 	 ModeController.stop_interaction()

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Systems/Character/Inventory/BaseItem.tscn" type="PackedScene" id=1]
+
+[node name="Item" instance=ExtResource( 1 )]
+id = "00000GetFirewood"
+display_name = "Gather some firewood"
+description = "For the picnic"
+category = "Quests"
+countable = false

@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource( 1 )
 items = {
+"00000GetFirewood": "res://Content/Items/Quests/00000GetFirewood/00000GetFirewood.tscn",
 "ButterKnife": "res://Content/Items/Tools/ButterKnife/ButterKnife.tscn",
 "CreatureLoreSuit": "res://Content/Items/CreatureLore/Suit/Suit.tscn",
 "NaggingThought": "res://Content/Items/NaggingThought/NaggingThought.tscn",

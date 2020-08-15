@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
@@ -51,20 +51,44 @@ func deserialize(data):
 func _ready():
 	yield(RoomSwitcher.notifier, \"room_fully_loaded\")
 	if first_visit:
-		pass #OverrideInteraction.bring_me_up(self)
+		$Timer.start()
 	first_visit = false
 	
 func activate():
-	ModeController.start_interaction(true)
+	ModeController.start_interaction(false)
 	self.execute()
 
 func execute():
 	clear_player_choices()
 	shl(\"Blah blah am sleeping\")
 	choice_call(\"Wake up\", \"wake_up\")
+	choice_call(\"Pretend to be asleep\", \"pretend_to_be_asleep\")
 	
 func wake_up():
 	ModeController.stop_interaction()
+	$\"../SpiritStateSwitcher\".set_state(\"standing\")
+	$\"../WakeUpCutscene\".run()
+
+func pretend_to_be_asleep():
+	end_cutscene()
+	
+
+
+func _on_Timer_timeout():
+	activate()
+"
+
+[sub_resource type="GDScript" id=7]
+script/source = "extends CutsceneEngine
+
+
+func run():
+	start_cutscene_right()
+	shl(\"Blah blah wow you're awake.\")
+	shl(\"Can you get us some firewood?\")
+	var quest = Character.inventory.add_item_by_id(\"00000GetFirewood\",false)
+	add_item_get(quest.icon, \"New task received:\", \"Gather some firewood\")
+	choice_call(\"OKIE DOKIE\", \"end_cutscene\")
 "
 
 [sub_resource type="GDScript" id=3]
@@ -179,7 +203,14 @@ __meta__ = {
 ]]
 script = SubResource( 2 )
 
-[node name="SpiritStateSwitcher" type="Node" parent="Objects" index="1" groups=[
+[node name="Timer" type="Timer" parent="Objects/FirstVisitCutscene" index="0"]
+wait_time = 0.5
+one_shot = true
+
+[node name="WakeUpCutscene" type="Node" parent="Objects" index="1"]
+script = SubResource( 7 )
+
+[node name="SpiritStateSwitcher" type="Node" parent="Objects" index="2" groups=[
 "serializable_room",
 ]]
 script = SubResource( 3 )
@@ -187,7 +218,7 @@ state = "on_blanket"
 on_blanket = NodePath("../PentagramBlanket/SpiritLyingDown")
 standing = NodePath("../SpiritStanding")
 
-[node name="PentagramBlanket" type="Sprite" parent="Objects" index="2"]
+[node name="PentagramBlanket" type="Sprite" parent="Objects" index="3"]
 position = Vector2( -336.635, -208.149 )
 scale = Vector2( 0.440703, 0.36682 )
 texture = ExtResource( 8 )
@@ -197,13 +228,13 @@ position = Vector2( 22.1015, -10.6212 )
 scale = Vector2( 0.9223, 0.579082 )
 texture = ExtResource( 7 )
 
-[node name="SpiritStanding" type="Sprite" parent="Objects" index="3"]
+[node name="SpiritStanding" type="Sprite" parent="Objects" index="4"]
 visible = false
 position = Vector2( -558.711, -208.149 )
 scale = Vector2( 0.136324, 0.383632 )
 texture = ExtResource( 7 )
 
-[node name="Firepit" type="Node" parent="Objects" index="4"]
+[node name="Firepit" type="Node" parent="Objects" index="5"]
 
 [node name="StateSwitcher" type="Node" parent="Objects/Firepit" index="0" groups=[
 "serializable_room",
@@ -226,26 +257,26 @@ visible = false
 position = Vector2( 27.6863, 28.3787 )
 texture = ExtResource( 4 )
 
-[node name="Eris" type="Sprite" parent="Objects" index="5"]
+[node name="Eris" type="Sprite" parent="Objects" index="6"]
 position = Vector2( 87.1511, -295.962 )
 texture = ExtResource( 6 )
 
-[node name="Aneris" type="Sprite" parent="Objects" index="6"]
+[node name="Aneris" type="Sprite" parent="Objects" index="7"]
 position = Vector2( -269.434, 164.429 )
 rotation = -3.05258
 scale = Vector2( 1.06783, 1.08671 )
 texture = ExtResource( 6 )
 
-[node name="BackpacksnTent" type="Sprite" parent="Objects" index="7"]
+[node name="BackpacksnTent" type="Sprite" parent="Objects" index="8"]
 position = Vector2( 311.614, 41.4117 )
 texture = ExtResource( 11 )
 
-[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="8"]
+[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="9"]
 position = Vector2( 148.679, -132.664 )
 scale = Vector2( 0.0414562, 0.0368791 )
 texture = ExtResource( 10 )
 
-[node name="PathArrowRight" parent="Objects" index="9" instance=ExtResource( 12 )]
+[node name="PathArrowRight" parent="Objects" index="10" instance=ExtResource( 12 )]
 position = Vector2( 681.091, 17.4935 )
 rotation = 1.5708
 scale = Vector2( 0.098522, 0.12893 )
@@ -262,7 +293,7 @@ polygon = PoolVector2Array( -497.101, 751.648, -544.231, -724.739, 563.171, -748
 [node name="Sprite" type="Sprite" parent="Objects/PathArrowRight" index="3"]
 texture = ExtResource( 9 )
 
-[node name="PathArrowLeft" parent="Objects" index="10" instance=ExtResource( 12 )]
+[node name="PathArrowLeft" parent="Objects" index="11" instance=ExtResource( 12 )]
 
 [node name="BlurbPoint" parent="Objects/PathArrowLeft" index="0"]
 position = Vector2( -698.805, 60.1431 )
@@ -278,6 +309,7 @@ position = Vector2( -696.005, 55.2566 )
 rotation = -1.5708
 scale = Vector2( 0.098522, 0.12893 )
 texture = ExtResource( 9 )
+[connection signal="timeout" from="Objects/FirstVisitCutscene/Timer" to="Objects/FirstVisitCutscene" method="_on_Timer_timeout"]
 
 [editable path="Objects/PathArrowRight"]
 
