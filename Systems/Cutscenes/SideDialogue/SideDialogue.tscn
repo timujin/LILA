@@ -23,8 +23,6 @@ func clear_pc():
 		child.queue_free()
 	
 func _ready(): 
-	#$Base.swap_to_left()
-	#add_item_get(load(\"res://Assets/Placeholders/advancedcreaturecarapace.png\"), \"blah blash\", \"blahfds\")
 	clear()
 	close_item_popup()
 	
@@ -69,12 +67,8 @@ func scroll_to_bottom():
 var previous_scroll_value = 0
 func _physics_process (delta):
 	if is_scrolling:
-		#print(delta, \" \", ending_point, \" \", starting_point, \" \", delta * (ending_point - starting_point))
 		var scroll_container = $\"Base/ScrollContainer/MarginContainer/Control/ScrollContainer\"
 		var new_scroll = scroll_container.scroll_vertical + delta * (ending_point - starting_point) / 0.5
-		#print(new_scroll, \"   \", ending_point)
-		#if scroll_container.scroll_vertical >= ending_point:
-		#	is_scrolling = false
 		if previous_scroll_value == new_scroll:
 			is_scrolling = false
 		scroll_container.scroll_vertical = new_scroll
@@ -83,16 +77,13 @@ func _physics_process (delta):
 
 
 func add_talking_head(icon:Texture, text:String):
-	print(\"Talking head added: \", text)
 	var item = preload(\"res://Systems/Cutscenes/SideDialogue/HeadSayItem.tscn\").instance()
 	self.add_child(item)
-	item.set_icon(icon)
+	#item.set_icon(icon)
 	item.set_text(text)
 	self.remove_child(item)
 	events_container.add_child(item)
 	events_container.move_child(item, events_container.get_child_count()-1)
-	#yield(item, \"finished\")
-	#scroll_to_bottom()
 	item.connect(\"finished\", self, \"scroll_to_bottom\")
 	return item
 
@@ -185,9 +176,6 @@ layer = 30
 
 [node name="Modal" parent="Inventory" index="0"]
 visible = false
-
-[node name="CategoriesContainer" parent="Inventory/Modal/Window/CategoriesPanel/ScrollContainer" index="0"]
-margin_bottom = 42.0
 
 [node name="BackgroundShade" type="Panel" parent="."]
 self_modulate = Color( 1, 1, 1, 0 )

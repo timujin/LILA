@@ -8,6 +8,19 @@ script/source = "extends Node
 func r(id:String):
 	return GlobalRegister.room(id)
 	
+####
+# Room preloading
+# This is to make the room loading work normally
+# if you set it as the starting scene of the project
+####
+
+var room_preloaded = true
+
+func _ready():
+	if room_preloaded:
+		var room_id = $\"/root/Room\".roomID
+		switch_to(room_id)
+	
 #####################
 ## ROOM LOADING #####
 #####################
@@ -48,6 +61,10 @@ func set_room_deserialized(value):
 \"\"\"
 
 var room:Node = null
+
+var in_the_process_of_loading = false
+
+signal room_loaded
 	
 func _switch_room_obj(to_room):
 	while $\"/root/Room\" == null:
@@ -78,6 +95,7 @@ func deserialize_room():
 \"\"\"
 
 func switch_to(id:String):
+	in_the_process_of_loading = true
 	ModeController.clicks_blocked = true
 	$LoadingScreen.visible = true
 	yield(get_tree(), \"idle_frame\")
@@ -93,6 +111,8 @@ func switch_to(id:String):
 func on_room_loaded():
 	ModeController.clicks_blocked = false
 	$LoadingScreen.visible = false
+	in_the_process_of_loading = false
+	emit_signal(\"room_loaded\")
 "
 
 [node name="RoomSwitcher" type="Node"]

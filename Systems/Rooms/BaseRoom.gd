@@ -7,6 +7,8 @@ signal room_loaded
 export var roomName:String = "[ROOM NAME NOT SET]"
 export var roomID:String   = "[ID NOT SET]"
 
+var room_loaded = false
+
 func _ready():
 	RoomSwitcher.room = self
 	get_parent().move_child(self,0)#call_deferred("move_to_back")
@@ -19,7 +21,6 @@ func deserialize_room():
 		emit_signal("room_loaded")
 		return
 	for object in objects_to_deserialize:
-		print("signal connected")
 		var data = Character.objects.deserialize(roomID, object.get_path(), {})
 		if data.size() == 0:
 			on_obj_deserialized(object)
@@ -28,11 +29,10 @@ func deserialize_room():
 			object.call_deferred("deserialize", data)
 		
 func on_obj_deserialized(object):
-	print("object deserialized")
 	objects_to_deserialize.erase(object)
 	if objects_to_deserialize.size() == 0:
-		print("emitting signal -- room loaded")
 		emit_signal("room_loaded")
+	room_loaded = true
 	
 
 """

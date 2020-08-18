@@ -25,7 +25,6 @@ var condition_function = null
 func open(use_item_popup:bool = false):
 	set_visible(true)
 	self.use_item_popup = use_item_popup
-	print(\"Item popup\", self.use_item_popup)
 	reload_ui()
 	emit_signal(\"opened\")
 	
@@ -44,7 +43,6 @@ func reload_ui():
 		if item.hidden or (use_item_popup and not item.usable_in_dialogues): continue
 		var renderer = item_prefab.instance()
 		item_container.add_child(renderer)
-		print(item.display_name,self.use_item_popup)
 		renderer.render_item(item, self.use_item_popup)
 		renderer.connect(\"pressed\", self, \"on_item_press\", [renderer])
 		
@@ -75,7 +73,6 @@ func update_category_notifications():
 	for category in categories:
 		category.render(category.text, false)
 	if use_item_popup: return
-	print(\"error\")
 	for item in items:
 		if item.hidden: continue
 		if item.notification_up:
@@ -136,8 +133,8 @@ func on_item_press(item):
 		close()
 
 func _on_CloseButton_pressed():
-	if not use_item_popup:
-		ModeController.set_mode(ModeController.EXPLORE)
+	#if not use_item_popup:
+	#	ModeController.set_mode(ModeController.EXPLORE)
 	close()
 "
 
@@ -202,19 +199,19 @@ __meta__ = {
 
 [node name="CategoriesContainer" type="VBoxContainer" parent="Modal/Window/CategoriesPanel/ScrollContainer"]
 margin_right = 323.0
-margin_bottom = 60.0
+margin_bottom = 42.0
 size_flags_horizontal = 3
 
 [node name="Category" parent="Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer" instance=ExtResource( 4 )]
 anchor_right = 0.0
 margin_right = 323.0
-margin_bottom = 28.0
+margin_bottom = 19.0
 
 [node name="Category2" parent="Modal/Window/CategoriesPanel/ScrollContainer/CategoriesContainer" instance=ExtResource( 4 )]
 anchor_right = 0.0
-margin_top = 32.0
+margin_top = 23.0
 margin_right = 323.0
-margin_bottom = 60.0
+margin_bottom = 42.0
 text = "Category namedsasad"
 clip_text = true
 

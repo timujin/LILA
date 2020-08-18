@@ -29,6 +29,12 @@ func start_interaction(left:bool):
 		
 	return window
 	
+func start_interaction_left():
+	return start_interaction(true)
+	
+func start_interaction_right():
+	return start_interaction(false)
+	
 func stop_interaction():
 	if window != null:
 		window.queue_free()
