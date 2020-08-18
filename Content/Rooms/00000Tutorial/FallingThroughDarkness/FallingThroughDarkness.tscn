@@ -35,7 +35,7 @@ colors = PoolColorArray( 0, 0, 0, 1 )
 [sub_resource type="GradientTexture" id=4]
 gradient = SubResource( 3 )
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=5]
 script/source = "extends CutsceneEngine
 
 
@@ -111,6 +111,6 @@ one_shot = true
 autostart = true
 
 [node name="Cutscene" type="Node" parent="Filling/StartingCutscene" index="0"]
-script = SubResource( 7 )
+script = SubResource( 5 )
 [connection signal="room_loaded" from="." to="HideInventoryButton" method="_on_Room_room_loaded"]
 [connection signal="timeout" from="Filling/StartingCutscene" to="Filling/StartingCutscene/Cutscene" method="_on_StartingCutscene_timeout"]

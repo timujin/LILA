@@ -48,7 +48,7 @@ func search_item_by_id(id:String):
 
 func add_item_by_id(id:String, allow_duplicate=false):
 	if (not allow_duplicate) and has_item_by_id(id):
-		return
+		return search_item_by_id(id)
 	var prototype = BaseItem.load_by_id(id)
 	prototype.connect(\"item_updated\", self, \"emit_signal\", [\"inventory_updated\"])
 	return add_item(prototype)

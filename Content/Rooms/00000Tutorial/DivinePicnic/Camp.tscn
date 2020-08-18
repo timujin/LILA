@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
@@ -36,22 +36,29 @@ brings you back to the beginning. (this part NIY)
 [sub_resource type="GDScript" id=2]
 script/source = "extends CutsceneEngine
 
+\"\"\"
+This scene plays exactly once, immediately after the player enters the scene.
+The player is given a choice to wake up (immediately calling the WakeUpCutscene),
+or to pretend to be asleep (in that case, he can investigate other objects in the
+scene for flavor points).
+\"\"\"
+
 var first_visit = true
 
 func serialize():
-	print(\"Serializing\", first_visit)
+	print(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASerializing first visit cutscene: \", first_visit)
 	return { \"first_visit\": first_visit }
 	
 func deserialize(data):
-	print(\"Deserializing camp\", data)
 	assert(data.has(\"first_visit\"))
 	first_visit = data[\"first_visit\"]
+	print(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdeserializing first visit cutscene: \", first_visit)
 
 
 func _ready():
 	yield(RoomSwitcher.notifier, \"room_fully_loaded\")
 	if first_visit:
-		$Timer.start()
+		activate()
 	first_visit = false
 	
 func activate():
@@ -72,14 +79,16 @@ func wake_up():
 func pretend_to_be_asleep():
 	end_cutscene()
 	
-
-
-func _on_Timer_timeout():
-	activate()
 "
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=3]
 script/source = "extends CutsceneEngine
+
+\"\"\"
+This scene runs once, after the player wakes up.
+The Goddesses say their hellos, introduce him to the scene, and give them the 
+quest to gather firewood.
+\"\"\"
 
 
 func run():
@@ -91,9 +100,16 @@ func run():
 	choice_call(\"OKIE DOKIE\", \"end_cutscene\")
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=4]
 script/source = "tool
 extends Node
+
+\"\"\"
+Determines whether the Spirit is lying on the blanket or standing up near it.
+This affects all interactions in the scene -- if the player is still sleeping,
+he will just describe what he sees, rather than interact with it.
+Once the player woke up, there is no way for him to lie on the blanket again.
+\"\"\"
 
 export(String, \"on_blanket\", \"standing\") var state setget set_state
 
@@ -101,10 +117,9 @@ export(NodePath) var on_blanket
 export(NodePath) var standing
 	
 func set_state(new_state):
-	state = new_state
-	if not self.is_inside_tree():
-		call_deferred(\"set_state\", new_state)
+	if not self.is_inside_tree(): # room-loading safety
 		return
+	state = new_state
 	get_node(on_blanket).visible = false
 	get_node(standing).visible = false
 	match new_state:
@@ -121,11 +136,65 @@ func serialize():
 	}
 	
 func deserialize(data):
+	return
 	assert(data.has(\"state\"))
 	set_state(data[\"state\"])
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+\"\"\"
+If the player is sleeping, this gives him the possibility to go awake.
+If he's not sleeping, he just describes the pentagram pattern on the blanket.
+\"\"\"
+
+export(NodePath) var spirit_state
+
+func on_activate():
+	if get_node(spirit_state).state == \"on_blanket\":
+		prompt_wake_up()
+	elif get_node(spirit_state).state == \"standing\":
+		describe_blanket()
+		
+
+func prompt_wake_up():
+	$TryWakeUp.run()
+	
+func describe_blanket():
+	get_parent().get_node(\"BlurbPoint\").blurb(\"The blanket has a pentagram pattern on it.\", null)
+"
+
+[sub_resource type="GDScript" id=6]
+script/source = "extends CutsceneEngine
+
+export(NodePath) var spirit_state
+export(NodePath) var wake_up_cutscene
+
+func run():
+	start_cutscene_right()
+	shl(\"Now I can wake up\")
+	choice_call(\"Wake up\", \"wake_up\")
+	choice_call(\"Keep sleeping\", \"end_cutscene\")
+	choice_call(\"Use item\", \"use_item\")
+	
+func wake_up():
+	print(get_stack())
+	end_cutscene()
+	get_node(spirit_state).set_state(\"standing\")
+	get_node(wake_up_cutscene).run()
+
+func use_item():
+	open_item_popup(\"use_item_filter\", \"use_item_callback\")
+	
+func use_item_filter(item):
+	return true
+	
+func use_item_callback(item):
+	print(item.name)
+"
+
+[sub_resource type="GDScript" id=7]
 script/source = "tool
 extends Node
 
@@ -165,7 +234,7 @@ func deserialize(data):
 	set_state(data[\"state\"])
 "
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=8]
 script/source = "extends Node
 
 
@@ -173,7 +242,7 @@ func activate():
 	RoomSwitcher.switch_to(\"00000DivinePond\")
 "
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=9]
 script/source = "extends Node
 
 
@@ -203,18 +272,13 @@ __meta__ = {
 ]]
 script = SubResource( 2 )
 
-[node name="Timer" type="Timer" parent="Objects/FirstVisitCutscene" index="0"]
-wait_time = 0.5
-one_shot = true
-
 [node name="WakeUpCutscene" type="Node" parent="Objects" index="1"]
-script = SubResource( 7 )
+script = SubResource( 3 )
 
 [node name="SpiritStateSwitcher" type="Node" parent="Objects" index="2" groups=[
 "serializable_room",
 ]]
-script = SubResource( 3 )
-state = "on_blanket"
+script = SubResource( 4 )
 on_blanket = NodePath("../PentagramBlanket/SpiritLyingDown")
 standing = NodePath("../SpiritStanding")
 
@@ -228,9 +292,31 @@ position = Vector2( 22.1015, -10.6212 )
 scale = Vector2( 0.9223, 0.579082 )
 texture = ExtResource( 7 )
 
+[node name="Interactable" parent="Objects/PentagramBlanket" index="1" instance=ExtResource( 12 )]
+position = Vector2( 763.859, 567.442 )
+scale = Vector2( 2.2691, 2.72613 )
+
+[node name="BlurbPoint" parent="Objects/PentagramBlanket/Interactable" index="0"]
+position = Vector2( -323.373, -255.192 )
+
+[node name="Activator" parent="Objects/PentagramBlanket/Interactable" index="1"]
+script = SubResource( 5 )
+spirit_state = NodePath("../../../SpiritStateSwitcher")
+
+[node name="TryWakeUp" type="Node" parent="Objects/PentagramBlanket/Interactable/Activator" index="0"]
+script = SubResource( 6 )
+spirit_state = NodePath("../../../../SpiritStateSwitcher")
+wake_up_cutscene = NodePath("../../../../WakeUpCutscene")
+
+[node name="Clickable" parent="Objects/PentagramBlanket/Interactable" index="2"]
+ActivatorName = "Blanket"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/PentagramBlanket/Interactable/Clickable" index="0"]
+polygon = PoolVector2Array( -564.576, -331.21, -560.365, -84.8924, -112.994, -85.9451, -109.836, -332.262 )
+
 [node name="SpiritStanding" type="Sprite" parent="Objects" index="4"]
 visible = false
-position = Vector2( -558.711, -208.149 )
+position = Vector2( -643.198, -228.197 )
 scale = Vector2( 0.136324, 0.383632 )
 texture = ExtResource( 7 )
 
@@ -239,7 +325,7 @@ texture = ExtResource( 7 )
 [node name="StateSwitcher" type="Node" parent="Objects/Firepit" index="0" groups=[
 "serializable_room",
 ]]
-script = SubResource( 4 )
+script = SubResource( 7 )
 state = "empty"
 
 [node name="empty_firepit" type="Sprite" parent="Objects/Firepit/StateSwitcher" index="0"]
@@ -267,16 +353,18 @@ rotation = -3.05258
 scale = Vector2( 1.06783, 1.08671 )
 texture = ExtResource( 6 )
 
-[node name="BackpacksnTent" type="Sprite" parent="Objects" index="8"]
+[node name="GoddessInteractable" parent="Objects" index="8" instance=ExtResource( 12 )]
+
+[node name="BackpacksnTent" type="Sprite" parent="Objects" index="9"]
 position = Vector2( 311.614, 41.4117 )
 texture = ExtResource( 11 )
 
-[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="9"]
+[node name="KnifeOnTheGround" type="Sprite" parent="Objects" index="10"]
 position = Vector2( 148.679, -132.664 )
 scale = Vector2( 0.0414562, 0.0368791 )
 texture = ExtResource( 10 )
 
-[node name="PathArrowRight" parent="Objects" index="10" instance=ExtResource( 12 )]
+[node name="PathArrowRight" parent="Objects" index="11" instance=ExtResource( 12 )]
 position = Vector2( 681.091, 17.4935 )
 rotation = 1.5708
 scale = Vector2( 0.098522, 0.12893 )
@@ -285,7 +373,7 @@ scale = Vector2( 0.098522, 0.12893 )
 position = Vector2( 35.6893, 13.6362 )
 
 [node name="Activator" parent="Objects/PathArrowRight" index="1"]
-script = SubResource( 5 )
+script = SubResource( 8 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/PathArrowRight/Clickable" index="0"]
 polygon = PoolVector2Array( -497.101, 751.648, -544.231, -724.739, 563.171, -748.749, 563.178, 751.646 )
@@ -293,13 +381,13 @@ polygon = PoolVector2Array( -497.101, 751.648, -544.231, -724.739, 563.171, -748
 [node name="Sprite" type="Sprite" parent="Objects/PathArrowRight" index="3"]
 texture = ExtResource( 9 )
 
-[node name="PathArrowLeft" parent="Objects" index="11" instance=ExtResource( 12 )]
+[node name="PathArrowLeft" parent="Objects" index="12" instance=ExtResource( 12 )]
 
 [node name="BlurbPoint" parent="Objects/PathArrowLeft" index="0"]
 position = Vector2( -698.805, 60.1431 )
 
 [node name="Activator" parent="Objects/PathArrowLeft" index="1"]
-script = SubResource( 6 )
+script = SubResource( 9 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/PathArrowLeft/Clickable" index="0"]
 polygon = PoolVector2Array( -791.277, 1.66992, -599.379, -2.19901, -601.7, 111.547, -791.277, 109.226 )
@@ -309,7 +397,8 @@ position = Vector2( -696.005, 55.2566 )
 rotation = -1.5708
 scale = Vector2( 0.098522, 0.12893 )
 texture = ExtResource( 9 )
-[connection signal="timeout" from="Objects/FirstVisitCutscene/Timer" to="Objects/FirstVisitCutscene" method="_on_Timer_timeout"]
+
+[editable path="Objects/PentagramBlanket/Interactable"]
 
 [editable path="Objects/PathArrowRight"]
 

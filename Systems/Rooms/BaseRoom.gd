@@ -22,9 +22,18 @@ func deserialize():
 	for object in objects:
 		var data = Character.objects.deserialize($"/root/Room".roomID, object.get_path(), {})
 		if data.size() > 0:
-			object.deserialize(data)
+			pass #safe_deserialize_object(object, data)
 	RoomSwitcher.room_deserialized = true
 	call_deferred("emit_signal", "room_loaded")
+	
+func safe_deserialize_object(object, data):
+	return
+	if not self.is_inside_tree(): # room-loading safety
+		print("IS NOT INSIDE TREE")
+		call_deferred("safe_deserialize_object", object, data)
+		return
+	print("IS INSIDE TREE")
+	object.deserialize(data)
 
 func serialize():
 	var objects = get_tree().get_nodes_in_group("serializable_room")
