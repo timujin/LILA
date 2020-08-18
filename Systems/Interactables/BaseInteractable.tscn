@@ -3,15 +3,19 @@
 [sub_resource type="GDScript" id=3]
 script/source = "extends Node2D
 
-func blurb(text, icon=null, button=null):
-	$BlurbPoint.blurb(text, icon, button)
+func blurb_dumb(text): return $BlurbPoint.blurb(text)
+
+func blurb(text,icon=null,buttontext=null,call_target=null,callback=null):
+	return $BlurbPoint.blurb(text,icon,buttontext,call_target,callback)
 "
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Position2D
 
-func blurb(text:String,icon:Texture,  buttontext=null):
+func blurb(text:String,icon:Texture=null, buttontext=null, call_target=null, callback=null):
 	ItemInteractionPopup.display(text, icon, buttontext, self)
+	ItemInteractionPopup.call_target = call_target
+	ItemInteractionPopup.callback = callback
 "
 
 [sub_resource type="GDScript" id=2]

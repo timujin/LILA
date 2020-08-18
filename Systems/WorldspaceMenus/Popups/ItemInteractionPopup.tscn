@@ -16,13 +16,17 @@ onready var icon = $Pivot/Popup/HBoxContainer/Control/TextureRect
 func _ready():
 	hide()
 	
+var call_target = null
+var callback = null
+	
 func hide():
 	popup.visible = false
 
 func display(text:String, icon:Texture, buttontext, at):
 	popup.visible = true
 	if (at is Node2D):
-		popup.rect_global_position = at.global_position
+		#popup.rect_global_position = at.global_position
+		offset = at.global_position
 	elif (at is Spatial):
 		print(\"origin\", at.global_transform.origin)
 		popup.rect_global_position = get_viewport().get_camera().unproject_position(at.global_transform.origin)
@@ -43,12 +47,17 @@ func display(text:String, icon:Texture, buttontext, at):
 func _input(event):
 	if popup.visible and Input.is_action_pressed(\"dismiss\") and not button.mouse_overed:
 		hide()
-
+		get_tree().set_input_as_handled()
 
 func _on_Button_pressed():
 	print(\"Activated\")
+	call_target.call(callback)
 	hide()
 
+
+
+func _on_Modal_pressed():
+	hide()
 "
 
 [sub_resource type="GDScript" id=2]
@@ -73,12 +82,14 @@ default_font = SubResource( 3 )
 
 [node name="Popup" type="CanvasLayer"]
 layer = 70
-follow_viewport_enable = true
 script = SubResource( 1 )
 
 [node name="Pivot" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 800.0
+margin_top = 450.0
+margin_right = 840.0
+margin_bottom = 490.0
+mouse_default_cursor_shape = 2
 theme = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -102,6 +113,9 @@ margin_left = 58.0
 margin_top = -42.0
 margin_right = -53.0
 margin_bottom = -7.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Button" type="Button" parent="Pivot/Popup/Panel"]
 anchor_right = 1.0

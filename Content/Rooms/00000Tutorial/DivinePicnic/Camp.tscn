@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
@@ -123,9 +123,6 @@ export(String, \"on_blanket\", \"standing\") var state setget set_state
 
 export(NodePath) var on_blanket
 export(NodePath) var standing
-	
-func _ready():
-	print(\"satte\", state)
 	
 func set_state(new_state):
 	state = new_state
@@ -287,13 +284,28 @@ func activate():
 script/source = "extends Node
 
 export(NodePath)  var spirit_state_controller
+export(NodePath) var GoddessDialogue
 
 func activate():
 	match get_node(spirit_state_controller).state:
 		\"on_blanket\":
 			get_parent().blurb(\"The Foddess of Everythin Else is making hotdogs.\", null, null)
 		\"standing\":
-			$ErisDialogue.run()
+			get_node(GoddessDialogue).run()
+"
+
+[sub_resource type="GDScript" id=14]
+script/source = "extends Node
+
+export(NodePath)  var spirit_state_controller
+export(NodePath) var GoddessDialogue
+
+func activate():
+	match get_node(spirit_state_controller).state:
+		\"on_blanket\":
+			get_parent().blurb(\"The Goddess of Nothing is erecting a tent.\", null, null)
+		\"standing\":
+			get_node(GoddessDialogue).run()
 "
 
 [sub_resource type="GDScript" id=13]
@@ -328,6 +340,47 @@ func idklol():
 	shl(\"I can't tell much about this.\")
 	choice_call(\"OK\", \"end_cutscene\")
 	
+"
+
+[sub_resource type="GDScript" id=16]
+script/source = "extends Node
+
+export(NodePath) var spirit_state
+
+func on_activate():
+	if get_node(spirit_state).state == \"on_blanket\":
+		get_parent().blurb(\"A knife is lying on the ground here.\", load(\"res://Assets/Placeholders/blueallyswords.png\"))
+	else:
+		get_parent().blurb(\"A knife is lying on the ground here.\", load(\"res://Assets/Placeholders/blueallyswords.png\"), \"Pick up\", self, \"pickup\")
+
+func pickup():
+	print(\"Knife picked up\")
+"
+
+[sub_resource type="GDScript" id=15]
+script/source = "extends Node
+
+signal deserialized
+
+
+export(bool) var present = true
+
+func set_state(present):
+	self.present = present
+	if not Engine.editor_hint and not is_inside_tree():
+		return # thread safety
+	get_parent().visible = present
+
+func serialize():
+	return {
+		\"present\": present
+	}
+	
+func deserialize(data):
+	assert(data.has(\"present\"))
+	set_state(data[\"present\"])
+	emit_signal(\"deserialized\")
+
 "
 
 [sub_resource type="GDScript" id=8]
@@ -463,9 +516,7 @@ position = Vector2( -87.1511, 295.962 )
 [node name="Activator" parent="Objects/Eris/BaseInteractable" index="1"]
 script = SubResource( 12 )
 spirit_state_controller = NodePath("../../../SpiritStateSwitcher")
-
-[node name="ErisDialogue" type="Node" parent="Objects/Eris/BaseInteractable/Activator" index="0"]
-script = SubResource( 13 )
+GoddessDialogue = NodePath("../../../GoddessDialogue")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/Eris/BaseInteractable/Clickable" index="0"]
 polygon = PoolVector2Array( -10.2238, -423.29, -5.46375, -180.528, 178.591, -171.008, 194.458, -415.357 )
@@ -478,7 +529,16 @@ texture = ExtResource( 6 )
 
 [node name="BaseInteractable" parent="Objects/Aneris" index="0" instance=ExtResource( 12 )]
 
-[node name="GoddessInteractable" parent="Objects" index="8" instance=ExtResource( 12 )]
+[node name="Activator" parent="Objects/Aneris/BaseInteractable" index="1"]
+script = SubResource( 14 )
+spirit_state_controller = NodePath("../../../SpiritStateSwitcher")
+GoddessDialogue = NodePath("../../../GoddessDialogue")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/Aneris/BaseInteractable/Clickable" index="0"]
+polygon = PoolVector2Array( 100.112, 125.243, 100.62, -121.508, -103.32, -130.239, -99.805, 126.397 )
+
+[node name="GoddessDialogue" type="Node" parent="Objects" index="8"]
+script = SubResource( 13 )
 
 [node name="BackpacksnTent" type="Sprite" parent="Objects" index="9"]
 position = Vector2( 311.614, 41.4117 )
@@ -488,6 +548,18 @@ texture = ExtResource( 11 )
 position = Vector2( 148.679, -132.664 )
 scale = Vector2( 0.0414562, 0.0368791 )
 texture = ExtResource( 10 )
+
+[node name="BaseInteractable" parent="Objects/KnifeOnTheGround" index="0" instance=ExtResource( 12 )]
+
+[node name="Activator" parent="Objects/KnifeOnTheGround/BaseInteractable" index="1"]
+script = SubResource( 16 )
+spirit_state = NodePath("../../../SpiritStateSwitcher")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/KnifeOnTheGround/BaseInteractable/Clickable" index="0"]
+polygon = PoolVector2Array( -1149.48, -583.09, 1100.54, -685.628, 1085.34, 647.369, -1027.86, 766.997 )
+
+[node name="StateSwitcher" type="Node" parent="Objects/KnifeOnTheGround" index="1"]
+script = SubResource( 15 )
 
 [node name="PathArrowRight" parent="Objects" index="11" instance=ExtResource( 12 )]
 position = Vector2( 681.091, 17.4935 )
@@ -529,6 +601,10 @@ texture = ExtResource( 9 )
 [editable path="Objects/Firepit/Interactable"]
 
 [editable path="Objects/Eris/BaseInteractable"]
+
+[editable path="Objects/Aneris/BaseInteractable"]
+
+[editable path="Objects/KnifeOnTheGround/BaseInteractable"]
 
 [editable path="Objects/PathArrowRight"]
 
