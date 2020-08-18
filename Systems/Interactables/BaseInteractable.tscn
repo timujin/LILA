@@ -4,12 +4,15 @@
 script/source = "extends Position2D
 
 func blurb(text:String,icon:Texture,  buttontext=null):
-	print(text)
 	ItemInteractionPopup.display(text, icon, buttontext, self)
 "
 
 [sub_resource type="GDScript" id=2]
 script/source = "extends Area2D
+
+#####
+# TODO: remake into sending signals to blurb
+#####
 
 signal on_activate
 

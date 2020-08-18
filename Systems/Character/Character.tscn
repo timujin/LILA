@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -128,34 +128,6 @@ func get_value(key:String, default=null):
 [sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
-# Status: works normally
-
-\"\"\"
-Stores the state of objects in rooms. 
-\"\"\"
-
-var pickled_rooms:Dictionary = {}
-
-func pickle(roomid:String, nodepath:NodePath, data:Dictionary):
-	if not pickled_rooms.has(roomid):
-		pickled_rooms[roomid] = {}
-	pickled_rooms[roomid][nodepath] = data
-	print(\"Pickled: %s - %s - %s\" % [roomid, nodepath, str(data)])
-	
-	
-	
-func unpickle(roomid:String, nodepath:NodePath, default:Dictionary):
-	if not pickled_rooms.has(roomid):
-		return default
-	if not pickled_rooms[roomid].has(nodepath):
-		return default
-	return pickled_rooms[roomid][nodepath]
-
-"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends Node
-
 \"\"\"
 Stores the state of objects in rooms. 
 \"\"\"
@@ -188,8 +160,5 @@ script = SubResource( 2 )
 [node name="Variables" type="Node" parent="."]
 script = SubResource( 3 )
 
-[node name="Pickles" type="Node" parent="."]
-script = SubResource( 4 )
-
 [node name="SerializedObjects" type="Node" parent="."]
-script = SubResource( 5 )
+script = SubResource( 4 )

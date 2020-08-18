@@ -7,21 +7,10 @@ script/source = "extends Control
 
 signal finished
 
-#onready var face = $\"HeadPanel\"
 onready var textbox = $\"RichTextLabel\"
 
-func set_icon(icon:Texture):
-	return
-	\"\"\"
-	if icon == null:
-		face.visible = false
-	else:
-		face.visible = true
-		face.get_child(0).texture = icon
-	\"\"\"
-
 func set_text(text:String):
-	print(textbox.set_text(text))
+	textbox.set_text(text)
 
 
 func _on_RichTextLabel_finished():
@@ -46,19 +35,10 @@ func set_text(text):
 	yield(get_tree(), \"idle_frame\")
 	yield(get_tree(), \"idle_frame\")
 	yield(get_tree(), \"idle_frame\")
-	#print(text)
-	#print(self.rect_size)
-	#print(self.get_content_height())
 	if self.rect_size.y < self.get_content_height():
 		self.rect_size = Vector2(self.rect_size.x, self.get_content_height())
-		#print(text)
-		print(self.get_content_height())
-		#print(self.rect_size)
 		yield(get_tree(), \"idle_frame\")
 		get_parent().rect_min_size = self.rect_size + Vector2(0, 10)
-		#print(get_parent().rect_min_size)
-		#get_parent().get_parent().hide()
-		#get_parent().get_parent().show()
 	emit_signal(\"finished\")
 "
 

@@ -5,17 +5,13 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-signal new_room_loaded
-
-var room_deserialized = false setget set_room_deserialized
-
 func r(id:String):
 	return GlobalRegister.room(id)
 	
 #####################
 ## ROOM LOADING #####
 #####################
-
+\"\"\"
 func _ready():
 	init_notifier()
 	if $\"/root/Room\" == null: return # debug mode
@@ -49,21 +45,40 @@ func set_room_deserialized(value):
 	if value:
 		emit_signal(\"deserialize_complete\")
 
+\"\"\"
+
 var room:Node = null
 	
 func _switch_room_obj(to_room):
-	room_deserialized = false
-	ModeController.reset()
-	#$\"/root/Room\".pickle()
+	while $\"/root/Room\" == null:
+		yield(get_tree(), \"idle_frame\")
+		yield(get_tree(), \"idle_frame\")
 	$\"/root/Room\".serialize()
 	$\"/root/Room\".name = \"Todelete_room\"
 	$\"/root/Todelete_room\".queue_free()
+	while $\"/root/Todelete_room\" != null:
+		yield(get_tree(), \"idle_frame\")
+		yield(get_tree(), \"idle_frame\")
 	room = to_room.instance()
 	get_tree().get_root().add_child(room)
 	room.connect(\"room_loaded\", self, \"on_room_loaded\")
 	room.connect(\"room_loaded\", $LoadingScreen, \"set_visible\", [false])
+	
+	#var serializables = get_tree().get_nodes_in_group(\"serializable_room\")
+	
+\"\"\"	
+func deserialize_room():
+	var objects = get_tree().get_nodes_in_group(\"serializable_room\")
+	for object in objects:
+		var data = Character.objects.deserialize($\"/root/Room\".roomID, object.get_path(), {})
+		if data.size() > 0:
+			safe_deserialize_object(object, data)
+	RoomSwitcher.room_deserialized = true
+	call_deferred(\"emit_signal\", \"room_loaded\")
+\"\"\"
 
 func switch_to(id:String):
+	ModeController.clicks_blocked = true
 	$LoadingScreen.visible = true
 	yield(get_tree(), \"idle_frame\")
 	yield(get_tree(), \"idle_frame\")
@@ -74,6 +89,10 @@ func switch_to(id:String):
 		assert(false)
 	else:
 		_switch_room_obj(roomscene)
+
+func on_room_loaded():
+	ModeController.clicks_blocked = false
+	$LoadingScreen.visible = false
 "
 
 [node name="RoomSwitcher" type="Node"]

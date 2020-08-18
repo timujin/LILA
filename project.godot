@@ -15,11 +15,6 @@ _global_script_classes=[ {
 "path": "res://Systems/Character/Inventory/BaseItem.gd"
 }, {
 "base": "Node",
-"class": "BasePickler",
-"language": "GDScript",
-"path": "res://Systems/Rooms/BasePickler.gd"
-}, {
-"base": "Node",
 "class": "BaseRoom",
 "language": "GDScript",
 "path": "res://Systems/Rooms/BaseRoom.gd"
@@ -36,7 +31,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "BaseItem": "",
-"BasePickler": "",
 "BaseRoom": "",
 "CutsceneEngine": "",
 "RegisterResource": ""

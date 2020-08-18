@@ -13,6 +13,7 @@ const horiz_margin = 0.2
 const verti_margin = 0.2
 
 func _process(delta):
+	return
 	if ModeController.is_room_scrollable() and is_scrolling:
 		screen_scrolling(delta)
 	

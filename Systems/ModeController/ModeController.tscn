@@ -4,6 +4,38 @@
 script/source = "extends Node
 
 
+# Click blocking (to prevent race conditions with user input)
+
+var clicks_blocked = false setget set_block_clicks
+
+func set_block_clicks(value):
+	clicks_blocked = value
+	$ClickBlocker/Panel.visible = value
+
+
+######
+# INTERACTION
+######
+
+var window = null
+
+func start_interaction(left:bool):
+	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
+	get_node(\"/root\").add_child(window)
+	if left:
+		window.display_to_the_left()
+	else:
+		window.display_to_the_right()
+		
+	return window
+	
+func stop_interaction():
+	if window != null:
+		window.queue_free()
+		window = null
+
+\"\"\"
+
 signal reset
 signal mode_changed (mode)
 signal hide_hud
@@ -17,13 +49,6 @@ func reset():
 ############
 # Base mode
 ############
-
-\"\"\"
-EXPLORE - basic mode where you interact with stuff in a Room.
-MENU - A HUD window has been opened, s/a Inventory, Journal, etc.
-CUTSCENE - Self-explanatory. Menus not openable and room is not interactable. Interaction within cutscene is allowed.
-INTERACTION - the West of Loathing style modal interaction window is open
-\"\"\"
 
 enum {EXPLORE, MENU, CUTSCENE, INTERACTION}
 
@@ -54,33 +79,6 @@ func stop_cutscene():
 	set_hud_hidden(false)
 	set_mode(EXPLORE)
 
-######
-# INTERACTION
-######
-
-var window
-
-func start_interaction(left:bool):
-	reset()
-	set_hud_hidden(true)
-	set_mode(INTERACTION)
-	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
-	get_node(\"/root\").add_child(window)
-	if left:
-		window.display_to_the_left()
-	else:
-		window.display_to_the_right()
-		
-	return window
-	
-func stop_interaction():
-	reset()
-	set_hud_hidden(false)
-	set_mode(EXPLORE)
-	if window != null:
-		window.queue_free()
-		window = null
-
 #########
 # Helper logical functions.
 # I put them here to be able to change the logic 
@@ -92,6 +90,8 @@ func is_room_scrollable():
 
 func is_menu_openable():
 	return mode == EXPLORE and hud_hidden == false
+
+\"\"\"
 
 ##########
 # Trying to resolve interactable hover conflicts
@@ -108,8 +108,19 @@ func unhover():
 	currently_hovered = null
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 	
-	
 "
 
 [node name="ModeController" type="Node"]
 script = SubResource( 1 )
+
+[node name="ClickBlocker" type="CanvasLayer" parent="."]
+layer = 120
+
+[node name="Panel" type="Panel" parent="ClickBlocker"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

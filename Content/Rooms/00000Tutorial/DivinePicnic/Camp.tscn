@@ -43,6 +43,8 @@ or to pretend to be asleep (in that case, he can investigate other objects in th
 scene for flavor points).
 \"\"\"
 
+signal deserialized
+
 var first_visit = true
 
 func serialize():
@@ -50,22 +52,26 @@ func serialize():
 	return { \"first_visit\": first_visit }
 	
 func deserialize(data):
+	print(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdeserializing first visit cutscene: \", first_visit)
 	assert(data.has(\"first_visit\"))
 	first_visit = data[\"first_visit\"]
-	print(\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdeserializing first visit cutscene: \", first_visit)
+	emit_signal(\"deserialized\")
 
 
 func _ready():
-	yield(RoomSwitcher.notifier, \"room_fully_loaded\")
-	if first_visit:
-		activate()
-	first_visit = false
+	#yield(RoomSwitcher.notifier, \"room_fully_loaded\")
+	#if first_visit:
+	#	activate()
+	#first_visit = false
+	pass
 	
 func activate():
+	print(\"first_visit_activated\")
 	ModeController.start_interaction(false)
 	self.execute()
 
 func execute():
+	print(get_stack())
 	clear_player_choices()
 	shl(\"Blah blah am sleeping\")
 	choice_call(\"Wake up\", \"wake_up\")
@@ -111,15 +117,20 @@ he will just describe what he sees, rather than interact with it.
 Once the player woke up, there is no way for him to lie on the blanket again.
 \"\"\"
 
+signal deserialized
+
 export(String, \"on_blanket\", \"standing\") var state setget set_state
 
 export(NodePath) var on_blanket
 export(NodePath) var standing
 	
+func _ready():
+	print(\"satte\", state)
+	
 func set_state(new_state):
-	if not self.is_inside_tree(): # room-loading safety
-		return
 	state = new_state
+	if not Engine.editor_hint and not is_inside_tree():
+		return # thread safety
 	get_node(on_blanket).visible = false
 	get_node(standing).visible = false
 	match new_state:
@@ -131,14 +142,16 @@ func set_state(new_state):
 			assert(false)
 
 func serialize():
+	print (\"serializing blanket\", state)
 	return {
 		\"state\": state
 	}
 	
 func deserialize(data):
-	return
 	assert(data.has(\"state\"))
+	print (\"deserializing blanket\", data)
 	set_state(data[\"state\"])
+	emit_signal(\"deserialized\")
 "
 
 [sub_resource type="GDScript" id=5]
@@ -198,7 +211,8 @@ func use_item_callback(item):
 script/source = "tool
 extends Node
 
-#enum STATE {EMPTY, FULL, LIT}
+
+signal deserialized
 
 export(String, \"empty\", \"full\", \"lit\") var state setget set_state
 
@@ -232,6 +246,7 @@ func serialize():
 func deserialize(data):
 	assert(data.has(\"state\"))
 	set_state(data[\"state\"])
+	emit_signal(\"deserialized\")
 "
 
 [sub_resource type="GDScript" id=8]
@@ -279,6 +294,7 @@ script = SubResource( 3 )
 "serializable_room",
 ]]
 script = SubResource( 4 )
+state = "standing"
 on_blanket = NodePath("../PentagramBlanket/SpiritLyingDown")
 standing = NodePath("../SpiritStanding")
 
@@ -288,6 +304,7 @@ scale = Vector2( 0.440703, 0.36682 )
 texture = ExtResource( 8 )
 
 [node name="SpiritLyingDown" type="Sprite" parent="Objects/PentagramBlanket" index="0"]
+visible = false
 position = Vector2( 22.1015, -10.6212 )
 scale = Vector2( 0.9223, 0.579082 )
 texture = ExtResource( 7 )
@@ -315,7 +332,6 @@ ActivatorName = "Blanket"
 polygon = PoolVector2Array( -564.576, -331.21, -560.365, -84.8924, -112.994, -85.9451, -109.836, -332.262 )
 
 [node name="SpiritStanding" type="Sprite" parent="Objects" index="4"]
-visible = false
 position = Vector2( -643.198, -228.197 )
 scale = Vector2( 0.136324, 0.383632 )
 texture = ExtResource( 7 )

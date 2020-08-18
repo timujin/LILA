@@ -10,50 +10,49 @@ export var roomID:String   = "[ID NOT SET]"
 func _ready():
 	RoomSwitcher.room = self
 	get_parent().move_child(self,0)#call_deferred("move_to_back")
-	call_deferred("deserialize")
+	call_deferred("deserialize_room")
+	
+var objects_to_deserialize = []
+func deserialize_room():
+	objects_to_deserialize = get_tree().get_nodes_in_group("serializable_room")
+	if objects_to_deserialize.size() == 0:
+		emit_signal("room_loaded")
+		return
+	for object in objects_to_deserialize:
+		print("signal connected")
+		var data = Character.objects.deserialize(roomID, object.get_path(), {})
+		if data.size() == 0:
+			on_obj_deserialized(object)
+		else:
+			object.connect("deserialized", self, "on_obj_deserialized", [object])
+			object.call_deferred("deserialize", data)
+		
+func on_obj_deserialized(object):
+	print("object deserialized")
+	objects_to_deserialize.erase(object)
+	if objects_to_deserialize.size() == 0:
+		print("emitting signal -- room loaded")
+		emit_signal("room_loaded")
+	
 
-#func move_to_back():
-#	get_parent().move_child(self,0)
-
-var deserialization_complete = false
-
+"""
 func deserialize():
+	return
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
 		var data = Character.objects.deserialize($"/root/Room".roomID, object.get_path(), {})
 		if data.size() > 0:
-			pass #safe_deserialize_object(object, data)
-	RoomSwitcher.room_deserialized = true
+			safe_deserialize_object(object, data)
 	call_deferred("emit_signal", "room_loaded")
 	
 func safe_deserialize_object(object, data):
-	return
 	if not self.is_inside_tree(): # room-loading safety
-		print("IS NOT INSIDE TREE")
 		call_deferred("safe_deserialize_object", object, data)
 		return
-	print("IS INSIDE TREE")
 	object.deserialize(data)
+"""
 
 func serialize():
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
 		Character.objects.serialize($"/root/Room".roomID, object.get_path(), object.serialize())
-	
-
-# pickles are obsolete; still present for history	
-func unpickle():
-	var picklers = get_tree().get_nodes_in_group("picklers")
-	for pickler in picklers:
-		pickler.unpickle()
-		
-func pickle():
-	var picklers = get_tree().get_nodes_in_group("picklers")
-	for pickler in picklers:
-		pickler.pickle()
-
-###############################
-
-
-func _on_Room_room_loaded():
-	pass # Replace with function body.
