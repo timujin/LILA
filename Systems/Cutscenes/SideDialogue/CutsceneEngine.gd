@@ -8,9 +8,11 @@ func signal_cont():
 	emit_signal("cont")
 
 func clear_full():
+	if ModeController.window == null: return
 	ModeController.window.clear()
 
 func clear_player_choices():
+	if ModeController.window == null: return
 	ModeController.window.clear_pc()
 	
 func say_head(icon, text:String):

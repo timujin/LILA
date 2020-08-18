@@ -20,6 +20,8 @@ func set_block_clicks(value):
 var window = null
 
 func start_interaction(left:bool):
+	if window != null:
+		stop_interaction()
 	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
 	get_node(\"/root\").add_child(window)
 	if left:

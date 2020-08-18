@@ -1,4 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Node2D
+
+func blurb(text, icon=null, button=null):
+	$BlurbPoint.blurb(text, icon, button)
+"
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Position2D
@@ -52,6 +59,7 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 "
 
 [node name="BaseInteractable" type="Node2D"]
+script = SubResource( 3 )
 
 [node name="BlurbPoint" type="Position2D" parent="."]
 script = SubResource( 1 )

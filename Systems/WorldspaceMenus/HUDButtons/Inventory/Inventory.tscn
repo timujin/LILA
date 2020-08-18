@@ -30,6 +30,7 @@ func open(use_item_popup:bool = false):
 	
 func close():
 	set_visible(false)
+	reload_ui()
 	emit_signal(\"closed\")
 
 func reload_ui():
@@ -97,7 +98,7 @@ func show_category(category:String):
 	else:		
 		for item in item_container.get_children():
 			if ((category == \"All\") or (category == item.category))\\
-			and condition_object.call(condition_function, [item.item_object]):
+			and condition_object.call(condition_function, item.item_object):
 				item.visible = true
 			else:
 				item.visible = false

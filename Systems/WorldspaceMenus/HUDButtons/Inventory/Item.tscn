@@ -157,7 +157,7 @@ __meta__ = {
 }
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 4
+layer = 32
 
 [node name="Offset" type="Control" parent="CanvasLayer"]
 margin_right = 40.0

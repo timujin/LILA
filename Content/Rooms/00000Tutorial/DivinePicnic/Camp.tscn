@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=2]
@@ -114,7 +114,7 @@ extends Node
 Determines whether the Spirit is lying on the blanket or standing up near it.
 This affects all interactions in the scene -- if the player is still sleeping,
 he will just describe what he sees, rather than interact with it.
-Once the player woke up, there is no way for him to lie on the blanket again.
+Once the player woke up, there is no way for him to lie on the blanket again.0
 \"\"\"
 
 signal deserialized
@@ -189,7 +189,7 @@ func run():
 	shl(\"Now I can wake up\")
 	choice_call(\"Wake up\", \"wake_up\")
 	choice_call(\"Keep sleeping\", \"end_cutscene\")
-	choice_call(\"Use item\", \"use_item\")
+	#choice_call(\"Use item\", \"use_item\")
 	
 func wake_up():
 	print(get_stack())
@@ -197,6 +197,7 @@ func wake_up():
 	get_node(spirit_state).set_state(\"standing\")
 	get_node(wake_up_cutscene).run()
 
+\"\"\"
 func use_item():
 	open_item_popup(\"use_item_filter\", \"use_item_callback\")
 	
@@ -205,6 +206,7 @@ func use_item_filter(item):
 	
 func use_item_callback(item):
 	print(item.name)
+\"\"\"
 "
 
 [sub_resource type="GDScript" id=7]
@@ -247,6 +249,85 @@ func deserialize(data):
 	assert(data.has(\"state\"))
 	set_state(data[\"state\"])
 	emit_signal(\"deserialized\")
+"
+
+[sub_resource type="GDScript" id=10]
+script/source = "extends Node2D
+
+
+func activate():
+	var msg = \"ERROR\"
+	match get_node(\"../../StateSwitcher\").state:
+		\"empty\":
+			msg = \"An empty firepit.\"
+		\"full\":
+			msg = \"A campfire, ready to be lit.\"
+		\"lit\":
+			msg = \"Devouring flame\"
+	get_parent().get_node(\"BlurbPoint\").blurb(msg,null,null)
+"
+
+[sub_resource type="GDScript" id=11]
+script/source = "extends Node
+
+
+func activate():
+	var msg = \"ERROR\"
+	match get_node(\"../../StateSwitcher\").state:
+		\"empty\":
+			msg = \"An empty firepit.\"
+		\"full\":
+			msg = \"A campfire, ready to be lit.\"
+		\"lit\":
+			msg = \"Devouring flame\"
+	get_parent().get_node(\"BlurbPoint\").blurb(msg,null,null)
+"
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends Node
+
+export(NodePath)  var spirit_state_controller
+
+func activate():
+	match get_node(spirit_state_controller).state:
+		\"on_blanket\":
+			get_parent().blurb(\"The Foddess of Everythin Else is making hotdogs.\", null, null)
+		\"standing\":
+			$ErisDialogue.run()
+"
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends CutsceneEngine
+
+func run():
+	ModeController.start_interaction_right()
+	clear_full()
+	shl(\"Hello. You want to talk abt smth?\")
+	choice_call(\"Actually, I want to talk about...\", \"use_item\")
+	choice_call(\"No, never mind.\", \"end_cutscene\")
+
+func use_item():
+	open_item_popup(\"filter\", \"callback\")
+	
+func filter(item):
+	return item.id == \"00000GetFirewood\"
+	
+func callback(item):
+	if item.id == \"00000GetFirewood\":
+		talk_about_firewood()
+	else:
+		idklol()
+		
+func talk_about_firewood():
+	clear_player_choices()
+	shl(\"Yes, you have to go and find some forewood.\")
+	choice_call(\"OK\", \"end_cutscene\")
+	
+func idklol():
+	clear_player_choices()
+	shl(\"I can't tell much about this.\")
+	choice_call(\"OK\", \"end_cutscene\")
+	
 "
 
 [sub_resource type="GDScript" id=8]
@@ -359,15 +440,43 @@ visible = false
 position = Vector2( 27.6863, 28.3787 )
 texture = ExtResource( 4 )
 
+[node name="Interactable" parent="Objects/Firepit" index="1" instance=ExtResource( 12 )]
+script = SubResource( 10 )
+
+[node name="Activator" parent="Objects/Firepit/Interactable" index="1"]
+script = SubResource( 11 )
+
+[node name="Clickable" parent="Objects/Firepit/Interactable" index="2"]
+ActivatorName = "Campfire"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/Firepit/Interactable/Clickable" index="0"]
+position = Vector2( -14.2802, 12.6935 )
+polygon = PoolVector2Array( -21.3306, -118.647, -87.9712, -58.3536, -111.771, 14.6338, -95.9045, 97.1413, -16.5706, 143.155, 77.0437, 157.435, 135.751, 138.395, 183.351, 87.6212, 183.351, -21.8599, 140.511, -72.6337, 86.5638, -104.367, 24.6832, -115.474 )
+
 [node name="Eris" type="Sprite" parent="Objects" index="6"]
 position = Vector2( 87.1511, -295.962 )
 texture = ExtResource( 6 )
+
+[node name="BaseInteractable" parent="Objects/Eris" index="0" instance=ExtResource( 12 )]
+position = Vector2( -87.1511, 295.962 )
+
+[node name="Activator" parent="Objects/Eris/BaseInteractable" index="1"]
+script = SubResource( 12 )
+spirit_state_controller = NodePath("../../../SpiritStateSwitcher")
+
+[node name="ErisDialogue" type="Node" parent="Objects/Eris/BaseInteractable/Activator" index="0"]
+script = SubResource( 13 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/Eris/BaseInteractable/Clickable" index="0"]
+polygon = PoolVector2Array( -10.2238, -423.29, -5.46375, -180.528, 178.591, -171.008, 194.458, -415.357 )
 
 [node name="Aneris" type="Sprite" parent="Objects" index="7"]
 position = Vector2( -269.434, 164.429 )
 rotation = -3.05258
 scale = Vector2( 1.06783, 1.08671 )
 texture = ExtResource( 6 )
+
+[node name="BaseInteractable" parent="Objects/Aneris" index="0" instance=ExtResource( 12 )]
 
 [node name="GoddessInteractable" parent="Objects" index="8" instance=ExtResource( 12 )]
 
@@ -416,6 +525,10 @@ texture = ExtResource( 9 )
 [connection signal="room_loaded" from="." to="Objects/FirstVisitCutscene" method="_on_Room_room_loaded"]
 
 [editable path="Objects/PentagramBlanket/Interactable"]
+
+[editable path="Objects/Firepit/Interactable"]
+
+[editable path="Objects/Eris/BaseInteractable"]
 
 [editable path="Objects/PathArrowRight"]
 
