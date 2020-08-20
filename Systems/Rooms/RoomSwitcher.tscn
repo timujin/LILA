@@ -17,6 +17,8 @@ func r(id:String):
 var room_preloaded = true
 
 func _ready():
+	
+	print(\"Room switcher ready\")
 	if room_preloaded:
 		var room_id = $\"/root/Room\".roomID
 		switch_to(room_id)

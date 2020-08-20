@@ -4,6 +4,9 @@
 script/source = "extends Node
 
 
+func _ready():
+	print(\"Mode controller ready\")
+
 # Click blocking (to prevent race conditions with user input)
 
 var clicks_blocked = false setget set_block_clicks

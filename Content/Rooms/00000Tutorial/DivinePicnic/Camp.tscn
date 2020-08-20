@@ -346,6 +346,7 @@ func idklol():
 script/source = "extends Node
 
 export(NodePath) var spirit_state
+export(NodePath) var knife_state
 
 func on_activate():
 	if get_node(spirit_state).state == \"on_blanket\":
@@ -354,7 +355,8 @@ func on_activate():
 		get_parent().blurb(\"A knife is lying on the ground here.\", load(\"res://Assets/Placeholders/blueallyswords.png\"), \"Pick up\", self, \"pickup\")
 
 func pickup():
-	print(\"Knife picked up\")
+	Character.inventory.add_item_by_id(\"ButterKnife\")
+	get_node(knife_state).present = false
 "
 
 [sub_resource type="GDScript" id=15]
@@ -363,13 +365,13 @@ script/source = "extends Node
 signal deserialized
 
 
-export(bool) var present = true
+export(bool) var present = true setget set_state
 
-func set_state(present):
-	self.present = present
+func set_state(value):
+	present = value
 	if not Engine.editor_hint and not is_inside_tree():
 		return # thread safety
-	get_parent().visible = present
+	get_parent().visible = value
 
 func serialize():
 	return {
@@ -554,6 +556,7 @@ texture = ExtResource( 10 )
 [node name="Activator" parent="Objects/KnifeOnTheGround/BaseInteractable" index="1"]
 script = SubResource( 16 )
 spirit_state = NodePath("../../../SpiritStateSwitcher")
+knife_state = NodePath("../../StateSwitcher")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Objects/KnifeOnTheGround/BaseInteractable/Clickable" index="0"]
 polygon = PoolVector2Array( -1149.48, -583.09, 1100.54, -685.628, 1085.34, 647.369, -1027.86, 766.997 )
