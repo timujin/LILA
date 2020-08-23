@@ -12,9 +12,16 @@ and collect all the IDs.
 extends Node
 
 export(Resource) var register
+export(bool) var needs_reloading
 
+
+var fully_loaded = false
 
 func _ready():
+	if needs_reloading:
+		load_items()
+		load_rooms()
+	fully_loaded = true
 	print(\"Global register ready\")
 
 
@@ -24,6 +31,8 @@ func room(id:String):
 	else:
 		return room(\"FFFFFDogroom\")
 
+func all_rooms():
+	return register.rooms.values()
 
 func item(id:String):
 	if register.items.has(id):
@@ -31,8 +40,117 @@ func item(id:String):
 	else:
 		return item(\"MissingNo\")
 		
+func all_items():
+	return register.items.values()
+
+########################
+# Initial loading
+########################
+		
+var files = []
+
+func dir_contents(path):
+	if not path.ends_with('/'):
+		path = path + '/'
+	var res = []
+	var dir = Directory.new()
+	if dir.open(path) == OK:
+		dir.list_dir_begin(true)
+		var file_name = dir.get_next()
+		while (file_name != \"\"):
+			if dir.current_is_dir():
+				res.append(path + file_name)
+			else:
+				files.append(path + file_name)
+			file_name = dir.get_next()
+	else:
+		print(\"An error occurred when trying to access the path: %s.\" % path)
+	return res
+	
+func recursively_enumerate(path):
+	var dirs = dir_contents(path)
+	for dir in dirs:
+		recursively_enumerate(dir)
+	
+		
+func load_rooms():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Content/Rooms/\")
+	for item in files:
+		if not item.ends_with(\".tscn\"):
+			continue
+		print(item)
+		var x = load(item).instance()
+		if not (x is BaseRoom):
+			continue
+		var id = x.roomID
+		var name = x.roomName
+		x.free()
+		if res.has(id):
+			printerr(\"Duplicate room id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+			assert(false)
+		else:
+			res[id] = {}
+			res[id][\"id\"] = id
+			res[id][\"name\"] = name
+			res[id][\"path\"] = item
+	files = []
+			
+	print(\"Rooms loaded in \" + str(OS.get_unix_time() - start))
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.rooms = res
+	print(saver.rooms)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
+
+func load_items():
+	var start = (OS.get_unix_time())
+	var res = {}
+	recursively_enumerate(\"res://Content/Items/\")
+	for item in files:
+		if not item.ends_with(\".tscn\"):
+			continue
+		print(item)
+		var x = load(item).instance()
+		if not (x is BaseItem):
+			continue
+		var id = x.id
+		var name = x.display_name
+		x.free()
+		if res.has(id):
+			printerr(\"Duplicate item id: %s\" % id)
+			printerr(\"Item 1: %s\" % item)
+			printerr(\"Item 2: %s\" % res[id])
+			assert(false)
+		else:
+			res[id] = {}
+			res[id][\"id\"] = id
+			res[id][\"name\"] = name
+			res[id][\"path\"] = item
+	files = []
+			
+	print(\"Items loaded in \" + str(OS.get_unix_time() - start))
+	
+	#var saver = RegisterResource.new()
+	var saver = load(\"res://Systems/GlobalRegister/Register.tres\")
+	saver.items = res
+	print(saver.items)
+	print(ResourceSaver.get_recognized_extensions(saver))
+	var dir = Directory.new()
+	#dir.remove(\"res://Systems/GlobalRegister/Register.tres\")
+	ResourceSaver.save(\"res://Systems/GlobalRegister/Register.tres\", saver, 64)
+	
 "
 
 [node name="GlobalRegister" type="Node"]
 script = SubResource( 1 )
 register = ExtResource( 1 )
+needs_reloading = true

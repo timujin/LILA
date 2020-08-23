@@ -10,7 +10,7 @@ export var roomID:String   = "[ID NOT SET]"
 var room_loaded = false
 
 func _ready():
-	RoomSwitcher.room = self
+	#RoomSwitcher.room = self
 	get_parent().move_child(self,0)#call_deferred("move_to_back")
 	call_deferred("deserialize_room")
 	
@@ -21,7 +21,7 @@ func deserialize_room():
 		emit_signal("room_loaded")
 		return
 	for object in objects_to_deserialize:
-		var data = Character.objects.deserialize(roomID, object.get_path(), {})
+		var data = null #Character.objects.deserialize(roomID, object.get_path(), {})
 		if data.size() == 0:
 			on_obj_deserialized(object)
 		else:
@@ -55,4 +55,4 @@ func safe_deserialize_object(object, data):
 func serialize():
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
-		Character.objects.serialize($"/root/Room".roomID, object.get_path(), object.serialize())
+		pass #Character.objects.serialize($"/root/Room".roomID, object.get_path(), object.serialize())

@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=2]
-
-[ext_resource path="res://Systems/Rooms/SwitcherLoadingScreen.tscn" type="PackedScene" id=1]
+[gd_scene load_steps=2 format=2]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -17,7 +15,7 @@ func r(id:String):
 var room_preloaded = true
 
 func _ready():
-	
+	return
 	print(\"Room switcher ready\")
 	if room_preloaded:
 		var room_id = $\"/root/Room\".roomID
@@ -119,5 +117,3 @@ func on_room_loaded():
 
 [node name="RoomSwitcher" type="Node"]
 script = SubResource( 1 )
-
-[node name="LoadingScreen" parent="." instance=ExtResource( 1 )]

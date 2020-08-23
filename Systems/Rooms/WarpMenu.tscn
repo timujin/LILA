@@ -1,0 +1,178 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Themes/HUD.tres" type="Theme" id=1]
+[ext_resource path="res://Assets/Themes/LineEdit.tres" type="StyleBox" id=2]
+[ext_resource path="res://Systems/Rooms/WarpMenuButton.tscn" type="PackedScene" id=3]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends CanvasLayer
+
+var visible = false setget set_visible
+
+onready var buttonContainer = $\"Control/Panel/Panel/ScrollContainer/VBoxContainer\"
+
+func set_visible(value):
+	visible = value
+	$Control.visible = value
+
+func _on_Panel_visibility_changed():
+	if $Control.visible == true:
+		load_rooms()
+	
+func load_rooms():
+	for child in buttonContainer.get_children():
+		child.queue_free()
+	if not GlobalRegister.fully_loaded:
+		yield(GlobalRegister, \"ready\")
+	var rooms = GlobalRegister.all_rooms()
+	rooms.sort()
+	for room in rooms:
+		var button = preload(\"res://Systems/Rooms/WarpMenuButton.tscn\").instance()
+		buttonContainer.add_child(button)
+		button.display(room)
+		button.connect(\"pressed\", self, \"on_room_selected\", [room[\"id\"]])
+
+func on_room_selected(id):
+	print(\"oon_room_sselected\")
+	#set_visible(false)
+	$Control.visible = false
+	return
+	switch_to_room(id)
+
+func _on_LineEdit_text_changed(new_text):
+	for child in buttonContainer.get_children():
+		if (new_text == \"\") or  								 \\
+				(new_text.to_lower() in child.rid.to_lower()) or \\
+				(new_text.to_lower() in child.rname.to_lower()): \\
+			child.visible = true
+		else:
+			child.visible = false
+
+###############################################################################
+func switch_to_room(id):
+	return
+	var old_room = get_node_or_null(\"Room\")
+	if old_room != null: old_room.queue_free()
+	while get_node_or_null(\"Room\") != null:
+		yield(get_tree(), \"idle_frame\")
+	print(\"loading completed\")
+"
+
+[node name="WarpMenu" type="CanvasLayer"]
+layer = 100
+script = SubResource( 1 )
+
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LineEdit" type="LineEdit" parent="Control/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 41.0
+margin_top = 36.0
+margin_right = -790.0
+margin_bottom = -831.0
+custom_styles/read_only = ExtResource( 2 )
+custom_styles/focus = ExtResource( 2 )
+custom_styles/normal = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="Control/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 33.0
+margin_top = 101.0
+margin_right = -800.0
+margin_bottom = -78.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/Panel/Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 3.0
+scroll_horizontal_enabled = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel/Panel/ScrollContainer"]
+margin_right = 767.0
+margin_bottom = 226.0
+size_flags_horizontal = 3
+
+[node name="Control" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_right = 767.0
+margin_bottom = 19.0
+
+[node name="Control2" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 23.0
+margin_right = 767.0
+margin_bottom = 42.0
+
+[node name="Control3" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 46.0
+margin_right = 767.0
+margin_bottom = 65.0
+
+[node name="Control4" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 69.0
+margin_right = 767.0
+margin_bottom = 88.0
+
+[node name="Control5" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 92.0
+margin_right = 767.0
+margin_bottom = 111.0
+
+[node name="Control6" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 115.0
+margin_right = 767.0
+margin_bottom = 134.0
+
+[node name="Control7" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 138.0
+margin_right = 767.0
+margin_bottom = 157.0
+
+[node name="Control8" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 161.0
+margin_right = 767.0
+margin_bottom = 180.0
+
+[node name="Control9" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 184.0
+margin_right = 767.0
+margin_bottom = 203.0
+
+[node name="Control10" parent="Control/Panel/Panel/ScrollContainer/VBoxContainer" instance=ExtResource( 3 )]
+anchor_right = 0.0
+margin_top = 207.0
+margin_right = 767.0
+margin_bottom = 226.0
+[connection signal="visibility_changed" from="Control/Panel" to="." method="_on_Panel_visibility_changed"]
+[connection signal="text_changed" from="Control/Panel/LineEdit" to="." method="_on_LineEdit_text_changed"]

@@ -5,29 +5,76 @@
 [resource]
 script = ExtResource( 1 )
 items = {
-"00000GetFirewood": "res://Content/Items/Quests/00000GetFirewood/00000GetFirewood.tscn",
-"ButterKnife": "res://Content/Items/Tools/ButterKnife/ButterKnife.tscn",
-"CreatureLoreSuit": "res://Content/Items/CreatureLore/Suit/Suit.tscn",
-"NaggingThought": "res://Content/Items/NaggingThought/NaggingThought.tscn",
-"Pyrokinesis": "res://Content/Items/Skills/Pyrokinesis/Pyrokinesis.tscn",
-"SizeableSupply OfDrinks": "res://Content/Items/Supplies/SizeableSupplyOfDrinks/SizeableSupplyOfDrinks.tscn",
-"Stick": "res://Content/Items/Stick/Stick.tscn",
-"Torch": "res://Content/Items/Tools/Torch/Torch.tscn"
+"00000GetFirewood": {
+"id": "00000GetFirewood",
+"name": "Gather some firewood",
+"path": "res://Content/Items/Quests/00000GetFirewood/00000GetFirewood.tscn"
+},
+"ButterKnife": {
+"id": "ButterKnife",
+"name": "Butter knife",
+"path": "res://Content/Items/Tools/ButterKnife/ButterKnife.tscn"
+},
+"CreatureLoreSuit": {
+"id": "CreatureLoreSuit",
+"name": "Suit",
+"path": "res://Content/Items/CreatureLore/Suit/Suit.tscn"
+},
+"NaggingThought": {
+"id": "NaggingThought",
+"name": "Nagging thought",
+"path": "res://Content/Items/NaggingThought/NaggingThought.tscn"
+},
+"Pyrokinesis": {
+"id": "Pyrokinesis",
+"name": "Pyrokinesis",
+"path": "res://Content/Items/Skills/Pyrokinesis/Pyrokinesis.tscn"
+},
+"SizeableSupply OfDrinks": {
+"id": "SizeableSupply OfDrinks",
+"name": "Sizeable supply of drinks",
+"path": "res://Content/Items/Supplies/SizeableSupplyOfDrinks/SizeableSupplyOfDrinks.tscn"
+},
+"Stick": {
+"id": "Stick",
+"name": "Stick",
+"path": "res://Content/Items/Stick/Stick.tscn"
+},
+"Torch": {
+"id": "Torch",
+"name": "Torch",
+"path": "res://Content/Items/Tools/Torch/Torch.tscn"
+}
 }
 rooms = {
-"00000DivineCave": "res://Content/Rooms/00000Tutorial/DivinePicnic/Cave.tscn",
-"00000DivineCaveEntrance": "res://Content/Rooms/00000Tutorial/DivinePicnic/CaveEntrance.tscn",
-"00000DivinePicnicCamp": "res://Content/Rooms/00000Tutorial/DivinePicnic/Camp.tscn",
-"00000DivinePond": "res://Content/Rooms/00000Tutorial/DivinePicnic/Pond.tscn",
-"00000WaitingRoom": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoom.tscn",
-"00000WaitingRoomWC": "res://Content/Rooms/00000Tutorial/WaitingRoom/WaitingRoomWC.tscn",
-"CubeRoom": "res://Content/Rooms/FFFFFTestinghall/3Droom/Box.tscn",
-"FFFFFBlueroom": "res://Content/Rooms/FFFFFTestinghall/Blueroom/Blueroom.tscn",
-"FFFFFDogroom": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn",
-"FFFFFGreenroom": "res://Content/Rooms/FFFFFTestinghall/Greenroom/Greenroom.tscn",
-"FFFFFPlainCubeRoom": "res://Content/Rooms/FFFFFTestinghall/PlainCubeRoom/PlainCubeRoom.tscn",
-"FFFFFRedroom": "res://Content/Rooms/FFFFFTestinghall/Redroom/Redroom.tscn",
-"FallingThroughDarkness": "res://Content/Rooms/00000Tutorial/FallingThroughDarkness/FallingThroughDarkness.tscn",
-"GoddessRoom": "res://Content/Rooms/00000Tutorial/GoddessRoom/GoddessRoom.tscn",
-"[ID NOT SET]": "res://Content/Rooms/FFFFFTestinghall/Corridor/CorridorTest.tscn"
+"00000DivineCave": {
+"id": "00000DivineCave",
+"name": "Divine Cave",
+"path": "res://Content/Rooms/00000Tutorial/DivinePicnic/Cave.tscn"
+},
+"00000DivineCaveEntrance": {
+"id": "00000DivineCaveEntrance",
+"name": "Divine Cave Entrance",
+"path": "res://Content/Rooms/00000Tutorial/DivinePicnic/CaveEntrance.tscn"
+},
+"00000DivinePicnicCamp": {
+"id": "00000DivinePicnicCamp",
+"name": "Divine picnic",
+"path": "res://Content/Rooms/00000Tutorial/DivinePicnic/Camp.tscn"
+},
+"00000DivinePond": {
+"id": "00000DivinePond",
+"name": "Divine Pond",
+"path": "res://Content/Rooms/00000Tutorial/DivinePicnic/Pond.tscn"
+},
+"FFFFFDogroom": {
+"id": "FFFFFDogroom",
+"name": "Dogroom",
+"path": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn"
+},
+"FallingThroughDarkness": {
+"id": "FallingThroughDarkness",
+"name": "Falling through darkness",
+"path": "res://Content/Rooms/00000Tutorial/FallingThroughDarkness/FallingThroughDarkness.tscn"
+}
 }

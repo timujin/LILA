@@ -44,14 +44,13 @@ config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]
 
-ModeController="*res://Systems/ModeController/ModeController.tscn"
 GlobalRegister="*res://Systems/GlobalRegister/GlobalRegister.tscn"
-RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
+ModeController="*res://Systems/ModeController/ModeController.tscn"
 Character="*res://Systems/Character/Character.tscn"
-HudButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
-ItemInteractionPopup="*res://Systems/WorldspaceMenus/Popups/ItemInteractionPopup.tscn"
 DeveloperConsole="*res://Systems/DeveloperConsole/DeveloperConsole.tscn"
-OverrideInteraction="*res://Systems/Interactables/OverrideInteraction.tscn"
+RoomSwitcher="*res://Systems/Rooms/RoomSwitcher.tscn"
+ItemInteractionPopup="*res://Systems/WorldspaceMenus/Popups/ItemInteractionPopup.tscn"
+HudButtons="*res://Systems/WorldspaceMenus/HUDButtons/HUDButtons.tscn"
 
 [display]
 
