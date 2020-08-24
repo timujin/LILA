@@ -22,7 +22,7 @@ func screen_scrolling(delta):
 	var vp = get_viewport()
 	var mp = vp.get_mouse_position()
 	
-	var geom = $\"/root/RoomSwitcher/RoomLayer/Room/Geometry\"
+	var geom = $Geometry
 	limit_left = geom.get_node(\"CameraLimitLeft\").position.x
 	limit_right = geom.get_node(\"CameraLimitRight\").position.x
 	limit_top = geom.get_node(\"CameraLimitTop\").position.y
@@ -125,23 +125,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Geometry" type="Node2D" parent="."]
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="CameraLimitLeft" type="Position2D" parent="Geometry"]
-position = Vector2( -1525.72, 542.16 )
-
-[node name="CameraLimitTop" type="Position2D" parent="Geometry"]
-position = Vector2( 881.761, -1129.7 )
-
-[node name="CameraLimitBottom" type="Position2D" parent="Geometry"]
-position = Vector2( 939.081, 1908.31 )
-
-[node name="CameraLimitRight" type="Position2D" parent="Geometry"]
-position = Vector2( 4084.8, 679.577 )
-
 [node name="FirstPersonCamera" type="Camera2D" parent="."]
 position = Vector2( 800, 455 )
 current = true
@@ -149,6 +132,24 @@ limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
 script = SubResource( 1 )
+
+[node name="Geometry" type="Node2D" parent="FirstPersonCamera"]
+position = Vector2( -800, -455 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CameraLimitLeft" type="Position2D" parent="FirstPersonCamera/Geometry"]
+position = Vector2( -1525.72, 542.16 )
+
+[node name="CameraLimitTop" type="Position2D" parent="FirstPersonCamera/Geometry"]
+position = Vector2( 881.761, -1129.7 )
+
+[node name="CameraLimitBottom" type="Position2D" parent="FirstPersonCamera/Geometry"]
+position = Vector2( 939.081, 1908.31 )
+
+[node name="CameraLimitRight" type="Position2D" parent="FirstPersonCamera/Geometry"]
+position = Vector2( 4084.8, 679.577 )
 
 [node name="AnimatedShade" type="CanvasLayer" parent="."]
 
@@ -165,3 +166,9 @@ __meta__ = {
 [node name="Fadeout" type="AnimationPlayer" parent="AnimatedShade"]
 autoplay = "New Anim"
 "anims/New Anim" = SubResource( 2 )
+
+[node name="Presentation" type="Node" parent="."]
+
+[node name="Logic" type="Node" parent="."]
+
+[node name="Serialization" type="Node" parent="."]

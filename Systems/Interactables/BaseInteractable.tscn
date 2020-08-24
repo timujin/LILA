@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=2]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node2D
 
 func blurb_dumb(text): return $BlurbPoint.blurb(text)
@@ -9,7 +9,7 @@ func blurb(text,icon=null,buttontext=null,call_target=null,callback=null):
 	return $BlurbPoint.blurb(text,icon,buttontext,call_target,callback)
 "
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Position2D
 
 func blurb(text:String,icon:Texture=null, buttontext=null, call_target=null, callback=null):
@@ -18,7 +18,7 @@ func blurb(text:String,icon:Texture=null, buttontext=null, call_target=null, cal
 	ItemInteractionPopup.callback = callback
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Area2D
 
 #####
@@ -63,15 +63,15 @@ func _on_Area2D_input_event(viewport, event, shape_idx):
 "
 
 [node name="BaseInteractable" type="Node2D"]
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [node name="BlurbPoint" type="Position2D" parent="."]
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="Activator" type="Node" parent="."]
 
 [node name="Clickable" type="Area2D" parent="."]
-script = SubResource( 2 )
+script = SubResource( 3 )
 [connection signal="input_event" from="Clickable" to="Clickable" method="_on_Area2D_input_event"]
 [connection signal="mouse_entered" from="Clickable" to="Clickable" method="_on_Area2D_mouse_entered"]
 [connection signal="mouse_exited" from="Clickable" to="Clickable" method="_on_Area2D_mouse_exited"]
