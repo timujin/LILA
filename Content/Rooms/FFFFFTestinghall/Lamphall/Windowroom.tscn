@@ -1,77 +1,16 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/window.jpg" type="Texture" id=2]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/Arrow.jpeg" type="Texture" id=3]
-[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=5]
-
-[sub_resource type="GDScript" id=2]
-script/source = "extends Sprite
-
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_ClickableArea_activated():
-	self.visible = not self.visible
-
-
-func _on_ClickableArea_area_entered(area):
-	self.visible = not self.visible
-
-
-func _on_Area2D_area_entered(area):
-	self.visible = not self.visible
-"
-
-[sub_resource type="GDScript" id=3]
-script/source = "extends Area2D
-
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = \"text\"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
-
-
-func _on_Area2D_area_entered(area):
-	print(\"entered\")
-
-
-func _on_Area2D_mouse_entered():
-	print(\"mouse entered\")
-
-
-func _on_ClickableArea_mouse_entered():
-	print(\"mouse entered\")
-"
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
-func activate():
+
+
+func _on_LeftArrowClick_activated():
 	RoomSwitcher.switch_to_room(\"FFFFFLampRoom\")
 "
 
@@ -79,47 +18,24 @@ func activate():
 roomName = "Window room"
 roomID = "FFFFFWindowRoom"
 
-[node name="window" type="Sprite" parent="." index="4"]
+[node name="window" type="Sprite" parent="Presentation" index="0"]
 position = Vector2( 738.429, 511.281 )
 texture = ExtResource( 2 )
-script = SubResource( 2 )
 
-[node name="Arrow" type="Sprite" parent="." index="5"]
+[node name="Arrow" type="Sprite" parent="Presentation" index="1"]
 position = Vector2( 297.021, 699.068 )
 rotation = -1.57468
 scale = Vector2( 0.221441, 0.174023 )
 texture = ExtResource( 3 )
 
-[node name="ClickableArea" type="Area2D" parent="Arrow" index="0"]
+[node name="LeftArrowClick" type="Area2D" parent="Presentation/Arrow" index="0"]
 position = Vector2( 0, -0.000244141 )
 script = ExtResource( 5 )
 ActivatorName = "ArrowLeft"
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/ClickableArea" index="0"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrow/LeftArrowClick" index="0"]
 polygon = PoolVector2Array( 587.281, -797.122, 602.085, 740.979, -470.124, 735.684, -592.489, -691.317 )
 
-[node name="Area2D" type="Area2D" parent="Arrow" index="1"]
-z_index = 5
-script = SubResource( 3 )
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/Area2D" index="0"]
-polygon = PoolVector2Array( 2375.41, -83.3341, 2254.88, 1082, 1448.35, 259.384, 1821.93, -780.661 )
-
-[node name="BaseInteractable" parent="Arrow" index="2" instance=ExtResource( 4 )]
-position = Vector2( 2048.43, 5914.16 )
-
-[node name="Activator" parent="Arrow/BaseInteractable" index="1"]
+[node name="Logic" parent="." index="5"]
 script = SubResource( 1 )
-
-[node name="Clickable" parent="Arrow/BaseInteractable" index="2"]
-ActivatorName = "old"
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/BaseInteractable/Clickable" index="0"]
-polygon = PoolVector2Array( 587.054, -722.702, 582.779, 678.867, -606.662, 759.817, -582.514, -765.689 )
-[connection signal="activated" from="Arrow/ClickableArea" to="window" method="_on_ClickableArea_activated"]
-[connection signal="mouse_entered" from="Arrow/ClickableArea" to="Arrow/Area2D" method="_on_ClickableArea_mouse_entered"]
-[connection signal="area_entered" from="Arrow/Area2D" to="window" method="_on_Area2D_area_entered"]
-[connection signal="area_entered" from="Arrow/Area2D" to="Arrow/Area2D" method="_on_Area2D_area_entered"]
-[connection signal="mouse_entered" from="Arrow/Area2D" to="Arrow/Area2D" method="_on_Area2D_mouse_entered"]
-
-[editable path="Arrow/BaseInteractable"]
+[connection signal="activated" from="Presentation/Arrow/LeftArrowClick" to="Logic" method="_on_LeftArrowClick_activated"]

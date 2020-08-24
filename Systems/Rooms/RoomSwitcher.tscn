@@ -37,10 +37,20 @@ func switch_to_room(roomID):
 	var roomPrefab = r(roomID)
 	var room = roomPrefab.instance()
 	$RoomLayer.add_child(room)
+	room.deserialize()
+	#print(\"waiting for deserialize\")
+	#yield(room, \"deserialized\")
+	#print(\"deserialized\")
+	room.shade_down()
 
 func unload_room():
 	if current_room() == null: return
 	var room = current_room()
+	room.shade_up()
+	room.serialize()
+	#print(\"waiting for serialize\")
+	#yield(room, \"serialized\")
+	#print(\"serialized\")
 	room.name = \"Room_old\"
 	room.queue_free()
 

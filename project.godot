@@ -33,13 +33,19 @@ _global_script_classes=[ {
 "class": "RegisterResource",
 "language": "GDScript",
 "path": "res://Systems/GlobalRegister/RegisterResource.gd"
+}, {
+"base": "Node",
+"class": "Serializer",
+"language": "GDScript",
+"path": "res://Systems/Rooms/Serializer.gd"
 } ]
 _global_script_class_icons={
 "BaseItem": "",
 "BaseRoom": "",
 "ClickableArea": "",
 "CutsceneEngine": "",
-"RegisterResource": ""
+"RegisterResource": "",
+"Serializer": ""
 }
 
 [application]

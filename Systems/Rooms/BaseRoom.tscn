@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.gd" type="Script" id=1]
 
@@ -85,13 +85,25 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
+tracks/1/type = "value"
+tracks/1/path = NodePath("Panel:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("Fadeout")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
 "times": PoolRealArray( 0.4 ),
 "transitions": PoolRealArray( 1 ),
 "values": [ {
@@ -99,18 +111,19 @@ tracks/1/keys = {
 "method": "queue_free"
 } ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("Panel:visible")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0, 0.4 ),
-"transitions": PoolRealArray( 1, 1 ),
-"update": 1,
-"values": [ true, false ]
-}
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Serializer
+
+
+func serialize():
+	return
+	
+func deserialize():
+	return
+	
+	
+"
 
 [node name="Room" type="Node2D"]
 script = ExtResource( 1 )
@@ -152,9 +165,9 @@ position = Vector2( 939.081, 1908.31 )
 position = Vector2( 4084.8, 679.577 )
 
 [node name="AnimatedShade" type="CanvasLayer" parent="."]
+layer = 60
 
 [node name="Panel" type="Panel" parent="AnimatedShade"]
-visible = false
 margin_left = -2182.0
 margin_top = -938.0
 margin_right = 3085.0
@@ -164,7 +177,6 @@ __meta__ = {
 }
 
 [node name="Fadeout" type="AnimationPlayer" parent="AnimatedShade"]
-autoplay = "New Anim"
 "anims/New Anim" = SubResource( 2 )
 
 [node name="Presentation" type="Node" parent="."]
@@ -172,3 +184,4 @@ autoplay = "New Anim"
 [node name="Logic" type="Node" parent="."]
 
 [node name="Serialization" type="Node" parent="."]
+script = SubResource( 3 )

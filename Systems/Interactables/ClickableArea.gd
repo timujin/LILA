@@ -24,16 +24,17 @@ func _ready():
 
 func press():
 	print("Clicked %s!" % ActivatorName)
-	emit_signal("on_activate")
+	emit_signal("activated")
+	"""
 	var activatable = get_parent().get_node("Activator")
 	if activatable != null and activatable.has_method("activate"):
 		activatable.activate()
 	if activatable != null and activatable.has_method("on_activate"):
 		activatable.on_activate()
-
+	"""
 
 func _on_ClickableArea_mouse_entered():
-	print("hover")
+	#print("hover")
 	if enabled:
 		ModeController.hover(self, hidden)
 

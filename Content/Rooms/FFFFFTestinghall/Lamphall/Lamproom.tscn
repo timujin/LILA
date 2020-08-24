@@ -1,49 +1,101 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/lit.jpg" type="Texture" id=2]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/unlit.jpg" type="Texture" id=3]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/Arrow.jpeg" type="Texture" id=4]
-[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=6]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
+func light_on():
+	$lit.visible = true
+	$unlit.visible = false
+	
+	
+func light_off():
+	$lit.visible = false
+	$unlit.visible = true
+	
+	
+"
 
-func activate():
+[sub_resource type="GDScript" id=2]
+script/source = "extends Node
+
+var lamp_lit = false
+
+func _on_SwitchLamp_activated():
+	if lamp_lit:
+		lamp_lit = false
+		$\"../Presentation/Lamp\".light_on()
+	else:
+		lamp_lit = true
+		$\"../Presentation/Lamp\".light_off()
+
+
+func _on_RightArrow_activated():
 	RoomSwitcher.switch_to_room(\"FFFFFWindowRoom\")
+"
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends Serializer
+
+func serialize():
+	var data = {}
+	data[\"lamp_on\"] = $\"../Presentation/Lamp/lit\".visible
+	store_data(data)
+	#emit_signal(\"serialized\")
+	
+func deserialize():
+	var data = load_data({\"lamp_on\":false})
+	print(\"des dta\", data)
+	if data[\"lamp_on\"]:
+		$\"../Presentation/Lamp\".light_on()
+	else:
+		$\"../Presentation/Lamp\".light_off()
+	#emit_signal(\"deserialized\")
 "
 
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Lamp room"
 roomID = "FFFFFLampRoom"
 
-[node name="Lamp" type="Node" parent="." index="5"]
-
-[node name="lit" type="Sprite" parent="Lamp" index="0"]
-position = Vector2( 563.391, 537.903 )
-texture = ExtResource( 2 )
-
-[node name="unlit" type="Sprite" parent="Lamp" index="1"]
-position = Vector2( 563.391, 537.903 )
-texture = ExtResource( 3 )
-
-[node name="Arrow" type="Sprite" parent="." index="6"]
+[node name="Arrow" type="Sprite" parent="Presentation" index="0"]
 position = Vector2( 1172.36, 546.425 )
 rotation = 1.52423
 scale = Vector2( 0.211758, 0.280855 )
 texture = ExtResource( 4 )
 
-[node name="BaseInteractable" parent="Arrow" index="0" instance=ExtResource( 5 )]
-position = Vector2( -23.4968, -28.614 )
-rotation = -1.50906
-scale = Vector2( 3.56348, 4.72017 )
+[node name="RightArrow" type="Area2D" parent="Presentation/Arrow" index="0"]
+script = ExtResource( 6 )
 
-[node name="Activator" parent="Arrow/BaseInteractable" index="1"]
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrow/RightArrow" index="0"]
+polygon = PoolVector2Array( -573.785, 746.246, -560.814, -737.489, 515.808, -745.833, 565.573, 713.72 )
+
+[node name="Lamp" type="Node" parent="Presentation" index="1"]
 script = SubResource( 1 )
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/BaseInteractable/Clickable" index="0"]
-rotation = 0.0597038
-polygon = PoolVector2Array( -238.435, -99.6235, 181.983, -137.731, 209.159, 99.8009, -210.486, 150.84 )
+[node name="lit" type="Sprite" parent="Presentation/Lamp" index="0"]
+visible = false
+position = Vector2( 563.391, 537.903 )
+texture = ExtResource( 2 )
 
-[editable path="Arrow/BaseInteractable"]
+[node name="unlit" type="Sprite" parent="Presentation/Lamp" index="1"]
+position = Vector2( 563.391, 537.903 )
+texture = ExtResource( 3 )
+
+[node name="SwitchLamp" type="Area2D" parent="Presentation/Lamp" index="2"]
+script = ExtResource( 6 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Lamp/SwitchLamp" index="0"]
+polygon = PoolVector2Array( 553.91, 253.449, 272.615, 505.134, 557.611, 780.877, 801.893, 536.594 )
+
+[node name="Logic" parent="." index="5"]
+script = SubResource( 2 )
+
+[node name="Serialization" parent="." index="6"]
+script = SubResource( 3 )
+[connection signal="activated" from="Presentation/Arrow/RightArrow" to="Logic" method="_on_RightArrow_activated"]
+[connection signal="activated" from="Presentation/Lamp/SwitchLamp" to="Logic" method="_on_SwitchLamp_activated"]
