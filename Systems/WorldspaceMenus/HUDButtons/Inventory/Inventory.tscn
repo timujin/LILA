@@ -140,7 +140,7 @@ func _on_CloseButton_pressed():
 "
 
 [node name="Inventory" type="CanvasLayer"]
-layer = 3
+layer = 55
 script = SubResource( 1 )
 
 [node name="Modal" type="Panel" parent="."]

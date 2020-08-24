@@ -46,7 +46,7 @@ func _on_Inventory_closed():
 "
 
 [node name="WSHUD" type="CanvasLayer"]
-layer = 2
+layer = 53
 script = SubResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
