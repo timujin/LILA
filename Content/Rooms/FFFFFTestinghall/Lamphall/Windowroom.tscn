@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/window.jpg" type="Texture" id=2]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/Arrow.jpeg" type="Texture" id=3]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+func activate():
+	RoomSwitcher.switch_to_room(\"FFFFFLampRoom\")
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Window room"
+roomID = "FFFFFWindowRoom"
+
+[node name="window" type="Sprite" parent="." index="5"]
+position = Vector2( 738.429, 511.281 )
+texture = ExtResource( 2 )
+
+[node name="Arrow" type="Sprite" parent="." index="6"]
+position = Vector2( 297.021, 699.068 )
+rotation = -1.57468
+scale = Vector2( 0.221441, 0.174023 )
+texture = ExtResource( 3 )
+
+[node name="BaseInteractable" parent="Arrow" index="0" instance=ExtResource( 4 )]
+
+[node name="Activator" parent="Arrow/BaseInteractable" index="1"]
+script = SubResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/BaseInteractable/Clickable" index="0"]
+polygon = PoolVector2Array( 587.054, -722.702, 582.779, 678.867, -606.662, 759.817, -582.514, -765.689 )
+
+[editable path="Arrow/BaseInteractable"]

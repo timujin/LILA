@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/lit.jpg" type="Texture" id=2]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/unlit.jpg" type="Texture" id=3]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/Arrow.jpeg" type="Texture" id=4]
+[ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=5]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+
+func activate():
+	RoomSwitcher.switch_to_room(\"FFFFFWindowRoom\")
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Lamp room"
+roomID = "FFFFFLampRoom"
+
+[node name="Lamp" type="Node" parent="." index="5"]
+
+[node name="lit" type="Sprite" parent="Lamp" index="0"]
+position = Vector2( 563.391, 537.903 )
+texture = ExtResource( 2 )
+
+[node name="unlit" type="Sprite" parent="Lamp" index="1"]
+position = Vector2( 563.391, 537.903 )
+texture = ExtResource( 3 )
+
+[node name="Arrow" type="Sprite" parent="." index="6"]
+position = Vector2( 1172.36, 546.425 )
+rotation = 1.52423
+scale = Vector2( 0.211758, 0.280855 )
+texture = ExtResource( 4 )
+
+[node name="BaseInteractable" parent="Arrow" index="0" instance=ExtResource( 5 )]
+position = Vector2( -23.4968, -28.614 )
+rotation = -1.50906
+scale = Vector2( 3.56348, 4.72017 )
+
+[node name="Activator" parent="Arrow/BaseInteractable" index="1"]
+script = SubResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Arrow/BaseInteractable/Clickable" index="0"]
+rotation = 0.0597038
+polygon = PoolVector2Array( -238.435, -99.6235, 181.983, -137.731, 209.159, 99.8009, -210.486, 150.84 )
+
+[editable path="Arrow/BaseInteractable"]

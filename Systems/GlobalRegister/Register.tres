@@ -72,6 +72,16 @@ rooms = {
 "name": "Dogroom",
 "path": "res://Content/Rooms/FFFFFTestinghall/Dogroom/Dogroom.tscn"
 },
+"FFFFFLampRoom": {
+"id": "FFFFFLampRoom",
+"name": "Lamp room",
+"path": "res://Content/Rooms/FFFFFTestinghall/Lamphall/Lamproom.tscn"
+},
+"FFFFFWindowRoom": {
+"id": "FFFFFWindowRoom",
+"name": "Window room",
+"path": "res://Content/Rooms/FFFFFTestinghall/Lamphall/Windowroom.tscn"
+},
 "FallingThroughDarkness": {
 "id": "FallingThroughDarkness",
 "name": "Falling through darkness",
