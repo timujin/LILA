@@ -8,7 +8,7 @@
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/stick.png" type="Texture" id=6]
 [ext_resource path="res://Systems/Interactables/BaseInteractable.tscn" type="PackedScene" id=7]
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Node
 
 
@@ -16,7 +16,7 @@ func on_activate():
 	RoomSwitcher.switch_to(\"00000DivineCave\")
 "
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Node
 
 
@@ -24,7 +24,7 @@ func activate():
 	RoomSwitcher.switch_to(\"00000DivinePond\")
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Node
 
 
@@ -36,6 +36,9 @@ func activate():
 roomName = "Divine Cave Entrance"
 roomID = "00000DivineCaveEntrance"
 
+[node name="Background" parent="." index="1"]
+position = Vector2( 806.009, 465.901 )
+
 [node name="Grass" type="Sprite" parent="Background" index="0"]
 position = Vector2( -7.51428, 7.18942 )
 scale = Vector2( 0.726751, 0.63076 )
@@ -44,12 +47,20 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Geometry" parent="." index="2"]
+position = Vector2( 806.009, 465.901 )
+
+[node name="FirstPersonCamera" parent="." index="3"]
+position = Vector2( 806.009, 465.901 )
+is_scrolling = true
+
 [node name="Filling" type="Node" parent="." index="5"]
 
 [node name="CaveEntrance" parent="Filling" index="0" instance=ExtResource( 7 )]
+position = Vector2( 806.009, 465.901 )
 
 [node name="Activator" parent="Filling/CaveEntrance" index="1"]
-script = SubResource( 3 )
+script = SubResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/CaveEntrance/Clickable" index="0"]
 polygon = PoolVector2Array( -130.878, -324.29, -86.4634, -383.51, -17.9902, -426.074, 70.8397, -407.568, 107.852, -346.498, 81.9435, -305.784, -75.3596, -287.278 )
@@ -67,53 +78,54 @@ texture = ExtResource( 5 )
 [node name="Sticks" type="Node" parent="Filling" index="1"]
 
 [node name="stick" type="Sprite" parent="Filling/Sticks" index="0"]
-position = Vector2( -19.2745, -230.409 )
+position = Vector2( 786.734, 235.492 )
 texture = ExtResource( 6 )
 
 [node name="stick2" type="Sprite" parent="Filling/Sticks" index="1"]
-position = Vector2( -10.8534, -203.041 )
+position = Vector2( 795.155, 262.86 )
 texture = ExtResource( 6 )
 
 [node name="stick3" type="Sprite" parent="Filling/Sticks" index="2"]
-position = Vector2( -6.64282, -179.883 )
+position = Vector2( 799.366, 286.018 )
 texture = ExtResource( 6 )
 
 [node name="stick4" type="Sprite" parent="Filling/Sticks" index="3"]
-position = Vector2( 1.29053, -146.562 )
+position = Vector2( 807.299, 319.339 )
 texture = ExtResource( 6 )
 
 [node name="stick5" type="Sprite" parent="Filling/Sticks" index="4"]
-position = Vector2( 4.46393, -110.069 )
+position = Vector2( 810.472, 355.832 )
 texture = ExtResource( 6 )
 
 [node name="stick6" type="Sprite" parent="Filling/Sticks" index="5"]
-position = Vector2( 4.46393, -60.8817 )
+position = Vector2( 810.472, 405.019 )
 texture = ExtResource( 6 )
 
 [node name="stick7" type="Sprite" parent="Filling/Sticks" index="6"]
-position = Vector2( 12.3973, -2.1745 )
+position = Vector2( 818.406, 463.726 )
 texture = ExtResource( 6 )
 
 [node name="stick8" type="Sprite" parent="Filling/Sticks" index="7"]
-position = Vector2( 13.984, 53.3593 )
+position = Vector2( 819.993, 519.26 )
 texture = ExtResource( 6 )
 
 [node name="stick9" type="Sprite" parent="Filling/Sticks" index="8"]
-position = Vector2( 23.5041, 104.133 )
+position = Vector2( 829.513, 570.034 )
 texture = ExtResource( 6 )
 
 [node name="stick10" type="Sprite" parent="Filling/Sticks" index="9"]
-position = Vector2( 33.0242, 159.667 )
+position = Vector2( 839.033, 625.568 )
 texture = ExtResource( 6 )
 
 [node name="stick11" type="Sprite" parent="Filling/Sticks" index="10"]
-position = Vector2( 33.0242, 208.854 )
+position = Vector2( 839.033, 674.755 )
 texture = ExtResource( 6 )
 
 [node name="PathArrowLeft" parent="Filling" index="2" instance=ExtResource( 7 )]
+position = Vector2( 806.009, 465.901 )
 
 [node name="Activator" parent="Filling/PathArrowLeft" index="1"]
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/PathArrowLeft/Clickable" index="0"]
 polygon = PoolVector2Array( -799.35, 182.054, -659.738, 179.838, -657.522, 329.423, -804.891, 326.099 )
@@ -125,9 +137,10 @@ scale = Vector2( 0.132791, 0.0980954 )
 texture = ExtResource( 3 )
 
 [node name="PathArrowRight" parent="Filling" index="3" instance=ExtResource( 7 )]
+position = Vector2( 806.009, 465.901 )
 
 [node name="Activator" parent="Filling/PathArrowRight" index="1"]
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Filling/PathArrowRight/Clickable" index="0"]
 polygon = PoolVector2Array( 544.6, 193.885, 544.6, 334.532, 738.915, 330.831, 738.915, 190.184 )

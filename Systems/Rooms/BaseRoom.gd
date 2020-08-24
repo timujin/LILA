@@ -7,6 +7,7 @@ signal room_loaded
 export var roomName:String = "[ROOM NAME NOT SET]"
 export var roomID:String   = "[ID NOT SET]"
 
+"""
 var room_loaded = false
 
 func _ready():
@@ -36,6 +37,7 @@ func on_obj_deserialized(object):
 	
 
 """
+"""
 func deserialize():
 	return
 	var objects = get_tree().get_nodes_in_group("serializable_room")
@@ -52,7 +54,10 @@ func safe_deserialize_object(object, data):
 	object.deserialize(data)
 """
 
+"""
 func serialize():
 	var objects = get_tree().get_nodes_in_group("serializable_room")
 	for object in objects:
 		pass #Character.objects.serialize($"/root/Room".roomID, object.get_path(), object.serialize())
+
+"""

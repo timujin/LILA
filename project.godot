@@ -39,7 +39,7 @@ _global_script_class_icons={
 [application]
 
 config/name="LILA"
-run/main_scene="res://Content/Rooms/00000Tutorial/FallingThroughDarkness/FallingThroughDarkness.tscn"
+run/main_scene="res://Loader.tscn"
 config/icon="res://Assets/Placeholders/icon.png"
 
 [autoload]

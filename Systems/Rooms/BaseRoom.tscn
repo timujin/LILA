@@ -13,8 +13,8 @@ const horiz_margin = 0.2
 const verti_margin = 0.2
 
 func _process(delta):
-	return
-	if ModeController.is_room_scrollable() and is_scrolling:
+	#return
+	if is_scrolling:
 		screen_scrolling(delta)
 	
 	
@@ -22,7 +22,7 @@ func screen_scrolling(delta):
 	var vp = get_viewport()
 	var mp = vp.get_mouse_position()
 	
-	var geom = $\"/root/Room/Geometry\"
+	var geom = $\"/root/RoomSwitcher/RoomLayer/Room/Geometry\"
 	limit_left = geom.get_node(\"CameraLimitLeft\").position.x
 	limit_right = geom.get_node(\"CameraLimitRight\").position.x
 	limit_top = geom.get_node(\"CameraLimitTop\").position.y

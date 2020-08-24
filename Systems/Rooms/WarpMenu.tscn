@@ -33,11 +33,8 @@ func load_rooms():
 		button.connect(\"pressed\", self, \"on_room_selected\", [room[\"id\"]])
 
 func on_room_selected(id):
-	print(\"oon_room_sselected\")
-	#set_visible(false)
 	$Control.visible = false
-	return
-	switch_to_room(id)
+	RoomSwitcher.switch_to_room(id)
 
 func _on_LineEdit_text_changed(new_text):
 	for child in buttonContainer.get_children():

@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Systems/Rooms/WarpMenu.tscn" type="PackedScene" id=1]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -12,18 +14,35 @@ func r(id:String):
 # if you set it as the starting scene of the project
 ####
 
-var room_preloaded = true
+#var room_preloaded = true
 
-func _ready():
-	return
-	print(\"Room switcher ready\")
-	if room_preloaded:
-		var room_id = $\"/root/Room\".roomID
-		switch_to(room_id)
+#func _ready():
+#	return
+#	print(\"Room switcher ready\")
+#	if room_preloaded:
+#		var room_id = $\"/root/Room\".roomID
+#		switch_to(room_id)
 	
 #####################
 ## ROOM LOADING #####
 #####################
+
+
+func current_room():
+	return get_node_or_null(\"RoomLayer/Room\")
+
+func switch_to_room(roomID):
+	unload_room()
+	
+	var roomPrefab = r(roomID)
+	var room = roomPrefab.instance()
+	$RoomLayer.add_child(room)
+
+func unload_room():
+	if current_room() == null: return
+	current_room().name = \"Room_old\"
+	current_room().queue_free()
+
 \"\"\"
 func _ready():
 	init_notifier()
@@ -60,6 +79,7 @@ func set_room_deserialized(value):
 
 \"\"\"
 
+\"\"\"
 var room:Node = null
 
 var in_the_process_of_loading = false
@@ -84,6 +104,7 @@ func _switch_room_obj(to_room):
 	#var serializables = get_tree().get_nodes_in_group(\"serializable_room\")
 	
 \"\"\"	
+\"\"\"
 func deserialize_room():
 	var objects = get_tree().get_nodes_in_group(\"serializable_room\")
 	for object in objects:
@@ -93,7 +114,7 @@ func deserialize_room():
 	RoomSwitcher.room_deserialized = true
 	call_deferred(\"emit_signal\", \"room_loaded\")
 \"\"\"
-
+\"\"\"
 func switch_to(id:String):
 	in_the_process_of_loading = true
 	ModeController.clicks_blocked = true
@@ -113,7 +134,14 @@ func on_room_loaded():
 	$LoadingScreen.visible = false
 	in_the_process_of_loading = false
 	emit_signal(\"room_loaded\")
+\"\"\"
 "
 
 [node name="RoomSwitcher" type="Node"]
 script = SubResource( 1 )
+
+[node name="RoomLayer" type="CanvasLayer" parent="."]
+layer = 50
+follow_viewport_enable = true
+
+[node name="WarpMenu" parent="." instance=ExtResource( 1 )]
