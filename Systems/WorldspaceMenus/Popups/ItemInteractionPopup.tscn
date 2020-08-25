@@ -19,14 +19,21 @@ func _ready():
 var call_target = null
 var callback = null
 	
+var intended_position = null
+	
 func hide():
 	popup.visible = false
+	intended_position = null
+	
+func _process(delta):
+	if intended_position != null:
+		offset =  intended_position.global_position + RoomSwitcher.get_node(\"RoomLayer\").offset - get_viewport().size / 2
 
 func display(text:String, icon:Texture, buttontext, at):
 	popup.visible = true
 	if (at is Node2D):
 		#popup.rect_global_position = at.global_position
-		offset = at.global_position
+		intended_position = at
 	elif (at is Spatial):
 		print(\"origin\", at.global_transform.origin)
 		popup.rect_global_position = get_viewport().get_camera().unproject_position(at.global_transform.origin)

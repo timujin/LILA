@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/eris.jpg" type="Texture" id=6]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Spirit.jpg" type="Texture" id=7]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/PentagramBlanket.jpg" type="Texture" id=8]
+[ext_resource path="res://Systems/Interactables/BlurbPoint.gd" type="Script" id=9]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/KnifeOnTheGround.jpeg" type="Texture" id=10]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/backpacks.PNG" type="Texture" id=11]
 
@@ -50,6 +51,7 @@ func set_state(new_state):
 		\"on_blanket\":
 			get_node(on_blanket).visible = true
 		\"standing\":
+			print(\"Is now standing\")
 			get_node(standing).visible = true
 		_:
 			assert(false)
@@ -90,29 +92,6 @@ func set_state(new_state):
 [sub_resource type="GDScript" id=4]
 script/source = "extends Node
 
-export(NodePath) var spirit
-export(NodePath) var wake_up_cutscene
-
-func _on_Goddesses_activated():
-	var state = get_node(spirit).state
-	if state == \"on_blanket\":
-		$LookAtGoddesses.run()
-	else:
-		get_node(wake_up_cutscene).run()
-"
-
-[sub_resource type="GDScript" id=5]
-script/source = "extends CutsceneEngine
-
-func run():
-	start_cutscene_right()
-	shl(\"Blah blah they're making sandwiches\")
-	choice_call(\"OK\", \"end_cutscene\")
-"
-
-[sub_resource type="GDScript" id=6]
-script/source = "extends Node
-
 signal deserialized
 
 
@@ -125,7 +104,13 @@ func set_state(value):
 	get_parent().visible = value
 "
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=5]
+script/source = "extends Node
+
+
+"
+
+[sub_resource type="GDScript" id=6]
 script/source = "extends CutsceneEngine
 
 \"\"\"
@@ -149,7 +134,6 @@ func _on_Room_room_loaded():
 
 	
 func activate():
-	return
 	print(\"first_visit_activated\")
 	ModeController.start_interaction(false)
 	self.execute()
@@ -172,7 +156,7 @@ func pretend_to_be_asleep():
 
 "
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=7]
 script/source = "extends CutsceneEngine
 
 \"\"\"
@@ -191,7 +175,30 @@ func run():
 	choice_call(\"OKIE DOKIE\", \"end_cutscene\")
 "
 
+[sub_resource type="GDScript" id=8]
+script/source = "extends Node
+
+export(NodePath) var spirit
+export(NodePath) var goddesses_dialogue
+
+func _on_Goddesses_activated():
+	var state = get_node(spirit).state
+	if state == \"on_blanket\":
+		$LookAtGoddesses.run()
+	else:
+		get_node(goddesses_dialogue).run()
+"
+
 [sub_resource type="GDScript" id=9]
+script/source = "extends CutsceneEngine
+
+func run():
+	start_cutscene_right()
+	shl(\"Blah blah they're making sandwiches\")
+	choice_call(\"OK\", \"end_cutscene\")
+"
+
+[sub_resource type="GDScript" id=10]
 script/source = "extends CutsceneEngine
 
 func run():
@@ -225,27 +232,60 @@ func idklol():
 	
 "
 
-[sub_resource type="GDScript" id=10]
+[sub_resource type="GDScript" id=11]
+script/source = "extends CutsceneEngine
+
+export(NodePath) var spirit_switcher
+export(NodePath) var blanket_blurb
+
+func _on_Blanket_activated():
+	var spirit_standing = get_node(spirit_switcher).state == \"standing\"
+	if spirit_standing:
+		get_node(blanket_blurb).display(\"A pentagram is stitched onto this blanket\")
+	else:
+		print(\"Wake up\")
+"
+
+[sub_resource type="GDScript" id=12]
 script/source = "extends Serializer
+
+export(Dictionary) var defaults = {
+	\"first_visit\": true,
+	\"spirit_state\": \"on_blanket\",
+	\"campfire_state\": \"empty\",
+	\"knife_there\": true
+}
+
+export(NodePath) var first_visit_cutscene
+export(NodePath) var spirit_on_a_blanket
+export(NodePath) var firepit
+export(NodePath) var knife
 
 
 func serialize():
-	pass
+	var data = {
+		\"first_visit\": get_node(first_visit_cutscene).first_visit,
+		\"spirit_state\": get_node(spirit_on_a_blanket).state,
+		\"campfire_state\": get_node(firepit).state,
+		\"knife_there\": get_node(knife).present
+	}
+	store_data(data)
 	
 func deserialize():
-	pass
+	var data = load_data(defaults)
+	get_node(first_visit_cutscene).first_visit = data[\"first_visit\"]
+	get_node(spirit_on_a_blanket).state = data[\"spirit_state\"]
+	get_node(firepit).state = data[\"campfire_state\"]
+	get_node(knife).present = data[\"knife_there\"]
 "
 
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Divine picnic"
 roomID = "00000DivinePicnicCamp"
+is_scrolling = true
 
 [node name="Description" parent="." index="0"]
 script = SubResource( 1 )
-
-[node name="FirstPersonCamera" parent="." index="1"]
-position = Vector2( 790.518, 451.869 )
-is_scrolling = true
 
 [node name="SpiritOnABlanket" type="Node" parent="Presentation" index="0"]
 script = SubResource( 2 )
@@ -258,16 +298,28 @@ position = Vector2( 489.769, 240.842 )
 scale = Vector2( 0.440703, 0.36682 )
 texture = ExtResource( 8 )
 
+[node name="Blanket" type="Area2D" parent="Presentation/SpiritOnABlanket/PentagramBlanket" index="0"]
+position = Vector2( 763.859, 567.442 )
+scale = Vector2( 2.2691, 2.72613 )
+script = ExtResource( 2 )
+ActivatorName = "Blanket"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/SpiritOnABlanket/PentagramBlanket/Blanket" index="0"]
+polygon = PoolVector2Array( -560.163, -333.754, -113.958, -326.953, -109.877, -90.2463, -561.523, -88.8859 )
+
 [node name="SpiritLyingDown" type="Sprite" parent="Presentation/SpiritOnABlanket" index="1"]
 position = Vector2( 499.509, 236.946 )
 scale = Vector2( 0.40646, 0.212419 )
 texture = ExtResource( 7 )
 
 [node name="SpiritStanding" type="Sprite" parent="Presentation/SpiritOnABlanket" index="2"]
-visible = false
-position = Vector2( -643.198, -228.197 )
+position = Vector2( 189.343, 188.073 )
 scale = Vector2( 0.136324, 0.383632 )
 texture = ExtResource( 7 )
+
+[node name="BlanketBlurb" type="Position2D" parent="Presentation/SpiritOnABlanket" index="3"]
+position = Vector2( 492.265, 333.112 )
+script = ExtResource( 9 )
 
 [node name="Firepit" type="Node" parent="Presentation" index="1"]
 
@@ -305,12 +357,6 @@ polygon = PoolVector2Array( -365.629, 15.8633, -150.689, 33.5483, -173.815, 317.
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Presentation/Goddesses" index="1"]
 polygon = PoolVector2Array( -13.29, -424.9, 190.767, -424.9, 188.046, -165.067, -13.29, -165.067 )
 
-[node name="GoddessesLogic" type="Node" parent="Presentation/Goddesses" index="2"]
-script = SubResource( 4 )
-
-[node name="LookAtGoddesses" type="Node" parent="Presentation/Goddesses/GoddessesLogic" index="0"]
-script = SubResource( 5 )
-
 [node name="Aneris" type="Sprite" parent="Presentation" index="4"]
 position = Vector2( 556.97, 613.42 )
 rotation = -3.05258
@@ -327,27 +373,41 @@ scale = Vector2( 0.0414562, 0.0368791 )
 texture = ExtResource( 10 )
 
 [node name="StateSwitcher" type="Node" parent="Presentation/KnifeOnTheGround" index="0"]
-script = SubResource( 6 )
+script = SubResource( 4 )
+
+[node name="Logic" parent="." index="5"]
+script = SubResource( 5 )
 
 [node name="FirstVisitCutscene" type="Node" parent="Logic" index="0"]
-script = SubResource( 7 )
+script = SubResource( 6 )
 spirit_state_switcher = NodePath("../../Presentation/SpiritOnABlanket")
 wake_up_cutscene = NodePath("../WakeUpCutscene")
 
 [node name="WakeUpCutscene" type="Node" parent="Logic" index="1"]
-script = SubResource( 8 )
+script = SubResource( 7 )
 
-[node name="GoddessDialogue" type="Node" parent="Logic" index="2"]
+[node name="GoddessesLogic" type="Node" parent="Logic" index="2"]
+script = SubResource( 8 )
+spirit = NodePath("../../Presentation/SpiritOnABlanket")
+goddesses_dialogue = NodePath("GoddessDialogue")
+
+[node name="LookAtGoddesses" type="Node" parent="Logic/GoddessesLogic" index="0"]
 script = SubResource( 9 )
 
-[node name="Blanket" type="Area2D" parent="Logic" index="3"]
-position = Vector2( 826.404, 448.991 )
-script = ExtResource( 2 )
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Logic/Blanket" index="0"]
-polygon = PoolVector2Array( -560.163, -333.754, -113.958, -326.953, -109.877, -90.2463, -561.523, -88.8859 )
-
-[node name="Serialization" parent="." index="5"]
+[node name="GoddessDialogue" type="Node" parent="Logic/GoddessesLogic" index="1"]
 script = SubResource( 10 )
+
+[node name="BlanketLogic" type="Node" parent="Logic" index="3"]
+script = SubResource( 11 )
+spirit_switcher = NodePath("../../Presentation/SpiritOnABlanket")
+blanket_blurb = NodePath("../../Presentation/SpiritOnABlanket/BlanketBlurb")
+
+[node name="Serialization" parent="." index="6"]
+script = SubResource( 12 )
+first_visit_cutscene = NodePath("../Logic/FirstVisitCutscene")
+spirit_on_a_blanket = NodePath("../Presentation/SpiritOnABlanket")
+firepit = NodePath("../Presentation/Firepit/StateSwitcher")
+knife = NodePath("../Presentation/KnifeOnTheGround/StateSwitcher")
 [connection signal="room_loaded" from="." to="Logic/FirstVisitCutscene" method="_on_Room_room_loaded"]
-[connection signal="activated" from="Presentation/Goddesses" to="Presentation/Goddesses/GoddessesLogic" method="_on_Goddesses_activated"]
+[connection signal="activated" from="Presentation/SpiritOnABlanket/PentagramBlanket/Blanket" to="Logic/BlanketLogic" method="_on_Blanket_activated"]
+[connection signal="activated" from="Presentation/Goddesses" to="Logic/GoddessesLogic" method="_on_Goddesses_activated"]

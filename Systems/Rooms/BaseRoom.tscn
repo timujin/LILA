@@ -138,7 +138,7 @@ position = Vector2( 939.081, 1908.31 )
 position = Vector2( 4084.8, 679.577 )
 
 [node name="FirstPersonCamera" type="Camera2D" parent="."]
-position = Vector2( 800, 455 )
+position = Vector2( 800, 450 )
 current = true
 limit_smoothed = true
 smoothing_enabled = true
