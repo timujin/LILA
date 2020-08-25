@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Systems/Rooms/WarpMenu.tscn" type="PackedScene" id=1]
 
@@ -150,13 +150,79 @@ func on_room_loaded():
 \"\"\"
 "
 
+[sub_resource type="GDScript" id=2]
+script/source = "extends CanvasLayer
+
+
+const min_speed = 0
+const max_speed = 1000
+const horiz_margin = 0.2
+const verti_margin = 0.2
+
+func _process(delta):
+	#return
+	if $Room and $Room.is_scrolling:
+		screen_scrolling(delta)
+	
+	
+func screen_scrolling(delta):
+	var vp = get_viewport()
+	var mp = vp.get_mouse_position()
+	
+	var geom = $Room/Geometry
+	var limit_left = geom.get_node(\"CameraLimitLeft\").position.x
+	var limit_right = geom.get_node(\"CameraLimitRight\").position.x
+	var limit_top = geom.get_node(\"CameraLimitTop\").position.y
+	var limit_bottom = geom.get_node(\"CameraLimitBottom\").position.y
+	
+	# horiz
+	
+	var h_left_edge = 0
+	var h_left_marg = vp.size.x * horiz_margin
+	var h_right_edge = vp.size.x
+	var h_right_marg = vp.size.x * (1 - horiz_margin)
+	
+	var horiz_speed = 0
+	if mp.x < h_left_marg:
+		var power = (h_left_marg - mp.x) /  (vp.size.x * horiz_margin)
+		horiz_speed = - lerp(min_speed, max_speed, power)
+		
+	if mp.x > h_right_marg:
+		var power = (mp.x - h_right_marg) /  (vp.size.x * (horiz_margin))
+		horiz_speed = lerp(min_speed, max_speed, power)
+		
+	offset.x -= horiz_speed*delta
+	
+	# vert
+	
+	var h_top_edge = 0
+	var h_top_marg = vp.size.y * verti_margin
+	var h_bottom_edge = vp.size.y
+	var h_bottom_marg = vp.size.y * (1 - verti_margin)
+	
+	var verti_speed = 0
+	if mp.y < h_top_marg:
+		var power = (h_top_marg - mp.y) /  (vp.size.y * verti_margin)
+		verti_speed = - lerp(min_speed, max_speed, power)
+		
+	if mp.y > h_bottom_marg:
+		var power = (mp.y - h_bottom_marg) /  (vp.size.y * (verti_margin))
+		verti_speed = lerp(min_speed, max_speed, power)
+		
+	offset.y -= verti_speed*delta
+	
+	offset.x = max(offset.x, limit_left + vp.size.x/2)
+	offset.x = min(offset.x, limit_right - vp.size.x/2)
+	offset.y = max(offset.y, limit_top + vp.size.y /2)
+	offset.y = min(offset.y, limit_bottom - vp.size.y /2)
+"
+
 [node name="RoomSwitcher" type="Node"]
 script = SubResource( 1 )
 
 [node name="RoomLayer" type="CanvasLayer" parent="."]
 layer = 50
-offset = Vector2( 200, 0 )
-transform = Transform2D( 1, 0, 0, 1, 200, 0 )
 follow_viewport_enable = true
+script = SubResource( 2 )
 
 [node name="WarpMenu" parent="." instance=ExtResource( 1 )]

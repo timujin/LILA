@@ -28,16 +28,30 @@ func deserialize():
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Window room"
 roomID = "FFFFFWindowRoom"
-
-[node name="FirstPersonCamera" parent="." index="1"]
 is_scrolling = true
 
+[node name="CameraLimitLeft" parent="Geometry" index="0"]
+position = Vector2( -1126.85, -39.2421 )
+
+[node name="CameraLimitTop" parent="Geometry" index="1"]
+position = Vector2( 152.327, -699.521 )
+
+[node name="CameraLimitBottom" parent="Geometry" index="2"]
+position = Vector2( 108.49, 704.397 )
+
+[node name="CameraLimitRight" parent="Geometry" index="3"]
+position = Vector2( 1347.77, -49.6715 )
+
+[node name="FirstPersonCamera" parent="." index="2"]
+position = Vector2( 20.4265, 5.00256 )
+script = null
+
 [node name="window" type="Sprite" parent="Presentation" index="0"]
-position = Vector2( 738.429, 511.281 )
+position = Vector2( -22.1301, 23.2556 )
 texture = ExtResource( 2 )
 
 [node name="Arrow" type="Sprite" parent="Presentation" index="1"]
-position = Vector2( 297.021, 699.068 )
+position = Vector2( -463.538, 211.043 )
 rotation = -1.57468
 scale = Vector2( 0.221441, 0.174023 )
 texture = ExtResource( 3 )
@@ -51,9 +65,9 @@ ActivatorName = "ArrowLeft"
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrow/LeftArrowClick" index="0"]
 polygon = PoolVector2Array( 587.281, -797.122, 602.085, 740.979, -470.124, 735.684, -592.489, -691.317 )
 
-[node name="Logic" parent="." index="4"]
+[node name="Logic" parent="." index="5"]
 script = SubResource( 1 )
 
-[node name="Serialization" parent="." index="5"]
+[node name="Serialization" parent="." index="6"]
 script = SubResource( 2 )
 [connection signal="activated" from="Presentation/Arrow/LeftArrowClick" to="Logic" method="_on_LeftArrowClick_activated"]

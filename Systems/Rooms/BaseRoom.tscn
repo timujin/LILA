@@ -13,7 +13,7 @@ const horiz_margin = 0.2
 const verti_margin = 0.2
 
 func _process(delta):
-	#return
+	return
 	if is_scrolling:
 		screen_scrolling(delta)
 	
@@ -120,6 +120,23 @@ __meta__ = {
 
 [node name="Description" type="Node" parent="."]
 
+[node name="Geometry" type="Node2D" parent="."]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CameraLimitLeft" type="Position2D" parent="Geometry"]
+position = Vector2( -1525.72, 542.16 )
+
+[node name="CameraLimitTop" type="Position2D" parent="Geometry"]
+position = Vector2( 881.761, -1129.7 )
+
+[node name="CameraLimitBottom" type="Position2D" parent="Geometry"]
+position = Vector2( 939.081, 1908.31 )
+
+[node name="CameraLimitRight" type="Position2D" parent="Geometry"]
+position = Vector2( 4084.8, 679.577 )
+
 [node name="FirstPersonCamera" type="Camera2D" parent="."]
 position = Vector2( 800, 455 )
 current = true
@@ -127,24 +144,6 @@ limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
 script = SubResource( 1 )
-
-[node name="Geometry" type="Node2D" parent="FirstPersonCamera"]
-position = Vector2( -800, -455 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="CameraLimitLeft" type="Position2D" parent="FirstPersonCamera/Geometry"]
-position = Vector2( -1525.72, 542.16 )
-
-[node name="CameraLimitTop" type="Position2D" parent="FirstPersonCamera/Geometry"]
-position = Vector2( 881.761, -1129.7 )
-
-[node name="CameraLimitBottom" type="Position2D" parent="FirstPersonCamera/Geometry"]
-position = Vector2( 939.081, 1908.31 )
-
-[node name="CameraLimitRight" type="Position2D" parent="FirstPersonCamera/Geometry"]
-position = Vector2( 4084.8, 679.577 )
 
 [node name="AnimatedShade" type="CanvasLayer" parent="."]
 layer = 80
