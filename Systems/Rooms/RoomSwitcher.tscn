@@ -170,10 +170,15 @@ func screen_scrolling(delta):
 	var mp = vp.get_mouse_position()
 	
 	var geom = $Room/Geometry
-	var limit_left = geom.get_node(\"CameraLimitLeft\").position.x
-	var limit_right = geom.get_node(\"CameraLimitRight\").position.x
-	var limit_top = geom.get_node(\"CameraLimitTop\").position.y
-	var limit_bottom = geom.get_node(\"CameraLimitBottom\").position.y
+	#var limit_left = geom.get_node(\"CameraLimitLeft\").position.x - vp.size.x /2
+	#var limit_right = geom.get_node(\"CameraLimitRight\").position.x - vp.size.x /2
+	#var limit_top = geom.get_node(\"CameraLimitTop\").position.y - vp.size.y /2
+	#var limit_bottom = geom.get_node(\"CameraLimitBottom\").position.y - vp.size.y /2
+	
+	var limit_right = -( geom.get_node(\"CameraLimitLeft\").position.x - vp.size.x /2)
+	var limit_left = -( geom.get_node(\"CameraLimitRight\").position.x - vp.size.x /2)
+	var limit_bottom = -(geom.get_node(\"CameraLimitTop\").position.y - vp.size.y /2)
+	var limit_top = -(geom.get_node(\"CameraLimitBottom\").position.y - vp.size.y /2)
 	
 	# horiz
 	

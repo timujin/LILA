@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/window.jpg" type="Texture" id=2]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/Arrow.jpeg" type="Texture" id=3]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/backpacks.PNG" type="Texture" id=4]
 [ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=5]
 
 [sub_resource type="GDScript" id=1]
@@ -26,32 +27,33 @@ func deserialize():
 "
 
 [node name="Room" instance=ExtResource( 1 )]
+position = Vector2( 14.4203, 0.00012207 )
 roomName = "Window room"
 roomID = "FFFFFWindowRoom"
 is_scrolling = true
 
 [node name="CameraLimitLeft" parent="Geometry" index="0"]
-position = Vector2( -1126.85, -39.2421 )
+position = Vector2( -347.279, 404.417 )
 
 [node name="CameraLimitTop" parent="Geometry" index="1"]
-position = Vector2( 152.327, -699.521 )
+position = Vector2( 917.48, -659.628 )
 
 [node name="CameraLimitBottom" parent="Geometry" index="2"]
-position = Vector2( 108.49, 704.397 )
+position = Vector2( 888.063, 1148.06 )
 
 [node name="CameraLimitRight" parent="Geometry" index="3"]
-position = Vector2( 1347.77, -49.6715 )
+position = Vector2( 2127.34, 374.974 )
 
 [node name="FirstPersonCamera" parent="." index="2"]
-position = Vector2( 20.4265, 5.00256 )
+position = Vector2( 800, 448.662 )
 script = null
 
 [node name="window" type="Sprite" parent="Presentation" index="0"]
-position = Vector2( -22.1301, 23.2556 )
+position = Vector2( 757.443, 466.915 )
 texture = ExtResource( 2 )
 
 [node name="Arrow" type="Sprite" parent="Presentation" index="1"]
-position = Vector2( -463.538, 211.043 )
+position = Vector2( 316.035, 654.702 )
 rotation = -1.57468
 scale = Vector2( 0.221441, 0.174023 )
 texture = ExtResource( 3 )
@@ -70,4 +72,24 @@ script = SubResource( 1 )
 
 [node name="Serialization" parent="." index="6"]
 script = SubResource( 2 )
+
+[node name="backpacks" type="Sprite" parent="." index="7"]
+position = Vector2( -329.686, 407.188 )
+scale = Vector2( 0.501872, 0.145489 )
+texture = ExtResource( 4 )
+
+[node name="backpacks2" type="Sprite" parent="." index="8"]
+position = Vector2( 2122.3, 370.924 )
+scale = Vector2( 0.501872, 0.145489 )
+texture = ExtResource( 4 )
+
+[node name="backpacks3" type="Sprite" parent="." index="9"]
+position = Vector2( 883.754, 1143.62 )
+scale = Vector2( 0.501872, 0.145489 )
+texture = ExtResource( 4 )
+
+[node name="backpacks4" type="Sprite" parent="." index="10"]
+position = Vector2( 912.595, -658.904 )
+scale = Vector2( 0.501872, 0.145489 )
+texture = ExtResource( 4 )
 [connection signal="activated" from="Presentation/Arrow/LeftArrowClick" to="Logic" method="_on_LeftArrowClick_activated"]
