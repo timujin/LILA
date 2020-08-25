@@ -47,10 +47,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Geometry" parent="." index="2"]
-position = Vector2( 806.009, 465.901 )
-
-[node name="FirstPersonCamera" parent="." index="3"]
+[node name="FirstPersonCamera" parent="." index="2"]
 position = Vector2( 806.009, 465.901 )
 is_scrolling = true
 

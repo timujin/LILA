@@ -42,6 +42,8 @@ func switch_to_room(roomID):
 	#yield(room, \"deserialized\")
 	#print(\"deserialized\")
 	room.shade_down()
+	room.emit_signal(\"room_loaded\")
+	
 
 func unload_room():
 	if current_room() == null: return
@@ -153,6 +155,8 @@ script = SubResource( 1 )
 
 [node name="RoomLayer" type="CanvasLayer" parent="."]
 layer = 50
+offset = Vector2( 200, 0 )
+transform = Transform2D( 1, 0, 0, 1, 200, 0 )
 follow_viewport_enable = true
 
 [node name="WarpMenu" parent="." instance=ExtResource( 1 )]

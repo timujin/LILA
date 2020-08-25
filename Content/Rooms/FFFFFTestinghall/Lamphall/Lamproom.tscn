@@ -62,6 +62,9 @@ func deserialize():
 roomName = "Lamp room"
 roomID = "FFFFFLampRoom"
 
+[node name="FirstPersonCamera" parent="." index="1"]
+is_scrolling = true
+
 [node name="Arrow" type="Sprite" parent="Presentation" index="0"]
 position = Vector2( 1172.36, 546.425 )
 rotation = 1.52423
@@ -92,10 +95,10 @@ script = ExtResource( 6 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Lamp/SwitchLamp" index="0"]
 polygon = PoolVector2Array( 553.91, 253.449, 272.615, 505.134, 557.611, 780.877, 801.893, 536.594 )
 
-[node name="Logic" parent="." index="5"]
+[node name="Logic" parent="." index="4"]
 script = SubResource( 2 )
 
-[node name="Serialization" parent="." index="6"]
+[node name="Serialization" parent="." index="5"]
 script = SubResource( 3 )
 [connection signal="activated" from="Presentation/Arrow/RightArrow" to="Logic" method="_on_RightArrow_activated"]
 [connection signal="activated" from="Presentation/Lamp/SwitchLamp" to="Logic" method="_on_SwitchLamp_activated"]

@@ -34,7 +34,7 @@ func press():
 	"""
 
 func _on_ClickableArea_mouse_entered():
-	#print("hover")
+	print("hover")
 	if enabled:
 		ModeController.hover(self, hidden)
 

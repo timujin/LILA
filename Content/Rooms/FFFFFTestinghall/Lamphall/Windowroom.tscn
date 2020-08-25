@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/FFFFFTestinghall/Lamphall/Assets/window.jpg" type="Texture" id=2]
@@ -14,9 +14,23 @@ func _on_LeftArrowClick_activated():
 	RoomSwitcher.switch_to_room(\"FFFFFLampRoom\")
 "
 
+[sub_resource type="GDScript" id=2]
+script/source = "extends Serializer
+
+
+func serialize():
+	pass
+	
+func deserialize():
+	pass
+"
+
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Window room"
 roomID = "FFFFFWindowRoom"
+
+[node name="FirstPersonCamera" parent="." index="1"]
+is_scrolling = true
 
 [node name="window" type="Sprite" parent="Presentation" index="0"]
 position = Vector2( 738.429, 511.281 )
@@ -30,12 +44,16 @@ texture = ExtResource( 3 )
 
 [node name="LeftArrowClick" type="Area2D" parent="Presentation/Arrow" index="0"]
 position = Vector2( 0, -0.000244141 )
+rotation = -4.65661e-10
 script = ExtResource( 5 )
 ActivatorName = "ArrowLeft"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrow/LeftArrowClick" index="0"]
 polygon = PoolVector2Array( 587.281, -797.122, 602.085, 740.979, -470.124, 735.684, -592.489, -691.317 )
 
-[node name="Logic" parent="." index="5"]
+[node name="Logic" parent="." index="4"]
 script = SubResource( 1 )
+
+[node name="Serialization" parent="." index="5"]
+script = SubResource( 2 )
 [connection signal="activated" from="Presentation/Arrow/LeftArrowClick" to="Logic" method="_on_LeftArrowClick_activated"]

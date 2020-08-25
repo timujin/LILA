@@ -168,7 +168,7 @@ func _on_Says_item_rect_changed():
 "
 
 [node name="SideDialogue" type="CanvasLayer"]
-layer = 10
+layer = 85
 script = SubResource( 1 )
 
 [node name="Inventory" parent="." instance=ExtResource( 2 )]

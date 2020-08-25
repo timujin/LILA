@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.gd" type="Script" id=1]
 
@@ -112,19 +112,6 @@ tracks/2/keys = {
 } ]
 }
 
-[sub_resource type="GDScript" id=3]
-script/source = "extends Serializer
-
-
-func serialize():
-	return
-	
-func deserialize():
-	return
-	
-	
-"
-
 [node name="Room" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
@@ -132,11 +119,6 @@ __meta__ = {
 }
 
 [node name="Description" type="Node" parent="."]
-
-[node name="Background" type="Node2D" parent="."]
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="FirstPersonCamera" type="Camera2D" parent="."]
 position = Vector2( 800, 455 )
@@ -165,9 +147,10 @@ position = Vector2( 939.081, 1908.31 )
 position = Vector2( 4084.8, 679.577 )
 
 [node name="AnimatedShade" type="CanvasLayer" parent="."]
-layer = 60
+layer = 80
 
 [node name="Panel" type="Panel" parent="AnimatedShade"]
+visible = false
 margin_left = -2182.0
 margin_top = -938.0
 margin_right = 3085.0
@@ -184,4 +167,3 @@ __meta__ = {
 [node name="Logic" type="Node" parent="."]
 
 [node name="Serialization" type="Node" parent="."]
-script = SubResource( 3 )

@@ -9,6 +9,7 @@ signal deserialized
 
 export var roomName:String = "[ROOM NAME NOT SET]"
 export var roomID:String   = "[ID NOT SET]"
+export var is_scrolling    = false
 
 
 func _ready():
