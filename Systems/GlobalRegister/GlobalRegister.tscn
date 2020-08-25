@@ -37,6 +37,7 @@ func all_rooms():
 
 func item(id:String):
 	if register.items.has(id):
+		print(\"Loading item\", register.items[id][\"path\"])
 		return load(register.items[id][\"path\"])
 	else:
 		return item(\"MissingNo\")

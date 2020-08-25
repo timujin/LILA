@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=2]
@@ -237,13 +237,61 @@ script/source = "extends CutsceneEngine
 
 export(NodePath) var spirit_switcher
 export(NodePath) var blanket_blurb
+export(NodePath) var wake_up_scene
 
 func _on_Blanket_activated():
 	var spirit_standing = get_node(spirit_switcher).state == \"standing\"
 	if spirit_standing:
 		get_node(blanket_blurb).display(\"A pentagram is stitched onto this blanket\")
 	else:
-		print(\"Wake up\")
+		get_node(spirit_switcher).state = \"standing\"
+		execute_wake_up_scene()
+
+func execute_wake_up_scene():
+	get_node(wake_up_scene).run()
+"
+
+[sub_resource type="GDScript" id=13]
+script/source = "extends Node
+
+export(NodePath) var spirit_state
+export(NodePath) var knife_on_the_ground
+export(NodePath) var knife_blurb
+
+
+onready var knife = GlobalRegister.item(\"ButterKnife\")
+
+var knife_icon = null
+
+func _on_ClickableArea_activated():
+	var knife_scene = knife.instance()
+	knife_icon = knife_scene.icon
+	knife_scene.queue_free()
+	
+	var spirit = get_node(spirit_state).state
+	
+	if spirit == \"on_blanket\":
+		get_node(knife_blurb).\\
+			display(\"There is a butter knife lying on the ground. I can't reach it from where I'm lying\",\\
+					knife_icon,\\
+					null,null,null)
+		
+	else:
+	
+		get_node(knife_blurb).\\
+			display(\"There is a butter knife lying on the ground.\",\\
+					knife_icon,\\
+					\"Pick up\",\\
+					self,\\
+					\"try_pick_up\")
+
+func try_pick_up():
+	get_node(knife_on_the_ground).get_node(\"StateSwitcher\").present = false
+	var knife = Character.inventory.add_item_by_id(\"ButterKnife\",false)
+	get_node(knife_blurb).\\
+		display(\"Now you have a knife.\",\\
+				knife_icon,\\
+				null,null,null)
 "
 
 [sub_resource type="GDScript" id=12]
@@ -282,7 +330,6 @@ func deserialize():
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Divine picnic"
 roomID = "00000DivinePicnicCamp"
-is_scrolling = true
 
 [node name="Description" parent="." index="0"]
 script = SubResource( 1 )
@@ -375,6 +422,19 @@ texture = ExtResource( 10 )
 [node name="StateSwitcher" type="Node" parent="Presentation/KnifeOnTheGround" index="0"]
 script = SubResource( 4 )
 
+[node name="ClickableArea" type="Area2D" parent="Presentation/KnifeOnTheGround" index="1"]
+script = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/KnifeOnTheGround/ClickableArea" index="0"]
+position = Vector2( -23583.1, -8612.45 )
+scale = Vector2( 24.1218, 27.1156 )
+polygon = PoolVector2Array( 930.375, 290.704, 1015.67, 290.704, 1023.42, 339.814, 927.79, 343.691 )
+
+[node name="KnifeBlurb" type="Position2D" parent="Presentation" index="7"]
+position = Vector2( 978.96, 316.327 )
+scale = Vector2( 0.0414562, 0.0368791 )
+script = ExtResource( 9 )
+
 [node name="Logic" parent="." index="5"]
 script = SubResource( 5 )
 
@@ -401,6 +461,13 @@ script = SubResource( 10 )
 script = SubResource( 11 )
 spirit_switcher = NodePath("../../Presentation/SpiritOnABlanket")
 blanket_blurb = NodePath("../../Presentation/SpiritOnABlanket/BlanketBlurb")
+wake_up_scene = NodePath("../WakeUpCutscene")
+
+[node name="KnifeLogic" type="Node" parent="Logic" index="4"]
+script = SubResource( 13 )
+spirit_state = NodePath("../../Presentation/SpiritOnABlanket")
+knife_on_the_ground = NodePath("../../Presentation/KnifeOnTheGround")
+knife_blurb = NodePath("../../Presentation/KnifeBlurb")
 
 [node name="Serialization" parent="." index="6"]
 script = SubResource( 12 )
@@ -411,3 +478,4 @@ knife = NodePath("../Presentation/KnifeOnTheGround/StateSwitcher")
 [connection signal="room_loaded" from="." to="Logic/FirstVisitCutscene" method="_on_Room_room_loaded"]
 [connection signal="activated" from="Presentation/SpiritOnABlanket/PentagramBlanket/Blanket" to="Logic/BlanketLogic" method="_on_Blanket_activated"]
 [connection signal="activated" from="Presentation/Goddesses" to="Logic/GoddessesLogic" method="_on_Goddesses_activated"]
+[connection signal="activated" from="Presentation/KnifeOnTheGround/ClickableArea" to="Logic/KnifeLogic" method="_on_ClickableArea_activated"]
