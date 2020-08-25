@@ -22,7 +22,10 @@ func set_block_clicks(value):
 
 var window = null
 
+var is_cutscene_playing = false
+
 func start_interaction(left:bool):
+	is_cutscene_playing = true
 	if window != null:
 		stop_interaction()
 	window = preload(\"res://Systems/Cutscenes/SideDialogue/SideDialogue.tscn\").instance()
@@ -41,6 +44,7 @@ func start_interaction_right():
 	return start_interaction(false)
 	
 func stop_interaction():
+	is_cutscene_playing = false
 	if window != null:
 		window.queue_free()
 		window = null

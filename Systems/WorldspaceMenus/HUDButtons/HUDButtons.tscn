@@ -33,16 +33,20 @@ func update_notification():
 func _ready():
 	unhide()
 
+var is_inventory_open = false
+
 func _on_Inventory_pressed():
 	update_notification()
 	#ModeController.set_mode(ModeController.MENU)
 	$Inventory.open()
+	is_inventory_open = true
 	$HBoxContainer/Inventory.visible = false
 
 
 func _on_Inventory_closed():
 	update_notification()
 	$HBoxContainer/Inventory.visible = true
+	is_inventory_open = false
 "
 
 [node name="WSHUD" type="CanvasLayer"]

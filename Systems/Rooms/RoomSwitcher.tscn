@@ -161,7 +161,7 @@ const verti_margin = 0.2
 
 func _process(delta):
 	#return
-	if $Room and $Room.is_scrolling:
+	if $Room and $Room.is_scrolling and not ModeController.is_cutscene_playing and not HudButtons.is_inventory_open:
 		screen_scrolling(delta)
 	
 	
