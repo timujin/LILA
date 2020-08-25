@@ -251,7 +251,7 @@ func execute_wake_up_scene():
 	get_node(wake_up_scene).run()
 "
 
-[sub_resource type="GDScript" id=13]
+[sub_resource type="GDScript" id=12]
 script/source = "extends Node
 
 export(NodePath) var spirit_state
@@ -294,7 +294,7 @@ func try_pick_up():
 				null,null,null)
 "
 
-[sub_resource type="GDScript" id=12]
+[sub_resource type="GDScript" id=13]
 script/source = "extends Serializer
 
 export(Dictionary) var defaults = {
@@ -464,13 +464,13 @@ blanket_blurb = NodePath("../../Presentation/SpiritOnABlanket/BlanketBlurb")
 wake_up_scene = NodePath("../WakeUpCutscene")
 
 [node name="KnifeLogic" type="Node" parent="Logic" index="4"]
-script = SubResource( 13 )
+script = SubResource( 12 )
 spirit_state = NodePath("../../Presentation/SpiritOnABlanket")
 knife_on_the_ground = NodePath("../../Presentation/KnifeOnTheGround")
 knife_blurb = NodePath("../../Presentation/KnifeBlurb")
 
 [node name="Serialization" parent="." index="6"]
-script = SubResource( 12 )
+script = SubResource( 13 )
 first_visit_cutscene = NodePath("../Logic/FirstVisitCutscene")
 spirit_on_a_blanket = NodePath("../Presentation/SpiritOnABlanket")
 firepit = NodePath("../Presentation/Firepit/StateSwitcher")
