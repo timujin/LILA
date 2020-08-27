@@ -2,7 +2,6 @@
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/PathArrow.jpeg" type="Texture" id=2]
-[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Grass.jpeg" type="Texture" id=3]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/Faggot.jpg" type="Texture" id=4]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/VendingMachine.png" type="Texture" id=5]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/PotatoTree.png" type="Texture" id=6]
@@ -23,16 +22,19 @@ func activate():
 	RoomSwitcher.switch_to(\"00000DivineCaveEntrance\")
 "
 
+[sub_resource type="GDScript" id=3]
+script/source = "extends Serializer
+
+func serialize():
+	pass
+	
+func deserialize():
+	pass
+"
+
 [node name="Room" instance=ExtResource( 1 )]
 roomName = "Divine Pond"
 roomID = "00000DivinePond"
-
-[node name="Grass" type="Sprite" parent="Background" index="0"]
-position = Vector2( -70.198, -34.0381 )
-texture = ExtResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="Filling" type="Node" parent="." index="5"]
 
@@ -78,6 +80,9 @@ position = Vector2( 597.595, 281.283 )
 rotation = 1.5708
 scale = Vector2( 0.282138, 0.235128 )
 texture = ExtResource( 2 )
+
+[node name="Serialization" parent="." index="7"]
+script = SubResource( 3 )
 
 [editable path="Filling/PathArrowLeft"]
 

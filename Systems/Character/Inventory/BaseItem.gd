@@ -2,6 +2,23 @@ extends Node
 
 # Status: works; but not feature-complete
 
+"""
+How would dialogue interaction with items work?
+Easiest scheme:
+	1) The dialogue probes whatever qualities it wants from the item
+	2) If the item passes, the corresponding interaction happens
+	3) If the item does not pass, the dialogue calls 'defer to item'
+	4) The item probes the dialogue for whatever qualities it wants
+	5) If the item passes, the interaction happens
+	6) If the item does not pass, the 'default' interaction happend
+	7) How would the 'def' interaction work, really?
+		Maybe it should be the property of the item, whether it produces the
+		default interaction, or it defers it to the dialogue?
+		This is because the item determines the mode of interaction, not
+		the subject.
+
+"""
+
 class_name BaseItem
 
 signal item_updated (item)

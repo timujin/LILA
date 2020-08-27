@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Systems/Interactables/ClickableArea.gd" type="Script" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Systems/Interactables/BlurbPoint.gd" type="Script" id=9]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/KnifeOnTheGround.jpeg" type="Texture" id=10]
 [ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/backpacks.PNG" type="Texture" id=11]
+[ext_resource path="res://Content/Rooms/00000Tutorial/DivinePicnic/Assets/PathArrow.jpeg" type="Texture" id=12]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -108,9 +109,21 @@ func set_state(value):
 script/source = "extends Node
 
 
+var active = false setget set_active
+
+func set_active(value):
+	active = value
+	$ArrowLeft.visible = active
+	$ArrowRight.visible = active
 "
 
 [sub_resource type="GDScript" id=6]
+script/source = "extends Node
+
+
+"
+
+[sub_resource type="GDScript" id=7]
 script/source = "extends CutsceneEngine
 
 \"\"\"
@@ -156,7 +169,7 @@ func pretend_to_be_asleep():
 
 "
 
-[sub_resource type="GDScript" id=7]
+[sub_resource type="GDScript" id=8]
 script/source = "extends CutsceneEngine
 
 \"\"\"
@@ -172,10 +185,16 @@ func run():
 	shl(\"Can you get us some firewood?\")
 	var quest = Character.inventory.add_item_by_id(\"00000GetFirewood\",false)
 	add_item_get(quest.icon, \"New task received:\", \"Gather some firewood\")
-	choice_call(\"OKIE DOKIE\", \"end_cutscene\")
+	choice_call(\"OKIE DOKIE\", \"end\")
+
+export(NodePath) var arrows
+
+func end():
+	get_node(arrows).active = true
+	end_cutscene()
 "
 
-[sub_resource type="GDScript" id=8]
+[sub_resource type="GDScript" id=9]
 script/source = "extends Node
 
 export(NodePath) var spirit
@@ -189,7 +208,7 @@ func _on_Goddesses_activated():
 		get_node(goddesses_dialogue).run()
 "
 
-[sub_resource type="GDScript" id=9]
+[sub_resource type="GDScript" id=10]
 script/source = "extends CutsceneEngine
 
 func run():
@@ -198,7 +217,7 @@ func run():
 	choice_call(\"OK\", \"end_cutscene\")
 "
 
-[sub_resource type="GDScript" id=10]
+[sub_resource type="GDScript" id=11]
 script/source = "extends CutsceneEngine
 
 func run():
@@ -232,7 +251,7 @@ func idklol():
 	
 "
 
-[sub_resource type="GDScript" id=11]
+[sub_resource type="GDScript" id=12]
 script/source = "extends CutsceneEngine
 
 export(NodePath) var spirit_switcher
@@ -251,7 +270,7 @@ func execute_wake_up_scene():
 	get_node(wake_up_scene).run()
 "
 
-[sub_resource type="GDScript" id=12]
+[sub_resource type="GDScript" id=13]
 script/source = "extends Node
 
 export(NodePath) var spirit_state
@@ -294,11 +313,24 @@ func try_pick_up():
 				null,null,null)
 "
 
-[sub_resource type="GDScript" id=13]
+[sub_resource type="GDScript" id=16]
+script/source = "extends Node
+
+
+func _on_ArrowLeft_activated():
+	RoomSwitcher.switch_to_room(\"00000DivineCaveEntrance\")
+
+
+func _on_ArrowRight_activated():
+	RoomSwitcher.switch_to_room(\"00000DivinePond\")
+"
+
+[sub_resource type="GDScript" id=15]
 script/source = "extends Serializer
 
 export(Dictionary) var defaults = {
 	\"first_visit\": true,
+	\"arrows_active\": false,
 	\"spirit_state\": \"on_blanket\",
 	\"campfire_state\": \"empty\",
 	\"knife_there\": true
@@ -308,11 +340,13 @@ export(NodePath) var first_visit_cutscene
 export(NodePath) var spirit_on_a_blanket
 export(NodePath) var firepit
 export(NodePath) var knife
+export(NodePath) var arrows
 
 
 func serialize():
 	var data = {
 		\"first_visit\": get_node(first_visit_cutscene).first_visit,
+		\"arrows_active\": get_node(arrows).active,
 		\"spirit_state\": get_node(spirit_on_a_blanket).state,
 		\"campfire_state\": get_node(firepit).state,
 		\"knife_there\": get_node(knife).present
@@ -322,6 +356,7 @@ func serialize():
 func deserialize():
 	var data = load_data(defaults)
 	get_node(first_visit_cutscene).first_visit = data[\"first_visit\"]
+	get_node(arrows).active = data[\"arrows_active\"]
 	get_node(spirit_on_a_blanket).state = data[\"spirit_state\"]
 	get_node(firepit).state = data[\"campfire_state\"]
 	get_node(knife).present = data[\"knife_there\"]
@@ -435,47 +470,81 @@ position = Vector2( 978.96, 316.327 )
 scale = Vector2( 0.0414562, 0.0368791 )
 script = ExtResource( 9 )
 
-[node name="Logic" parent="." index="5"]
+[node name="Arrows" type="Node" parent="Presentation" index="8"]
 script = SubResource( 5 )
 
-[node name="FirstVisitCutscene" type="Node" parent="Logic" index="0"]
+[node name="ArrowLeft" type="Sprite" parent="Presentation/Arrows" index="0"]
+position = Vector2( 240.644, 678.431 )
+rotation = -1.55782
+scale = Vector2( 0.203182, 0.15735 )
+texture = ExtResource( 12 )
+
+[node name="ArrowLeft" type="Area2D" parent="Presentation/Arrows/ArrowLeft" index="0"]
+script = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrows/ArrowLeft/ArrowLeft" index="0"]
+polygon = PoolVector2Array( 496.036, -747.246, 556.112, 698.492, -591.305, 729.484, -542.093, -718.085 )
+
+[node name="ArrowRight" type="Sprite" parent="Presentation/Arrows" index="1"]
+position = Vector2( 1434.29, 715.444 )
+rotation = 1.51446
+scale = Vector2( 0.203182, 0.15735 )
+texture = ExtResource( 12 )
+
+[node name="ArrowRight" type="Area2D" parent="Presentation/Arrows/ArrowRight" index="0"]
+script = ExtResource( 2 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Presentation/Arrows/ArrowRight/ArrowRight" index="0"]
+polygon = PoolVector2Array( -537.488, 759.804, -554.712, -725.711, 559.339, -750.603, 566.444, 757.735 )
+
+[node name="Logic" parent="." index="5"]
 script = SubResource( 6 )
+
+[node name="FirstVisitCutscene" type="Node" parent="Logic" index="0"]
+script = SubResource( 7 )
 spirit_state_switcher = NodePath("../../Presentation/SpiritOnABlanket")
 wake_up_cutscene = NodePath("../WakeUpCutscene")
 
 [node name="WakeUpCutscene" type="Node" parent="Logic" index="1"]
-script = SubResource( 7 )
+script = SubResource( 8 )
+arrows = NodePath("../../Presentation/Arrows")
 
 [node name="GoddessesLogic" type="Node" parent="Logic" index="2"]
-script = SubResource( 8 )
+script = SubResource( 9 )
 spirit = NodePath("../../Presentation/SpiritOnABlanket")
 goddesses_dialogue = NodePath("GoddessDialogue")
 
 [node name="LookAtGoddesses" type="Node" parent="Logic/GoddessesLogic" index="0"]
-script = SubResource( 9 )
-
-[node name="GoddessDialogue" type="Node" parent="Logic/GoddessesLogic" index="1"]
 script = SubResource( 10 )
 
-[node name="BlanketLogic" type="Node" parent="Logic" index="3"]
+[node name="GoddessDialogue" type="Node" parent="Logic/GoddessesLogic" index="1"]
 script = SubResource( 11 )
+
+[node name="BlanketLogic" type="Node" parent="Logic" index="3"]
+script = SubResource( 12 )
 spirit_switcher = NodePath("../../Presentation/SpiritOnABlanket")
 blanket_blurb = NodePath("../../Presentation/SpiritOnABlanket/BlanketBlurb")
 wake_up_scene = NodePath("../WakeUpCutscene")
 
 [node name="KnifeLogic" type="Node" parent="Logic" index="4"]
-script = SubResource( 12 )
+script = SubResource( 13 )
 spirit_state = NodePath("../../Presentation/SpiritOnABlanket")
 knife_on_the_ground = NodePath("../../Presentation/KnifeOnTheGround")
 knife_blurb = NodePath("../../Presentation/KnifeBlurb")
 
+[node name="RoomTransitions" type="Node" parent="Logic" index="5"]
+script = SubResource( 16 )
+
 [node name="Serialization" parent="." index="6"]
-script = SubResource( 13 )
+script = SubResource( 15 )
 first_visit_cutscene = NodePath("../Logic/FirstVisitCutscene")
 spirit_on_a_blanket = NodePath("../Presentation/SpiritOnABlanket")
 firepit = NodePath("../Presentation/Firepit/StateSwitcher")
 knife = NodePath("../Presentation/KnifeOnTheGround/StateSwitcher")
+arrows = NodePath("../Presentation/Arrows")
 [connection signal="room_loaded" from="." to="Logic/FirstVisitCutscene" method="_on_Room_room_loaded"]
 [connection signal="activated" from="Presentation/SpiritOnABlanket/PentagramBlanket/Blanket" to="Logic/BlanketLogic" method="_on_Blanket_activated"]
 [connection signal="activated" from="Presentation/Goddesses" to="Logic/GoddessesLogic" method="_on_Goddesses_activated"]
 [connection signal="activated" from="Presentation/KnifeOnTheGround/ClickableArea" to="Logic/KnifeLogic" method="_on_ClickableArea_activated"]
+[connection signal="activated" from="Presentation/Arrows/ArrowLeft/ArrowLeft" to="Logic/RoomTransitions" method="_on_ArrowLeft_activated"]
+[connection signal="activated" from="Presentation/Arrows/ArrowRight/ArrowRight" to="Logic/RoomTransitions" method="_on_ArrowRight_activated"]
