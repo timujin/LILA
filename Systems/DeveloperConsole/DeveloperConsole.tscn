@@ -71,7 +71,7 @@ func echoerr(text:String, repeat_in_stdout=true):
 	$Modal/VBoxContainer.add_child(x)
 	x.text = \"ERROR! \" + text
 	if repeat_in_stdout:
-		print(text)
+		printerr(text)
 
 
 func _on_Button_pressed():
@@ -298,8 +298,11 @@ margin_left = 33.0
 margin_top = -68.0
 margin_right = -37.0
 margin_bottom = -34.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Button" type="Button" parent="Modal"]
+[node name="SkipCutscene" type="Button" parent="Modal"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -203.0
@@ -314,4 +317,4 @@ __meta__ = {
 [node name="Interpreter" type="Node" parent="."]
 script = SubResource( 2 )
 [connection signal="text_entered" from="Modal/LineEdit" to="." method="_on_LineEdit_text_entered"]
-[connection signal="pressed" from="Modal/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="Modal/SkipCutscene" to="." method="_on_Button_pressed"]

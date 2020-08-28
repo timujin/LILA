@@ -313,7 +313,7 @@ func try_pick_up():
 				null,null,null)
 "
 
-[sub_resource type="GDScript" id=16]
+[sub_resource type="GDScript" id=14]
 script/source = "extends Node
 
 
@@ -533,7 +533,7 @@ knife_on_the_ground = NodePath("../../Presentation/KnifeOnTheGround")
 knife_blurb = NodePath("../../Presentation/KnifeBlurb")
 
 [node name="RoomTransitions" type="Node" parent="Logic" index="5"]
-script = SubResource( 16 )
+script = SubResource( 14 )
 
 [node name="Serialization" parent="." index="6"]
 script = SubResource( 15 )
