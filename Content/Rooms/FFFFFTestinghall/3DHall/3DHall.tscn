@@ -6,7 +6,7 @@
 [ext_resource path="res://Systems/Interactables/ClickableMesh.tscn" type="PackedScene" id=4]
 
 [sub_resource type="BoxShape" id=2]
-extents = Vector3( 1.14523, 1.01524, 1.1344 )
+extents = Vector3( 1.32246, 1.16295, 1.32202 )
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Serializer
@@ -37,15 +37,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7767, 26.0863, -1.08815 )
 [node name="Cube-loop" parent="Presentation/untitled" index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.588, 7.65539, -19.7793 )
 
-[node name="ClickableMesh" parent="Presentation/untitled/Cube" index="1" instance=ExtResource( 4 )]
-transform = Transform( 0.0247898, 0, 0, 0, 4.07355, 0, 0, 0, 0.0247898, 0.0232243, 16.9016, -0.730416 )
-
-[node name="CollisionShape" parent="Presentation/untitled/Cube/ClickableMesh" index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.928688, -1.10217, -0.365925 )
-shape = SubResource( 2 )
-
 [node name="Light" parent="Presentation/untitled" index="2"]
 transform = Transform( -0.290865, 0.566393, 0.771101, -0.0551891, 0.794672, -0.604525, -0.955171, -0.218391, -0.199883, 4.07625, 13.7638, -1.00545 )
+
+[node name="ClickableMesh" parent="Presentation/untitled/Cube2" index="2" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.93685, 1.2, 2.23426 )
+
+[node name="CollisionShape" parent="Presentation/untitled/Cube2/ClickableMesh" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.615995, -1.15781, -2.2501 )
+shape = SubResource( 2 )
 
 [node name="AnimationPlayer" parent="Presentation/untitled" index="5"]
 autoplay = "CubeAction-loop"
@@ -57,4 +57,4 @@ script = SubResource( 1 )
 
 [editable path="Presentation/untitled"]
 
-[editable path="Presentation/untitled/Cube/ClickableMesh"]
+[editable path="Presentation/untitled/Cube2/ClickableMesh"]

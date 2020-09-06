@@ -9,6 +9,10 @@ export var enabled : bool = true
 export var hidden : bool = false
 
 
+func on_clickable_mesh_clicked():
+	pass
+
+
 func _ready():
 	pass
 	
@@ -35,3 +39,12 @@ func _on_ClickableArea_input_event(viewport, event, shape_idx):
 	if Input.is_action_just_pressed("select") and ModeController.currently_hovered == self:
 		press()
 """
+
+
+func _on_ClickableMesh_mouse_entered():
+	print("entered")
+
+
+
+func _on_ClickableMesh_mouse_exited():
+	print("exited")
