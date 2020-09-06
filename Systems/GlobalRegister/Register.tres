@@ -20,11 +20,6 @@ items = {
 "name": "Suit",
 "path": "res://Content/Items/CreatureLore/Suit/Suit.tscn"
 },
-"NaggingThought": {
-"id": "NaggingThought",
-"name": "Nagging thought",
-"path": "res://Content/Items/NaggingThought/NaggingThought.tscn"
-},
 "Pyrokinesis": {
 "id": "Pyrokinesis",
 "name": "Pyrokinesis",
@@ -66,6 +61,11 @@ rooms = {
 "id": "00000DivinePond",
 "name": "Divine Pond",
 "path": "res://Content/Rooms/00000Tutorial/DivinePicnic/Pond.tscn"
+},
+"3DHall": {
+"id": "3DHall",
+"name": "3D Hall",
+"path": "res://Content/Rooms/FFFFFTestinghall/3DHall/3DHall.tscn"
 },
 "FFFFFDogroom": {
 "id": "FFFFFDogroom",

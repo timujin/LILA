@@ -1,0 +1,177 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends KinematicBody
+
+const GRAVITY = -24.8
+var vel = Vector3()
+const MAX_SPEED = 20
+const JUMP_SPEED = 9
+const ACCEL = 4.5
+
+var dir = Vector3()
+
+const DEACCEL= 16
+const MAX_SLOPE_ANGLE = 40
+
+var camera
+var rotation_helper
+
+var MOUSE_SENSITIVITY = 0.05
+
+func _ready():
+	camera = $RotationHelper/Camera
+	rotation_helper = $RotationHelper
+
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _physics_process(delta):
+	process_input(delta)
+	process_movement(delta)
+
+func process_input(delta):
+
+	# ----------------------------------
+	# Walking
+	dir = Vector3()
+	var cam_xform = camera.get_global_transform()
+
+	var input_movement_vector = Vector2()
+
+	if Input.is_action_pressed(\"movement_forward\"):
+		input_movement_vector.y += 1
+	if Input.is_action_pressed(\"movement_backward\"):
+		input_movement_vector.y -= 1
+	if Input.is_action_pressed(\"movement_left\"):
+		input_movement_vector.x -= 1
+	if Input.is_action_pressed(\"movement_right\"):
+		input_movement_vector.x += 1
+
+	input_movement_vector = input_movement_vector.normalized()
+
+	# Basis vectors are already normalized.
+	dir += -cam_xform.basis.z * input_movement_vector.y
+	dir += cam_xform.basis.x * input_movement_vector.x
+	# ----------------------------------
+
+	# ----------------------------------
+	# Jumping
+	if is_on_floor():
+		if Input.is_action_just_pressed(\"movement_jump\"):
+			vel.y = JUMP_SPEED
+	# ----------------------------------
+
+	# ----------------------------------
+	# Capturing/Freeing the cursor
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	# ----------------------------------
+
+func process_movement(delta):
+	dir.y = 0
+	dir = dir.normalized()
+
+	vel.y += delta * GRAVITY
+
+	var hvel = vel
+	hvel.y = 0
+
+	var target = dir
+	target *= MAX_SPEED
+
+	var accel
+	if dir.dot(hvel) > 0:
+		accel = ACCEL
+	else:
+		accel = DEACCEL
+
+	hvel = hvel.linear_interpolate(target, accel * delta)
+	vel.x = hvel.x
+	vel.z = hvel.z
+	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
+
+func _input(event):
+	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+		rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY))
+		self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
+
+		var camera_rot = rotation_helper.rotation_degrees
+		camera_rot.x = clamp(camera_rot.x, -70, 70)
+		rotation_helper.rotation_degrees = camera_rot
+"
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.466937
+height = 0.994772
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 0.0861433, 0.0238361, 0.0991925 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends RayCast
+
+export(NodePath) var camera
+export(NodePath) var cursor
+
+func _input(event):
+	#if is_colliding():
+	#	print(\"Collding\", get_collider(), get_collider().get_parent().is_class(\"ClickableMesh\"))
+	#	cursor.global_position = 
+	if event is InputEventMouseMotion:
+		var from = get_node(camera).project_ray_origin(event.position)
+		var to = from + get_node(camera).project_ray_normal(event.position) * 1000
+		
+		var result = get_world().direct_space_state.intersect_ray(from, to, [self, get_node(cursor)], 0x7FFFFFFF, true, true)
+		#print(result)
+		if result.has(\"position\"):
+			get_node(cursor).global_transform.origin = result[\"position\"]
+"
+
+[sub_resource type="SphereShape" id=5]
+radius = 0.0807309
+
+[sub_resource type="SphereMesh" id=6]
+radius = 0.1
+height = 0.1
+
+[sub_resource type="SpatialMaterial" id=7]
+albedo_color = Color( 0.0666667, 0.407843, 1, 1 )
+
+[node name="Player" type="KinematicBody"]
+script = SubResource( 3 )
+
+[node name="Body" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0.956254, 0 )
+shape = SubResource( 1 )
+
+[node name="Feet" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00156316, 0.0237565, -0.00175264 )
+shape = SubResource( 2 )
+
+[node name="RotationHelper" type="Spatial" parent="."]
+
+[node name="Camera" type="Camera" parent="RotationHelper"]
+transform = Transform( -1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, 0, 1.73427, 0 )
+current = true
+
+[node name="InteractionRayCast" type="RayCast" parent="RotationHelper"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 1.74497, 0 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+collide_with_areas = true
+script = SubResource( 4 )
+camera = NodePath("../Camera")
+cursor = NodePath("../../3DCursor")
+
+[node name="3DCursor" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.11438 )
+
+[node name="CollisionShape" type="CollisionShape" parent="3DCursor"]
+shape = SubResource( 5 )
+
+[node name="MeshInstance" type="MeshInstance" parent="3DCursor"]
+mesh = SubResource( 6 )
+material/0 = SubResource( 7 )

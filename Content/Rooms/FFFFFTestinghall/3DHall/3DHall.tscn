@@ -1,0 +1,60 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Systems/Rooms/3DRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Content/Rooms/FFFFFTestinghall/3DHall/untitled.glb" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Rooms/3DPlayer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Systems/Interactables/ClickableMesh.tscn" type="PackedScene" id=4]
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 1.14523, 1.01524, 1.1344 )
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Serializer
+
+
+func serialize():
+	assert(true)
+	
+func deserialize():
+	assert(true)
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "3D Hall"
+roomID = "3DHall"
+
+[node name="Geometry" parent="." index="1"]
+visible = false
+
+[node name="FirstPersonCamera" parent="." index="2"]
+visible = false
+
+[node name="Player" parent="Presentation" index="0" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7767, 26.0863, -1.08815 )
+
+[node name="untitled" parent="Presentation" index="1" instance=ExtResource( 2 )]
+
+[node name="Cube-loop" parent="Presentation/untitled" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.588, 7.65539, -19.7793 )
+
+[node name="ClickableMesh" parent="Presentation/untitled/Cube" index="1" instance=ExtResource( 4 )]
+transform = Transform( 0.0247898, 0, 0, 0, 4.07355, 0, 0, 0, 0.0247898, 0.0232243, 16.9016, -0.730416 )
+
+[node name="CollisionShape" parent="Presentation/untitled/Cube/ClickableMesh" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.928688, -1.10217, -0.365925 )
+shape = SubResource( 2 )
+
+[node name="Light" parent="Presentation/untitled" index="2"]
+transform = Transform( -0.290865, 0.566393, 0.771101, -0.0551891, 0.794672, -0.604525, -0.955171, -0.218391, -0.199883, 4.07625, 13.7638, -1.00545 )
+
+[node name="AnimationPlayer" parent="Presentation/untitled" index="5"]
+autoplay = "CubeAction-loop"
+
+[node name="Serialization" parent="." index="6"]
+script = SubResource( 1 )
+
+[node name="World" type="Spatial" parent="." index="7"]
+
+[editable path="Presentation/untitled"]
+
+[editable path="Presentation/untitled/Cube/ClickableMesh"]
