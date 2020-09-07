@@ -10,7 +10,8 @@ export var hidden : bool = false
 
 
 func on_clickable_mesh_clicked():
-	pass
+	print("Clicked ", ActivatorName)
+	emit_signal("activated")
 
 
 func _ready():
