@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/cube_room.dae-570a4d4ce372537bda262f9acc761631.scn"
+path="res://.import/door_unscripted.escn-57a98555a7e7004ce6df293114d8fb38.scn"
 
 [deps]
 
-source_file="res://Assets/3D/cube_room.dae"
-dest_files=[ "res://.import/cube_room.dae-570a4d4ce372537bda262f9acc761631.scn" ]
+source_file="res://Assets/3D/Doors/door_unscripted.escn"
+dest_files=[ "res://.import/door_unscripted.escn-57a98555a7e7004ce6df293114d8fb38.scn" ]
 
 [params]
 

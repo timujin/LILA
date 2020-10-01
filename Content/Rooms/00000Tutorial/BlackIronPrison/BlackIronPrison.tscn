@@ -1,0 +1,56 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Assets/3D/WallSegments/wall_segment_short.escn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Rooms/3DPlayer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Assets/3D/WallSegments/floor_segment_short.escn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/3D/WallSegments/wall_door.escn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/3D/Doors/door.tscn" type="PackedScene" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Serializer
+
+func serialize():
+	pass
+	
+	
+func deserialize():
+	
+	pass
+"
+
+[node name="Room" instance=ExtResource( 1 )]
+roomName = "Black Iron Prison"
+roomID = "BlackIronPrison"
+
+[node name="Serialization" parent="." index="6"]
+script = SubResource( 1 )
+
+[node name="Geometry2" type="Spatial" parent="." index="7"]
+
+[node name="Player" parent="Geometry2" index="0" instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2567, 0 )
+
+[node name="wall_segment_short" parent="." index="8" instance=ExtResource( 2 )]
+
+[node name="wall_segment_short2" parent="." index="9" instance=ExtResource( 2 )]
+transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0 )
+
+[node name="floor_segment_short" parent="." index="10" instance=ExtResource( 4 )]
+
+[node name="floor_segment_short2" parent="." index="11" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6 )
+
+[node name="wall_door" parent="." index="12" instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12 )
+
+[node name="door" parent="wall_door" index="1" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, -3 )
+
+[node name="Cube" parent="wall_door/door/Hinge" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.9, 0.0231571 )
+
+[node name="wall_segment_short3" parent="." index="13" instance=ExtResource( 2 )]
+transform = Transform( 4.47035e-08, 0, -1, 0, 1, 0, 1, 0, 4.47035e-08, 0, 0, 6 )
+
+[editable path="wall_door/door"]

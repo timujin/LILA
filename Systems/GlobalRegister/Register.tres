@@ -67,6 +67,11 @@ rooms = {
 "name": "3D Hall",
 "path": "res://Content/Rooms/FFFFFTestinghall/3DHall/3DHall.tscn"
 },
+"BlackIronPrison": {
+"id": "BlackIronPrison",
+"name": "Black Iron Prison",
+"path": "res://Content/Rooms/00000Tutorial/BlackIronPrison/BlackIronPrison.tscn"
+},
 "FFFFFDogroom": {
 "id": "FFFFFDogroom",
 "name": "Dogroom",

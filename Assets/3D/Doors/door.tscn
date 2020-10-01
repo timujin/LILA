@@ -1,0 +1,53 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Assets/3D/Doors/door_unscripted.escn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+
+export var is_open = false
+
+func _ready():
+	if is_open: rotation_degrees = Vector3(0,-90,0)
+	else: 		rotation_degrees = Vector3(0,  0,0)
+	
+func open():
+	if $AnimationPlayer.is_playing(): return
+	is_open = true
+	$AnimationPlayer.play(\"OpenClose\")
+	
+
+func close():
+	if $AnimationPlayer.is_playing(): return
+	is_open = false
+	$AnimationPlayer.play_backwards(\"OpenClose\")
+
+func _input(ev):
+	if ev is InputEventKey and ev.pressed and ev.scancode == KEY_K and not ev.echo:
+		if is_open: close()
+		else:       open()
+"
+
+[sub_resource type="Animation" id=2]
+resource_name = "OpenClose"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1 ),
+"transitions": PoolRealArray( 1, 3.4822 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 0 ), Vector3( 0, -90, 0 ) ]
+}
+
+[node name="door" instance=ExtResource( 2 )]
+
+[node name="Hinge" parent="." index="0"]
+script = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Hinge" index="1"]
+anims/OpenClose = SubResource( 2 )

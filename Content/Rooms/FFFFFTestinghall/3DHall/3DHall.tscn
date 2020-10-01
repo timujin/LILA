@@ -5,10 +5,10 @@
 [ext_resource path="res://Systems/Rooms/3DPlayer.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Systems/Interactables/ClickableMesh.tscn" type="PackedScene" id=4]
 
-[sub_resource type="BoxShape" id=2]
+[sub_resource type="BoxShape" id=1]
 extents = Vector3( 1.32246, 1.16295, 1.32202 )
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=2]
 script/source = "extends Serializer
 
 
@@ -45,15 +45,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.93685, 1.2, 2.23426 )
 
 [node name="CollisionShape" parent="Presentation/untitled/Cube2/ClickableMesh" index="0"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.615995, -1.15781, -2.2501 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="AnimationPlayer" parent="Presentation/untitled" index="5"]
 autoplay = "CubeAction-loop"
 
 [node name="Serialization" parent="." index="6"]
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="World" type="Spatial" parent="." index="7"]
+visible = false
 
 [editable path="Presentation/untitled"]
 
