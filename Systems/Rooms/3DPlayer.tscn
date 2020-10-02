@@ -6,8 +6,11 @@
 [sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
 
+var frozen = false
+var off_camera = false
+
 const GRAVITY = -24.8
-var vel = Vector3()
+var vel = Vector3() # TODO make this 0 on freeze
 const MAX_SPEED = 20
 const JUMP_SPEED = 9
 const ACCEL = 4.5
@@ -22,11 +25,23 @@ var rotation_helper
 
 var MOUSE_SENSITIVITY = 0.05
 
+export var temp_look_target:NodePath
+
 func _ready():
 	camera = $RotationHelper/Camera
 	rotation_helper = $RotationHelper
 
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+func camera_look(at):
+	self.frozen = true
+	camera.look(at)
+	off_camera = true
+	
+func camera_unlook():
+	self.frozen = false
+	camera.unlook()
+	off_camera = false
 
 func _physics_process(delta):
 	process_input(delta)
@@ -34,35 +49,36 @@ func _physics_process(delta):
 
 func process_input(delta):
 
-	# ----------------------------------
-	# Walking
-	dir = Vector3()
-	var cam_xform = camera.get_global_transform()
-
-	var input_movement_vector = Vector2()
-
-	if Input.is_action_pressed(\"movement_forward\"):
-		input_movement_vector.y += 1
-	if Input.is_action_pressed(\"movement_backward\"):
-		input_movement_vector.y -= 1
-	if Input.is_action_pressed(\"movement_left\"):
-		input_movement_vector.x -= 1
-	if Input.is_action_pressed(\"movement_right\"):
-		input_movement_vector.x += 1
-
-	input_movement_vector = input_movement_vector.normalized()
-
-	# Basis vectors are already normalized.
-	dir += -cam_xform.basis.z * input_movement_vector.y
-	dir += cam_xform.basis.x * input_movement_vector.x
-	# ----------------------------------
-
-	# ----------------------------------
-	# Jumping
-	if is_on_floor():
-		if Input.is_action_just_pressed(\"movement_jump\"):
-			vel.y = JUMP_SPEED
-	# ----------------------------------
+	if not frozen:
+		# ----------------------------------
+		# Walking
+		dir = Vector3()
+		var cam_xform = camera.get_global_transform()
+	
+		var input_movement_vector = Vector2()
+	
+		if Input.is_action_pressed(\"movement_forward\"):
+			input_movement_vector.y += 1
+		if Input.is_action_pressed(\"movement_backward\"):
+			input_movement_vector.y -= 1
+		if Input.is_action_pressed(\"movement_left\"):
+			input_movement_vector.x -= 1
+		if Input.is_action_pressed(\"movement_right\"):
+			input_movement_vector.x += 1
+	
+		input_movement_vector = input_movement_vector.normalized()
+	
+		# Basis vectors are already normalized.
+		dir += -cam_xform.basis.z * input_movement_vector.y
+		dir += cam_xform.basis.x * input_movement_vector.x
+		# ----------------------------------
+	
+		# ----------------------------------
+		# Jumping
+		if is_on_floor():
+			if Input.is_action_just_pressed(\"movement_jump\"):
+				vel.y = JUMP_SPEED
+		# ----------------------------------
 
 	# ----------------------------------
 	# Capturing/Freeing the cursor
@@ -96,7 +112,15 @@ func process_movement(delta):
 	vel.z = hvel.z
 	vel = move_and_slide(vel, Vector3(0, 1, 0), 0.05, 4, deg2rad(MAX_SLOPE_ANGLE))
 
-func _input(event):
+func _input(event):	
+	if event is InputEventKey and event.pressed and event.scancode == KEY_L and not event.echo:
+		if off_camera: camera_unlook()
+		else: camera_look(get_node(temp_look_target))
+		
+	if frozen: return
+	
+	
+	
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		rotation_helper.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY))
 		self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
@@ -120,10 +144,16 @@ export(NodePath) var cursor
 export(Texture) var reticule_off
 export(Texture) var reticule_on
 
+var look_disabled = false
+
 var target_body = null
 
 
 func _process(delta):
+	process_movement(delta)
+	
+	if look_disabled: return
+	
 	var ray =  get_parent().get_node(\"RayCast\")
 	ray.force_raycast_update()
 
@@ -150,6 +180,35 @@ func _process(delta):
 func _input(event):
 	if event is InputEventMouseButton and event.is_pressed() and Input.is_action_pressed(\"activate\") and target_body != null:
 		target_body.on_clickable_mesh_clicked()
+		
+
+
+##########################################
+# Camera movement to look at things
+##########################################
+
+export var temp_look_target:NodePath
+
+var target = null
+var speed = 3
+var is_moving = false
+
+func look(target):
+	self.target = target
+	is_moving = true
+	look_disabled = true
+		
+func unlook():
+	self.target = $\"../CameraOriginalPosition\"
+	is_moving = false
+	look_disabled = false
+	
+func process_movement(delta):
+	if target == null: return
+	global_transform.origin = lerp(global_transform.origin, target.global_transform.origin, delta*speed)
+	var current_rotation = Quat(global_transform.basis)
+	var next_rotation = current_rotation.slerp(Quat(target.global_transform.basis), delta*speed)
+	global_transform.basis = Basis(next_rotation)
 "
 
 [sub_resource type="SpatialMaterial" id=5]
@@ -176,6 +235,9 @@ script = SubResource( 4 )
 cursor = NodePath("../../3DCursor")
 reticule_off = ExtResource( 1 )
 reticule_on = ExtResource( 2 )
+
+[node name="CameraOriginalPosition" type="Camera" parent="RotationHelper"]
+transform = Transform( -1, -5.32907e-15, 3.25841e-07, -1.77636e-15, 1, 7.45058e-09, -3.25841e-07, 7.45058e-09, -1, 0, 0.0228175, 0.133492 )
 
 [node name="RayCast" type="RayCast" parent="RotationHelper"]
 transform = Transform( 1, 0, 0, 0, -1.56462e-07, 1, 0, -1, -1.56462e-07, 0, 0.0156274, 0.132032 )

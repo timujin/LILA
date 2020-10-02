@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+
+[node name="BlackIronWindow" type="CSGBox"]
+transform = Transform( 1, 0, 0, 0, 0.35, 0, 0, 0, 1, 2.89627, 6, -0.1 )
+width = 0.2
+height = 2.76449
+depth = 2.27035
+material = SubResource( 2 )
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 2.85714, 0, 0, 0, 1, -0.208993, 0, 0 )
+omni_range = 11.0

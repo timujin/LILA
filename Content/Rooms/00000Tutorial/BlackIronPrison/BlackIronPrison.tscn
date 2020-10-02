@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Systems/Rooms/BaseRoom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/3D/WallSegments/wall_segment_short.escn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Assets/3D/WallSegments/floor_segment_short.escn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/3D/WallSegments/wall_door.escn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/3D/Doors/door.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Assets/3D/Furniture/black_iron_window.tscn" type="PackedScene" id=7]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Serializer
@@ -30,27 +31,39 @@ script = SubResource( 1 )
 
 [node name="Player" parent="Geometry2" index="0" instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2567, 0 )
+temp_look_target = NodePath("../CameraTarget")
 
-[node name="wall_segment_short" parent="." index="8" instance=ExtResource( 2 )]
+[node name="Camera" parent="Geometry2/Player/RotationHelper" index="0"]
+temp_look_target = NodePath("../../../CameraTarget")
 
-[node name="wall_segment_short2" parent="." index="9" instance=ExtResource( 2 )]
+[node name="wall_segment_short" parent="Geometry2" index="1" instance=ExtResource( 2 )]
+
+[node name="wall_segment_short2" parent="Geometry2" index="2" instance=ExtResource( 2 )]
 transform = Transform( -4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0 )
 
-[node name="floor_segment_short" parent="." index="10" instance=ExtResource( 4 )]
+[node name="floor_segment_short" parent="Geometry2" index="3" instance=ExtResource( 4 )]
 
-[node name="floor_segment_short2" parent="." index="11" instance=ExtResource( 4 )]
+[node name="floor_segment_short2" parent="Geometry2" index="4" instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6 )
 
-[node name="wall_door" parent="." index="12" instance=ExtResource( 5 )]
+[node name="wall_door" parent="Geometry2" index="5" instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 12 )
 
-[node name="door" parent="wall_door" index="1" instance=ExtResource( 6 )]
+[node name="door" parent="Geometry2/wall_door" index="1" instance=ExtResource( 6 )]
 transform = Transform( 1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, -3 )
 
-[node name="Cube" parent="wall_door/door/Hinge" index="0"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.9, 0.0231571 )
-
-[node name="wall_segment_short3" parent="." index="13" instance=ExtResource( 2 )]
+[node name="wall_segment_short3" parent="Geometry2" index="6" instance=ExtResource( 2 )]
 transform = Transform( 4.47035e-08, 0, -1, 0, 1, 0, 1, 0, 4.47035e-08, 0, 0, 6 )
 
-[editable path="wall_door/door"]
+[node name="BlackIronWindow" parent="Geometry2" index="7" instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 0.35, 0, 0, 0, 1, 2.89627, 6, 5.9 )
+
+[node name="BlackIronWindow3" parent="Geometry2" index="8" instance=ExtResource( 7 )]
+transform = Transform( -2.98023e-08, 0, 1, 0, 0.35, 0, -1, 0, -2.98023e-08, -0.10373, 6, -2.89076 )
+
+[node name="BlackIronWindow2" parent="Geometry2" index="9" instance=ExtResource( 7 )]
+
+[node name="CameraTarget" type="Camera" parent="Geometry2" index="10"]
+transform = Transform( 0.709406, -0.573576, -0.409576, 0.496732, 0.819152, -0.286788, 0.5, 0, 0.866025, 0, 4, 3 )
+
+[editable path="Geometry2/Player"]
